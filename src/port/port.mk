@@ -13,7 +13,7 @@ PORT_CFLAGS += -Isrc/port/inc # Global include directory
 PORT_LFLAGS := -Tsrc/port/stm32f767xx.ld # Linker script
 
 # Port-specific libopencm3 library
-PORT_LIBOPENCM3 := libopencm3_stm32f4.a
+PORT_LIBOPENCM3 := libopencm3_stm32f7.a
 
 # Port-specific FreeRTOS architecture
 PORT_FREERTOS := GCC/ARM_CM7/r0p1

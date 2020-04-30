@@ -20,6 +20,8 @@ _LIB_NAME = libopencm3
 _BUILD_DIR = build/lib/$(_LIB_NAME)
 _LIB_DIR = lib/$(_LIB_NAME)
 
+_LIB_CDEPS := -I$(_LIB_DIR)/include
+
 _LIB_LDEPS := -L$(_BUILD_DIR) -l$(patsubst lib%.a,%,$(PORT_LIBOPENCM3))
 
 ################################## TARGETS #####################################
@@ -31,6 +33,9 @@ $(_BUILD_DIR)/$(PORT_LIBOPENCM3):
 	$(MAKE) -C $(_LIB_DIR)
     # Copy the desired static library to the build folder
 	cp $(_LIB_DIR)/lib/$(PORT_LIBOPENCM3) $@
-    # Echo dependencies into dependencies file
-	touch $(_BUILD_DIR)/$(_LIB_NAME).ldep
-	echo "$(_LIB_LDEPS)" > $(_BUILD_DIR)/$(_LIB_NAME).ldep
+    # Echo compiler dependencies into dependencies file
+	touch build/$(PROJECT).cdep
+	echo "$(_LIB_CDEPS)" >> build/$(PROJECT).cdep
+    # Echo linker dependencies into dependencies file
+	touch build/$(PROJECT).ldep
+	echo "$(_LIB_LDEPS)" >> build/$(PROJECT).ldep

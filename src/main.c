@@ -18,7 +18,7 @@ void startTask1(void *args __attribute((unused))) {
 
     for (;;) {
         vSystemLEDToggle();
-        vTaskDelay(100);
+        vTaskDelay(50);
 	}
 }
 
@@ -27,7 +27,7 @@ void startTask2(void *args __attribute((unused))) {
 
     for (;;) {
         vStatusLEDToggle();
-        vTaskDelay(500);
+        vTaskDelay(100);
 	}
 }
 
@@ -36,7 +36,7 @@ void startTask3(void *args __attribute((unused))) {
 
     for (;;) {
         vWarningLEDToggle();
-        vTaskDelay(1000);
+        vTaskDelay(400);
 	}
 }
 

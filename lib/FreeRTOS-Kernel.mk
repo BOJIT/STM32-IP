@@ -25,9 +25,9 @@ _SRC += portable/MemMang/heap_4.c portable/$(PORT_FREERTOS)/port.c
 
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 
-_INC := -I$(_LIB_DIR)/include -I$(_LIB_DIR)/portable/$(PORT_FREERTOS)
+_LIB_CDEPS := -I$(_LIB_DIR)/include -I$(_LIB_DIR)/portable/$(PORT_FREERTOS)
 
-_LIB_LDEPS := $(_INC) -L$(_BUILD_DIR) -l$(_LIB_NAME)
+_LIB_LDEPS := -L$(_BUILD_DIR) -l$(_LIB_NAME)
 
 ################################## TARGETS #####################################
 
@@ -35,14 +35,17 @@ _LIB_LDEPS := $(_INC) -L$(_BUILD_DIR) -l$(_LIB_NAME)
 $(_BUILD_DIR)/lib$(_LIB_NAME).a: $(_OBJ)
 	mkdir -p $(@D)
 	$(AR) rcs $@ $^
-    # Echo dependencies into dependencies file
-	touch $(_BUILD_DIR)/$(_LIB_NAME).ldep
-	echo "$(_LIB_LDEPS)" > $(_BUILD_DIR)/$(_LIB_NAME).ldep
+    # Echo compiler dependencies into dependencies file
+	touch build/$(PROJECT).cdep
+	echo "$(_LIB_CDEPS)" >> build/$(PROJECT).cdep
+    # Echo linker dependencies into dependencies file
+	touch build/$(PROJECT).ldep
+	echo "$(_LIB_LDEPS)" >> build/$(PROJECT).ldep
 
 
 $(_OBJ): $(_BUILD_DIR)/%.o : $(_LIB_DIR)/%.c
     # Don't link objects yet
 	mkdir -p $(@D)
-	$(CC) -c $(CFLAGS) $(PORT_CFLAGS) $(_INC) $^ -o $@
+	$(CC) -c $(CFLAGS) $(PORT_CFLAGS) $(_LIB_CDEPS) $^ -o $@
 	
 
