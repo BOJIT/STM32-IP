@@ -1,0 +1,8 @@
+.vscode/*
+bin/*
+build/*
+*.o
+*.bin
+*.elf
+*.map
+generated.*.ld
