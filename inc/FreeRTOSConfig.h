@@ -7,7 +7,7 @@
 #define configUSE_IDLE_HOOK		0
 #define configUSE_TICK_HOOK		0
 #define configCPU_CLOCK_HZ		( ( unsigned long ) SYSCLK_FREQ )
-#define configSYSTICK_CLOCK_HZ		( configCPU_CLOCK_HZ / 64 ) /* vTaskDelay() fix */
+#define configSYSTICK_CLOCK_HZ		( configCPU_CLOCK_HZ / 8 ) /* vTaskDelay() fix */
 #define configTICK_RATE_HZ		( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES		( 5 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 128 )

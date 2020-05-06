@@ -1,5 +1,7 @@
 /* MAIN USER APPLICATION */
+#include <stdio.h>
 #include "main.h"
+#include "port_config.h"
 
 /* Stack Overflow Handler */
 extern void vApplicationStackOverflowHook(
@@ -36,6 +38,9 @@ void startTask3(void *args __attribute((unused))) {
 
     for (;;) {
         vWarningLEDToggle();
+        #ifdef DEBUG
+            printf("Print Task!\n");
+        #endif
         vTaskDelay(400);
 	}
 }
@@ -45,7 +50,11 @@ int main(void) {
 
     vConfigureClock();  // Configure RCC, System Clock Tree, PLL, etc...
 
-    vGPIOInitialize();
+    vLEDInitialize();   // Set onboard LED GPIOs as outputs
+
+    #ifdef DEBUG
+        vConfigureUART();   // Configure UART as output for debugging
+    #endif
 
     xTaskCreate(startTask1, "task1", 100, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(startTask2, "task2", 100, NULL, configMAX_PRIORITIES-1, NULL);

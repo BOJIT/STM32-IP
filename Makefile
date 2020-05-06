@@ -20,10 +20,10 @@ _FORMAT_OFF = \033[0m
 
 ################################## SOURCES #####################################
 
-_BUILD_DIR = build/src
+_BUILD_DIR = build
 
 # Project Source Files:
-_SRC := $(wildcard src/*.c) src/port/port_functions.c
+_SRC := $(wildcard src/*.c) src/port/user/src/port_functions.c # temporary bodge
 _LIB := $(wildcard lib/*.mk)
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 
@@ -38,7 +38,9 @@ _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 all: dep $(_OBJ)
 	@echo "$(_FORMAT_PURPLE)Linking Application Code:$(_FORMAT_OFF)"
 	mkdir -p bin
-	$(CC) $(_OBJ) -o bin/$(PROJECT).elf $(LFLAGS) $(PORT_LFLAGS)
+	# CFlags are included purely for setting implicit linker flags
+	$(CC) $(CFLAGS) $(PORT_CFLAGS) $(_OBJ) -o bin/$(PROJECT).elf \
+	$(LFLAGS) $(PORT_LFLAGS)
 	$(OBJCOPY) -O binary bin/$(PROJECT).elf bin/$(PROJECT).bin
 
 # Delete device binary and build directories

@@ -23,7 +23,7 @@ _LIB_DIR = lib/$(_LIB_NAME)
 _SRC := croutine.c event_groups.c list.c queue.c stream_buffer.c tasks.c timers.c
 _SRC += portable/MemMang/heap_4.c portable/$(PORT_FREERTOS)/port.c
 
-_OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
+_OBJ := $(patsubst %.c,$(_BUILD_DIR)/obj/%.o,$(_SRC))
 
 _LIB_CDEPS := -I$(_LIB_DIR)/include -I$(_LIB_DIR)/portable/$(PORT_FREERTOS)
 
@@ -42,8 +42,8 @@ $(_BUILD_DIR)/lib$(_LIB_NAME).a: $(_OBJ)
 	touch build/$(PROJECT).ldep
 	echo "$(_LIB_LDEPS)" >> build/$(PROJECT).ldep
 
-
-$(_OBJ): $(_BUILD_DIR)/%.o : $(_LIB_DIR)/%.c
+# Build all library objects
+$(_OBJ): $(_BUILD_DIR)/obj/%.o : $(_LIB_DIR)/%.c
     # Don't link objects yet
 	mkdir -p $(@D)
 	$(CC) -c $(CFLAGS) $(PORT_CFLAGS) $(_LIB_CDEPS) $^ -o $@
