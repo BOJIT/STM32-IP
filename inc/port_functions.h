@@ -1,6 +1,8 @@
 #ifndef PORT_FUNCTIONS
 #define PORT_FUNCTIONS
 
+/*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
+
 /* Function to Initialise all GPIOs */
 void vLEDInitialize();
 
@@ -19,7 +21,12 @@ void vConfigureClock();
 /* Configure UART for debugging messages */
 void vConfigureUART();
 
+/* Configure Ethernet Peripheral */
+void vConfigureETH();
+
+/*----------------------------- NEWLIB OVERRIDES -----------------------------*/
+
 /* Redirect 'printf' to UART */
 int _write(int fd, char *ptr, int len);
 
-#endif
+#endif /* PORT_FUNCTIONS */

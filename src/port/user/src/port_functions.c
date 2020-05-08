@@ -1,13 +1,20 @@
 #include "port_functions.h"
 
+/* Libopencm3 Includes */
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/pwr.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/ethernet/mac.h>
+#include <libopencm3/ethernet/phy.h>
 
+/* Global Port-Specific Definitions */
 #include "port_config.h"
 
+/*-------------------- PRIVATE DEVICE-SPECIFIC FUNCTIONS ---------------------*/
+
+#ifdef DEBUG
 /* Function to Map SYSCLK/4 to GPIO PC9  */
 static void prvMcoSetup(void)
 {
@@ -25,33 +32,40 @@ static void prvMcoSetup(void)
     RCC_CFGR = (RCC_CFGR & ~(RCC_CFGR_MCOPRE_MASK << RCC_CFGR_MCO2PRE_SHIFT)) |
             (RCC_CFGR_MCOPRE_DIV_4 << RCC_CFGR_MCO2PRE_SHIFT);
 }
+#endif /* DEBUG */
+
+/*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
 /* Function to Initialise all GPIOs */
 void vLEDInitialize() {
-    /* Enable GPIOB clock. */
-    rcc_periph_clock_enable(RCC_GPIOB);
-
+    /* Enable GPIO clocks */
+    rcc_periph_clock_enable(SYSTEM_LED_RCC);
+    rcc_periph_clock_enable(STATUS_LED_RCC);
+    rcc_periph_clock_enable(WARNING_LED_RCC);
     /* System LED */
-    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
+    gpio_mode_setup(SYSTEM_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
+            SYSTEM_LED_PIN);
     /* Status LED */
-    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
+    gpio_mode_setup(STATUS_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
+            STATUS_LED_PIN);
     /* Warning LED */
-    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
+    gpio_mode_setup(WARNING_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
+            WARNING_LED_PIN);
 }
 
 /* Function to Toggle System LED */
 void vSystemLEDToggle() {
-    gpio_toggle(GPIOB, GPIO0);
+    gpio_toggle(SYSTEM_LED_PORT, SYSTEM_LED_PIN);
 }
 
 /* Function to Toggle Status LED */
 void vStatusLEDToggle() {
-    gpio_toggle(GPIOB, GPIO7);
+    gpio_toggle(STATUS_LED_PORT, STATUS_LED_PIN);
 }
 
 /* Function to Toggle Warning LED */
 void vWarningLEDToggle() {
-    gpio_toggle(GPIOB, GPIO14);
+    gpio_toggle(WARNING_LED_PORT, WARNING_LED_PIN);
 }
 
 /* Initialise All System Clock Architecture */
@@ -78,19 +92,21 @@ void vConfigureClock() {
     rcc_clock_setup_hse(&rcc_config, HSE_FREQ/2000000);
 
     #ifdef DEBUG
-        /* Map system clock to PC9 (MCO2 output) */
-        prvMcoSetup();
-    #endif
+    /* Map system clock to PC9 (MCO2 output) */
+    prvMcoSetup();
+    #endif /* DEBUG */
 }
 
+#ifdef DEBUG
 /* Configure UART for debugging messages */
 void vConfigureUART() {
     /* Enable GPIOD and USART3 clock. */
-    rcc_periph_clock_enable(RCC_GPIOD);
+    rcc_periph_clock_enable(DEBUG_UART_RCC);
     rcc_periph_clock_enable(RCC_USART3);
     /* Setup GPIO pins for USART3 transmit. */
-    gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8 | GPIO9);
-    gpio_set_af(GPIOD, GPIO_AF7, GPIO8 | GPIO9);
+    gpio_mode_setup(DEBUG_UART_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE,
+            DEBUG_UART_TX | DEBUG_UART_RX);
+    gpio_set_af(DEBUG_UART_PORT, GPIO_AF7, DEBUG_UART_TX | DEBUG_UART_RX);
 
     /* Setup USART3 parameters. */
     usart_set_baudrate(USART3, 115200);
@@ -103,6 +119,22 @@ void vConfigureUART() {
     /* Finally enable the USART. */
     usart_enable(USART3);
 }
+#endif /* DEBUG */
+
+/* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
+// Eventually the ethernet descriptors will be declared in the task that
+// initialises the ethernet peripheral and handles the ethernet callbacks
+uint8_t eth_descs[(ETH_TXBUFNB * ETH_TX_BUF_SIZE) + \
+                  (ETH_RXBUFNB * ETH_RX_BUF_SIZE)];
+
+/* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
+
+/* Configure Ethernet Peripheral */
+void vConfigureETH() {
+
+}
+
+/*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
 /* Redirect 'printf' to UART */
 int _write(int fd, char *ptr, int len) {
@@ -111,4 +143,11 @@ int _write(int fd, char *ptr, int len) {
         ptr++;
     }
     return len;
+}
+
+/*------------------------------- ETHERNET ISR -------------------------------*/
+
+/* Ethernet ISR */
+void eth_isr(void) {
+
 }
