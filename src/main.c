@@ -40,7 +40,8 @@ void startTask3(void *args __attribute((unused))) {
         #ifdef DEBUG
         printf("Print Task!\n");
         #endif /* DEBUG */
-        vTaskDelay(400);
+        vSendETH();
+        vTaskDelay(1000);
 	}
 }
 

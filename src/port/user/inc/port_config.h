@@ -40,6 +40,7 @@
 #define GPIO_ETH_RMII_RXD1 GPIO5    /* PC5 */
 /* Note that the ports themselves are defined in vConfigureETH()! */
 
+/* Definitions for Ethernet Descriptor Buffers */
 #define ETH_TXBUFNB 2
 #define ETH_RXBUFNB 2
 #define ETH_TX_BUF_SIZE (1520 + 16)

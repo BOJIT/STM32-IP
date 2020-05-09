@@ -12,6 +12,10 @@
 /* Global Port-Specific Definitions */
 #include "port_config.h"
 
+#ifdef DEBUG
+#include <stdio.h>
+#endif /* DEBUG */
+
 /*-------------------- PRIVATE DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
 #ifdef DEBUG
@@ -131,7 +135,71 @@ uint8_t eth_descs[(ETH_TXBUFNB * ETH_TX_BUF_SIZE) + \
 
 /* Configure Ethernet Peripheral */
 void vConfigureETH() {
+    /* Enable relavant clocks */
+    rcc_periph_clock_enable(RCC_GPIOA);
+    rcc_periph_clock_enable(RCC_GPIOB);
+    rcc_periph_clock_enable(RCC_GPIOC);
+    rcc_periph_clock_enable(RCC_GPIOG);
 
+    rcc_periph_clock_enable(RCC_ETHMAC);
+    rcc_periph_clock_enable(RCC_ETHMACPTP);
+    rcc_periph_clock_enable(RCC_ETHMACRX);
+    rcc_periph_clock_enable(RCC_ETHMACTX);
+
+    /* Reset peripheral prior to setting GPIOs */
+    rcc_periph_reset_pulse(RCC_ETHMAC);
+
+    /* Configure ethernet GPIOs */
+    /* GPIOA */
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDIO |
+            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
+    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP,
+            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_MDIO);
+    gpio_set_af(GPIOA, GPIO_AF11, GPIO_ETH_RMII_MDIO |
+            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
+
+    /* GPIOB */
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
+    gpio_set_output_options(GPIOB, GPIO_OTYPE_PP,
+            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_TXD1);
+    gpio_set_af(GPIOB, GPIO_AF11, GPIO_ETH_RMII_TXD1);
+    // PPS definition to go here when implemented
+
+    /* GPIOC */
+    gpio_mode_setup(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDC |
+            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
+    gpio_set_output_options(GPIOC, GPIO_OTYPE_PP,
+            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_MDC);
+    gpio_set_af(GPIOC, GPIO_AF11, GPIO_ETH_RMII_MDC |
+            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
+
+    /* GPIOG */
+    gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE,
+            GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
+    gpio_set_output_options(GPIOG, GPIO_OTYPE_PP,
+            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
+    gpio_set_af(GPIOG, GPIO_AF11, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
+
+    // Probably want to configure NVIC eth_handler here if libopencm3 doesn't handle it
+
+    /* Initialise Ethernet Hardware */
+    rcc_periph_reset_pulse(RST_ETHMAC);
+    eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
+
+    /* Set Station MAC Address */
+    uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
+    eth_set_mac(en_mac);
+
+    eth_desc_init(eth_descs, ETH_TXBUFNB, ETH_RXBUFNB, ETH_TX_BUF_SIZE,
+            ETH_RX_BUF_SIZE, false);
+    eth_start();
+    printf("%d\n", phy_link_isup(PHY_ADDRESS));
+}
+
+/* Test function to send an ethernet packet */
+void vSendETH(void) {
+    uint8_t frame[100];
+    eth_tx(frame,sizeof(frame));
 }
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/

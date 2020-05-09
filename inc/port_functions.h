@@ -24,6 +24,9 @@ void vConfigureUART();
 /* Configure Ethernet Peripheral */
 void vConfigureETH();
 
+/* Test function to send an ethernet packet */
+void vSendETH(void);
+
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
 /* Redirect 'printf' to UART */
