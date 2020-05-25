@@ -28,7 +28,7 @@ void startTask2(void *args __attribute((unused))) {
 
     for (;;) {
         vStatusLEDToggle();
-        vTaskDelay(100);
+        vTaskDelay(500);
 	}
 }
 
@@ -38,9 +38,10 @@ void startTask3(void *args __attribute((unused))) {
     for (;;) {
         vWarningLEDToggle();
         #ifdef DEBUG
-        printf("Print Task!\n");
+        //printf("Print Task!\n");
         #endif /* DEBUG */
-        vSendETH();
+        int result = vSendETH();
+        printf("%d\n", result);
         vTaskDelay(1000);
 	}
 }

@@ -25,7 +25,7 @@ void vConfigureUART();
 void vConfigureETH();
 
 /* Test function to send an ethernet packet */
-void vSendETH(void);
+int vSendETH(void);
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 

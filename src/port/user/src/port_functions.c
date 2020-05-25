@@ -197,9 +197,9 @@ void vConfigureETH() {
 }
 
 /* Test function to send an ethernet packet */
-void vSendETH(void) {
+int vSendETH(void) {
     uint8_t frame[100];
-    eth_tx(frame,sizeof(frame));
+    return eth_tx(frame,sizeof(frame));
 }
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
