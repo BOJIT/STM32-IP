@@ -1,7 +1,13 @@
 #include "port_functions.h"
 
+/* Inclue FreeRTOS Headers */
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* Libopencm3 Includes */
+#include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/syscfg.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/pwr.h>
@@ -131,37 +137,51 @@ void vConfigureUART() {
 uint8_t eth_descs[(ETH_TXBUFNB * ETH_TX_BUF_SIZE) + \
                   (ETH_RXBUFNB * ETH_RX_BUF_SIZE)];
 
+uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
+
+struct eth_pkt {
+    uint8_t dest_mac[6];
+    uint8_t src_mac[6];
+    uint16_t ethertype;
+    uint8_t data[100];
+} pkt;
+
+union eth_frame_type {
+    struct eth_pkt pkt;
+    uint8_t data[sizeof(pkt)/sizeof(uint8_t)];
+} eth_frame;
+
 /* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
 
 /* Configure Ethernet Peripheral */
 void vConfigureETH() {
+
+    // MPU STUFF?
+
     /* Enable relavant clocks */
+    rcc_periph_clock_enable(RCC_ETHMAC);
+    rcc_periph_clock_enable(RCC_ETHMACRX);
+    rcc_periph_clock_enable(RCC_ETHMACTX);
+
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOG);
-
-    rcc_periph_clock_enable(RCC_ETHMAC);
-    rcc_periph_clock_enable(RCC_ETHMACPTP);
-    rcc_periph_clock_enable(RCC_ETHMACRX);
-    rcc_periph_clock_enable(RCC_ETHMACTX);
-
-    /* Reset peripheral prior to setting GPIOs */
-    rcc_periph_reset_pulse(RCC_ETHMAC);
+    
 
     /* Configure ethernet GPIOs */
     /* GPIOA */
     gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDIO |
             GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
     gpio_set_output_options(GPIOA, GPIO_OTYPE_PP,
-            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_MDIO);
+            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDIO);
     gpio_set_af(GPIOA, GPIO_AF11, GPIO_ETH_RMII_MDIO |
             GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
 
     /* GPIOB */
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
     gpio_set_output_options(GPIOB, GPIO_OTYPE_PP,
-            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_TXD1);
+            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TXD1);
     gpio_set_af(GPIOB, GPIO_AF11, GPIO_ETH_RMII_TXD1);
     // PPS definition to go here when implemented
 
@@ -169,7 +189,7 @@ void vConfigureETH() {
     gpio_mode_setup(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDC |
             GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
     gpio_set_output_options(GPIOC, GPIO_OTYPE_PP,
-            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_MDC);
+            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDC);
     gpio_set_af(GPIOC, GPIO_AF11, GPIO_ETH_RMII_MDC |
             GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
 
@@ -177,45 +197,86 @@ void vConfigureETH() {
     gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE,
             GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
     gpio_set_output_options(GPIOG, GPIO_OTYPE_PP,
-            GPIO_OSPEED_100MHZ, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
+            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
     gpio_set_af(GPIOG, GPIO_AF11, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
 
-    // Probably want to configure NVIC eth_handler here if libopencm3 doesn't handle it
+    /* NVIC Interrupt Configuration */
+    nvic_set_priority(NVIC_ETH_IRQ, 5);
+    nvic_enable_irq(NVIC_ETH_IRQ);
+    eth_irq_enable(ETH_DMAIER_NISE); // Might need to be moved later
 
+    /* Configure to use RMII interface */
+    rcc_periph_clock_enable(RCC_SYSCFG);
+
+    rcc_periph_reset_hold(RST_ETHMAC);
+    SYSCFG_PMC |= (1 << 23);    // MII_RMII_SEL (use RMII)
+    rcc_periph_reset_release(RST_ETHMAC);
+
+    // 2 Clock cycles are required before accessing a peripheral after an RCC change
+    asm("NOP"); asm("NOP");
+
+    /* Soft MAC Reset */
+    ETH_DMABMR |= ETH_DMABMR_SR;
+    while (ETH_DMABMR & ETH_DMABMR_SR);
+
+
+    //TESTING ONLY
+    eth_smi_write(phy, PHY_REG_BCR, PHY_REG_BCR_RESET);
     /* Initialise Ethernet Hardware */
-    rcc_periph_reset_pulse(RST_ETHMAC);
     eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
+    // // Do any customised PHY configuration here!
 
-    /* Set Station MAC Address */
-    uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
-    eth_set_mac(en_mac);
+    // eth_desc_init(eth_descs, ETH_TXBUFNB, ETH_RXBUFNB, ETH_TX_BUF_SIZE,
+    //         ETH_RX_BUF_SIZE, false);
 
-    eth_desc_init(eth_descs, ETH_TXBUFNB, ETH_RXBUFNB, ETH_TX_BUF_SIZE,
-            ETH_RX_BUF_SIZE, false);
-    eth_start();
-    printf("%d\n", phy_link_isup(PHY_ADDRESS));
+    // /* Set Station MAC Address */
+    // //eth_set_mac(en_mac);
+
+    // eth_start();
+
+    //printf("Link Status: %d\n", eth_smi_read(PHY_ADDRESS, PHY_REG_BSR));
 }
 
 /* Test function to send an ethernet packet */
 int vSendETH(void) {
-    uint8_t frame[100];
-    return eth_tx(frame,sizeof(frame));
+    for(uint32_t i=0; i<NELEMS(eth_frame.pkt.dest_mac); i++) {
+        eth_frame.pkt.dest_mac[i] = 0xFF;
+    }
+    for(uint32_t i=0; i<NELEMS(eth_frame.pkt.src_mac); i++) {
+        eth_frame.pkt.src_mac[i] = en_mac[i];
+    }
+    eth_frame.pkt.ethertype = 0x88B5;
+    for(int i = 0; i<16; i++) {
+        printf("%d,", eth_frame.data[i]);
+    }
+    //phy_reset(PHY_ADDRESS);
+    //printf("\n");
+    //printf("Link Status: %d\n", eth_smi_read(PHY_ADDRESS, PHY_REG_BSR));
+
+    return 0;// eth_tx(eth_frame.data, NELEMS(eth_frame.data));
 }
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
 /* Redirect 'printf' to UART */
-int _write(int fd, char *ptr, int len) {
-    for(int i = 0; i < len; i++) {
-        usart_send_blocking(USART3, *ptr);
-        ptr++;
+int _write(int file, char * ptr, int len)
+{
+    int i;
+
+    if (file == 1) {
+        for (i = 0; i < len; i++) {
+            if (ptr[i] == '\n')
+                usart_send_blocking(USART3, '\r');
+            usart_send_blocking(USART3, ptr[i]);
+        }
+        return i;
     }
-    return len;
+    return -1;
 }
 
 /*------------------------------- ETHERNET ISR -------------------------------*/
 
 /* Ethernet ISR */
 void eth_isr(void) {
-
+    for(;;);
 }

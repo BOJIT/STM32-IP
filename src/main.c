@@ -38,10 +38,10 @@ void startTask3(void *args __attribute((unused))) {
     for (;;) {
         vWarningLEDToggle();
         #ifdef DEBUG
-        //printf("Print Task!\n");
+        printf("Print Task!\n");
         #endif /* DEBUG */
-        int result = vSendETH();
-        printf("%d\n", result);
+        // int result = vSendETH();
+        // printf("Eth Status: %d\n", result);
         vTaskDelay(1000);
 	}
 }
@@ -59,9 +59,9 @@ int main(void) {
 
     vConfigureETH(); // Configure Ethernet GPIOs and registers
 
-    xTaskCreate(startTask1, "task1", 100, NULL, configMAX_PRIORITIES-1, NULL);
-    xTaskCreate(startTask2, "task2", 100, NULL, configMAX_PRIORITIES-1, NULL);
-    xTaskCreate(startTask3, "task3", 100, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(startTask1, "task1", 1024, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(startTask2, "task2", 1024, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(startTask3, "task3", 1024, NULL, configMAX_PRIORITIES-1, NULL);
 
     vTaskStartScheduler();
 

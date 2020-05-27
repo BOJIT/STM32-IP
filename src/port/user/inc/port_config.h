@@ -48,4 +48,7 @@
 
 #define PHY_ADDRESS PHY1
 
+/* Handy Macros */
+#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+
 #endif /* PORT_CONFIG */

@@ -15,8 +15,11 @@ then
     ## For some reason, launching the st-util as a child process seems to cause
     ## issues. for now, just launch st-util in a separate terminal.
 
+    # > tar extended-remote :4242
+    # > file bin/PTP_STM32.elf
+
     # Start GDB debugger on localhost:
-    arm-none-eabi-gdb
+    arm-none-eabi-gdb --command=src/port/gdb
 
     kill 0
 
