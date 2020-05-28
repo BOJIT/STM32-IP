@@ -1,6 +1,11 @@
 #ifndef PORT_CONFIG
 #define PORT_CONFIG
 
+/* Move somewhere else? */
+#define ERR_OK 0
+#define ERR_FAULT 1
+#define ERR_TIMEOUT 2
+
 /* Enable Debug Options */
 #define DEBUG
 
@@ -41,10 +46,10 @@
 /* Note that the ports themselves are defined in vConfigureETH()! */
 
 /* Definitions for Ethernet Descriptor Buffers */
-#define ETH_TXBUFNB 2
-#define ETH_RXBUFNB 2
-#define ETH_TX_BUF_SIZE (1520 + 16)
-#define ETH_RX_BUF_SIZE (1520 + 16)
+// #define ETH_TXBUFNB 4
+// #define ETH_RXBUFNB 4
+// #define ETH_TX_BUF_SIZE (1520 + 16)
+// #define ETH_RX_BUF_SIZE (1520 + 16)
 
 #define PHY_ADDRESS PHY0
 

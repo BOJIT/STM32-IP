@@ -35,13 +35,15 @@ void startTask2(void *args __attribute((unused))) {
 /* Task 3 - Blink Warning LED */
 void startTask3(void *args __attribute((unused))) {
 
+    vConfigureETH(); // Configure Ethernet GPIOs and registers
+
     for (;;) {
         vWarningLEDToggle();
         #ifdef DEBUG
         printf("Print Task!\n");
         #endif /* DEBUG */
-        // int result = vSendETH();
-        // printf("Eth Status: %d\n", result);
+        int result = vSendETH();
+        printf("Eth Status: %d\n", result);
         vTaskDelay(1000);
 	}
 }
@@ -56,8 +58,6 @@ int main(void) {
     #ifdef DEBUG
     vConfigureUART();   // Configure UART as output for debugging
     #endif /* DEBUG */
-
-    vConfigureETH(); // Configure Ethernet GPIOs and registers
 
     xTaskCreate(startTask1, "task1", 1024, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(startTask2, "task2", 1024, NULL, configMAX_PRIORITIES-1, NULL);

@@ -37,8 +37,8 @@ _LIB_LDEPS := -L$(_BUILD_DIR) -l$(_LIB_NAME)
 
 ################################## TARGETS #####################################
 
-donothing:
-	echo "nothing"
+# donothing:
+# 	echo "nothing"
 
 # Archive into static library
 $(_BUILD_DIR)/lib$(_LIB_NAME).a: $(_OBJ)
