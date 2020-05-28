@@ -46,7 +46,7 @@
 #define ETH_TX_BUF_SIZE (1520 + 16)
 #define ETH_RX_BUF_SIZE (1520 + 16)
 
-#define PHY_ADDRESS PHY1
+#define PHY_ADDRESS PHY0
 
 /* Handy Macros */
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))

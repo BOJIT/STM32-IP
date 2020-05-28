@@ -171,34 +171,34 @@ void vConfigureETH() {
 
     /* Configure ethernet GPIOs */
     /* GPIOA */
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDIO |
-            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
     gpio_set_output_options(GPIOA, GPIO_OTYPE_PP,
             GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDIO);
     gpio_set_af(GPIOA, GPIO_AF11, GPIO_ETH_RMII_MDIO |
             GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDIO |
+            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
 
     /* GPIOB */
-    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
     gpio_set_output_options(GPIOB, GPIO_OTYPE_PP,
             GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TXD1);
     gpio_set_af(GPIOB, GPIO_AF11, GPIO_ETH_RMII_TXD1);
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
     // PPS definition to go here when implemented
 
     /* GPIOC */
-    gpio_mode_setup(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDC |
-            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
     gpio_set_output_options(GPIOC, GPIO_OTYPE_PP,
             GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDC);
     gpio_set_af(GPIOC, GPIO_AF11, GPIO_ETH_RMII_MDC |
             GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
+    gpio_mode_setup(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDC |
+            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
 
     /* GPIOG */
-    gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE,
-            GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
     gpio_set_output_options(GPIOG, GPIO_OTYPE_PP,
             GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
     gpio_set_af(GPIOG, GPIO_AF11, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
+    gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE,
+            GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
 
     /* NVIC Interrupt Configuration */
     nvic_set_priority(NVIC_ETH_IRQ, 5);
@@ -221,7 +221,7 @@ void vConfigureETH() {
 
 
     //TESTING ONLY
-    eth_smi_write(phy, PHY_REG_BCR, PHY_REG_BCR_RESET);
+    //eth_smi_write(PHY_ADDRESS, PHY_REG_BCR, PHY_REG_BCR_RESET);
     /* Initialise Ethernet Hardware */
     eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
     // // Do any customised PHY configuration here!
