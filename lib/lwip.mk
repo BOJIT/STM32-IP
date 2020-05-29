@@ -32,7 +32,11 @@ _SRC += src/port/src/arch/sys_arch.c
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/obj/%.o,$(_SRC))
 
 
-_LIB_CDEPS := -I$(_LIB_DIR)/include
+_LIB_CDEPS := -I$(_LIB_DIR)/include 
+
+# Include FreeRTOS headers as sub-library (currently hardcoded, not ideal)
+_LIB_CDEPS += -Ilib/FreeRTOS-Kernel/include
+_LIB_CDEPS += -Ilib/FreeRTOS-Kernel/portable/$(PORT_FREERTOS)
 
 _LIB_LDEPS := -L$(_BUILD_DIR) -l$(_LIB_NAME)
 
@@ -51,6 +55,7 @@ $(_BUILD_DIR)/lib$(_LIB_NAME).a: $(_OBJ)
 
 # Build all library objects
 $(_OBJ): $(_BUILD_DIR)/obj/%.o : %.c
+	echo $(_SRC)
     # Don't link objects yet
 	mkdir -p $(@D)
 	$(CC) -c $(CFLAGS) $(PORT_CFLAGS) $(_LIB_CDEPS) $^ -o $@

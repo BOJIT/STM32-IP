@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef int sys_prot_t;
+typedef uint32_t sys_prot_t;
 
 #define LWIP_PROVIDE_ERRNO
 
