@@ -59,9 +59,9 @@ int main(void) {
     vConfigureUART();   // Configure UART as output for debugging
     #endif /* DEBUG */
 
-    xTaskCreate(startTask1, "task1", 1024, NULL, configMAX_PRIORITIES-1, NULL);
-    xTaskCreate(startTask2, "task2", 1024, NULL, configMAX_PRIORITIES-1, NULL);
-    xTaskCreate(startTask3, "task3", 1024, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(startTask1, "task1", 350, NULL, 5, NULL);
+    xTaskCreate(startTask2, "task2", 350, NULL, 5, NULL);
+    xTaskCreate(startTask3, "lwip", 1024, NULL, configMAX_PRIORITIES-2, NULL);
 
     vTaskStartScheduler();
 

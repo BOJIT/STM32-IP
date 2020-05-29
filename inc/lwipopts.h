@@ -1,6 +1,3 @@
-// #define NO_SYS                1
-// #define NO_SYS_NO_TIMERS      1
-
 #define MEM_ALIGNMENT 4
 #define MEM_SIZE      (32*1024)
 
@@ -23,6 +20,7 @@
 #define CHECKSUM_CHECK_TCP  0
 #define CHECKSUM_CHECK_ICMP 0
 
+// Don't know if this is necessary
 #define SYS_LIGHTWEIGHT_PROT            1
 
 #define LWIP_ETHERNET 1

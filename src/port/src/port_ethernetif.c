@@ -4,13 +4,15 @@
 /* lwIP Includes */
 #include <lwip/init.h>
 #include <lwip/netif.h>
-#include <lwip/dhcp.h>
-#include <lwip/autoip.h>
-#include <lwip/stats.h>
+//#include <lwip/dhcp.h>
+//#include <lwip/autoip.h>
+//#include <lwip/stats.h>
 #include <lwip/err.h>
 #include <lwip/netif.h>
+#include <lwip/tcpip.h>
 
 #include <netif/etharp.h>
+#include <netif/ethernet.h>
 
 /* Libopencm3 Includes */
 #include <libopencm3/cm3/nvic.h>
@@ -22,6 +24,11 @@
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/ethernet/mac.h>
 #include <libopencm3/ethernet/phy.h>
+
+/* FreeRTOS Includes */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -105,6 +112,9 @@ static struct dma_desc *rx_cur_dma_desc;
 // These variables are global to avoid silly stack sizes - they should only
 // ever be accessed by the Ethernet handler thread!
 
+/* FreeRTOS Semaphore for Ethernet Interrupt */
+SemaphoreHandle_t ETH_SEMPHR = NULL;
+
 /*--------------------- PRIVATE DEVICE-SPECIFIC FUNCTIONS --------------------*/
 static void init_tx_dma_desc(void)
 {
@@ -164,16 +174,61 @@ static err_t mac_init(void)
     return ERR_OK;
 }
 
+static void low_level_init(struct netif *netif)
+{
+    /* set MAC hardware address length */
+    netif->hwaddr_len = ETHARP_HWADDR_LEN;
+
+    //read_hwaddr_from_otp(netif); // TEMPORARY HARD-CODED MAC ADDRESS
+    netif->hwaddr[0] = 0x01;
+    netif->hwaddr[1] = 0x02;
+    netif->hwaddr[2] = 0x03;
+    netif->hwaddr[3] = 0x04;
+    netif->hwaddr[4] = 0x05;
+    netif->hwaddr[5] = 0x06;
+
+    /* Set MAC Address */
+    eth_set_mac(netif->hwaddr);
+
+    /* maximum transfer unit */
+    netif->mtu = 1500;
+
+    netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
+
+    // #if LWIP_IGMP
+    // netif->flags |= NETIF_FLAG_IGMP;
+    // netif_set_igmp_mac_filter(netif, mac_filter); // LATER
+    // #endif
+
+    init_tx_dma_desc();
+    init_rx_dma_desc();
+
+    /* Setup task and semaphore to process incoming frames */
+    ETH_SEMPHR = xSemaphoreCreateBinary();
+
+    xTaskCreate(ethernetif_input, "ETH", 350, netif, configMAX_PRIORITIES-1, NULL);
+
+    /* Enable MAC and DMA transmission and reception */
+    eth_start(); 
+
+    // ethIRQenable() in libopencm3
+    ETH_DMAIER = ETH_DMAIER_ERIE | ETH_DMAIER_RIE | ETH_DMAIER_NISE;
+
+    /* NVIC Interrupt Configuration */
+    nvic_set_priority(NVIC_ETH_IRQ, 5);
+    nvic_enable_irq(NVIC_ETH_IRQ);
+}
+
 err_t netif_init(struct netif *netif)
 {
     err_t ret;
 
     LWIP_ASSERT("netif != NULL", (netif != NULL));
 
-#if LWIP_NETIF_HOSTNAME
-    /* Initialize interface hostname */
-    netif->hostname = "lwip";
-#endif /* LWIP_NETIF_HOSTNAME */
+// #if LWIP_NETIF_HOSTNAME
+//     /* Initialize interface hostname */
+//     netif->hostname = "lwip";
+// #endif /* LWIP_NETIF_HOSTNAME */
 
     netif->name[0] = 's';
     netif->name[1] = 't';
@@ -190,7 +245,8 @@ err_t netif_init(struct netif *netif)
 }
 
 /* Initialise hardware ready for Ethernet */
-void eth_hw_init(void) {
+void eth_hw_init(void)
+{
     /* Enable relavant clocks */
     rcc_periph_clock_enable(RCC_ETHMAC);
     rcc_periph_clock_enable(RCC_ETHMACRX);
@@ -244,46 +300,71 @@ void eth_hw_init(void) {
     asm("NOP"); asm("NOP");
 }
 
-/*-------------------------- LOW-LEVEL IO FUNCTIONS --------------------------*/
-static void low_level_init(struct netif *netif)
+/*--------------------------- Operation Functions ----------------------------*/
+
+static void prepare_tx_descr(struct pbuf *p, int first, int last)
 {
-    /* set MAC hardware address length */
-    netif->hwaddr_len = ETHARP_HWADDR_LEN;
+    // wait until the packet is freed by the DMA
+    while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
 
-    //read_hwaddr_from_otp(netif); // TEMPORARY HARD-CODED MAC ADDRESS
-    netif->hwaddr[0] = 0x01;
-    netif->hwaddr[1] = 0x02;
-    netif->hwaddr[2] = 0x03;
-    netif->hwaddr[3] = 0x04;
-    netif->hwaddr[4] = 0x05;
-    netif->hwaddr[5] = 0x06;
+    // discard old pbuf pointer
+    if (tx_cur_dma_desc->pbuf != NULL)
+        pbuf_free(tx_cur_dma_desc->pbuf);
 
-    /* Set MAC Address */
-    eth_set_mac(netif->hwaddr);
+    pbuf_ref(p);
+    tx_cur_dma_desc->pbuf = p;
 
-    /* maximum transfer unit */
-    netif->mtu = 1500;
+    tx_cur_dma_desc->Status &= ~(ETH_TDES0_FS | ETH_TDES0_LS);
+    if (first)
+        tx_cur_dma_desc->Status |= ETH_TDES0_FS;
+    if (last)
+        tx_cur_dma_desc->Status |= ETH_TDES0_LS;
 
-    netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
+    tx_cur_dma_desc->Buffer1Addr = p->payload;
+    tx_cur_dma_desc->ControlBufferSize = p->len;
+    // Pass ownership back to DMA
+    tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
 
-    // #if LWIP_IGMP
-    // netif->flags |= NETIF_FLAG_IGMP;
-    // netif_set_igmp_mac_filter(netif, mac_filter); // LATER
-    // #endif
+    tx_cur_dma_desc = tx_cur_dma_desc->Buffer2NextDescAddr;
+}
 
-    init_tx_dma_desc();
-    init_rx_dma_desc();
+static err_t low_level_output(struct netif *netif, struct pbuf *p)
+{
+    struct pbuf *q;
 
-    /* Enable MAC and DMA transmission and reception */
-    eth_start();
+    for(q = p; q != NULL; q = q->next)
+        prepare_tx_descr(q, q == p, q->next == NULL);
 
-    // ethIRQenable() in libopencm3
-    ETH_DMAIER = ETH_DMAIER_ERIE | ETH_DMAIER_RIE | ETH_DMAIER_NISE;
+    // Pass ownership of descriptor to ethernet MAC
+    if (ETH_DMASR & ETH_DMASR_TBUS) {
+        ETH_DMASR = ETH_DMASR_TBUS;
+        ETH_DMATPDR = 0;
+    }
 
-    /* NVIC Interrupt Configuration */
-    nvic_set_priority(NVIC_ETH_IRQ, 5);
-    nvic_enable_irq(NVIC_ETH_IRQ);
+    return ERR_OK;
+}
 
+/* Task for processing incoming ethernet frames */
+void ethernetif_input(void* argument)
+{
+    struct pbuf *p;
+    struct netif *netif = (struct netif *) argument;
+    
+    for(;;) {
+        if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
+            do
+            {
+                LOCK_TCPIP_CORE();
+                p = low_level_input(netif);
+                if(p != NULL) {
+                    if(netif->input(p, netif) != ERR_OK) {
+                        pbuf_free(p);
+                    }
+                }
+                UNLOCK_TCPIP_CORE();
+            } while(p != NULL);
+        }
+    }
 }
 
 
@@ -298,13 +379,19 @@ void networkInit(void)
     ip_addr_t net_mask = {0};
     ip_addr_t gw_addr = {0};
  
-    lwip_init();
+    tcpip_init(NULL, NULL);
     netif_add(&netif, &ip_addr, &net_mask, &gw_addr, NULL, netif_init,
-              ethernet_input);
+              tcpip_input);
     //netif_set_status_callback(&netif, netif_status); add these later
     //netif_set_link_callback(&netif, netif_link);
     netif_set_default(&netif);
-    netif_set_hostname(&netif, "lwip");
+    //netif_set_hostname(&netif, "lwip");
+    if (netif_is_link_up(&netif)) { // From ST's HAL
+        netif_set_up(&netif);
+    }
+    else {
+        netif_set_down(&netif);
+    }
 
     printf("Mac Address: %02x:%02x:%02x:%02x:%02x:%02x\n",
            netif.hwaddr[0], netif.hwaddr[1], netif.hwaddr[2],
@@ -317,8 +404,11 @@ void networkInit(void)
 /*------------------------------- ETHERNET ISR -------------------------------*/
 
 /* Ethernet ISR */
-void eth_isr(void) {
-    //eth_irq_ack_pending(ETH_DMASR_NIS);
-    // Temporarily just clear the interrupt
-    ETH_DMASR |= ETH_DMASR_ERS | ETH_DMASR_RS | ETH_DMASR_NIS;
+void eth_isr(void)
+{
+    static BaseType_t task_yield = pdFALSE;
+    // Clear ethernetif_input semaphore
+    xSemaphoreGiveFromISR(ETH_SEMPHR, &task_yield);
+    ETH_DMASR = ETH_DMASR_ERS | ETH_DMASR_RS | ETH_DMASR_NIS;
+    portYIELD_FROM_ISR(task_yield);
 }
