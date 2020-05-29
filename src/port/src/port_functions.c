@@ -16,76 +16,47 @@
 #include <libopencm3/ethernet/phy.h>
 
 /* LWIP includes */
-#include "lwip/mem.h"
-#include "netif/etharp.h"
+// #include "lwip/mem.h"
+// #include "netif/etharp.h"
 
 /* Global Port-Specific Definitions */
 #include "port_config.h"
+#include "port_ethernetif.h"
 
 #ifdef DEBUG
 #include <stdio.h>
 #endif /* DEBUG */
 
-/*-------------------- Static Global Variables (DMA) -------------------------------*/
-/* from lsgunth */
-struct dma_desc {
-    volatile uint32_t   Status;
-    uint32_t   ControlBufferSize;
-    void *     Buffer1Addr;
-    void *     Buffer2NextDescAddr;
-    uint32_t   ExtendedStatus;
-    uint32_t   Reserved1;
-    uint32_t   TimeStampLow;
-    uint32_t   TimeStampHigh;
-    struct pbuf *pbuf;
-};
+// /*-------------------- Static Global Variables (DMA) -------------------------------*/
+// /* from lsgunth */
+// struct dma_desc {
+//     volatile uint32_t   Status;
+//     uint32_t   ControlBufferSize;
+//     void *     Buffer1Addr;
+//     void *     Buffer2NextDescAddr;
+//     uint32_t   ExtendedStatus;
+//     uint32_t   Reserved1;
+//     uint32_t   TimeStampLow;
+//     uint32_t   TimeStampHigh;
+//     struct pbuf *pbuf;
+// };
 
-#ifndef STIF_NUM_TX_DMA_DESC
-#define STIF_NUM_TX_DMA_DESC 20
-#endif
-static struct dma_desc tx_dma_desc[STIF_NUM_TX_DMA_DESC];
-static struct dma_desc *tx_cur_dma_desc;
+// #ifndef STIF_NUM_TX_DMA_DESC
+// #define STIF_NUM_TX_DMA_DESC 20
+// #endif
+// static struct dma_desc tx_dma_desc[STIF_NUM_TX_DMA_DESC];
+// static struct dma_desc *tx_cur_dma_desc;
 
-#ifndef STIF_NUM_RX_DMA_DESC
-#define STIF_NUM_RX_DMA_DESC 5
-#endif
-static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
-static struct dma_desc *rx_cur_dma_desc;
-// These variables are global to avoid silly stack sizes - they should only
-// ever be accessed by the Ethernet handler thread!
+// #ifndef STIF_NUM_RX_DMA_DESC
+// #define STIF_NUM_RX_DMA_DESC 5
+// #endif
+// static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
+// static struct dma_desc *rx_cur_dma_desc;
+// // These variables are global to avoid silly stack sizes - they should only
+// // ever be accessed by the Ethernet handler thread!
 
 /*---------------------------- Ethernet Driver -------------------------------*/
 
-/* from lsgunth */
-static void init_tx_dma_desc(void)
-{
-    for (int i = 0; i < STIF_NUM_TX_DMA_DESC; i++) {
-        tx_dma_desc[i].Status = ETH_TDES0_TCH | ETH_TDES0_CIC_IPPL;
-        tx_dma_desc[i].pbuf = NULL;
-        tx_dma_desc[i].Buffer2NextDescAddr = &tx_dma_desc[i+1];
-    }
-    // Chain buffers in a ring
-    tx_dma_desc[STIF_NUM_TX_DMA_DESC-1].Buffer2NextDescAddr = &tx_dma_desc[0];
-
-    ETH_DMATDLAR = (uint32_t) tx_dma_desc;
-    tx_cur_dma_desc = &tx_dma_desc[0];
-}
-
-/* from lsgunth */
-static void init_rx_dma_desc(void)
-{
-    for (int i = 0; i < STIF_NUM_RX_DMA_DESC; i++) {
-        rx_dma_desc[i].Status = ETH_RDES0_OWN;
-        rx_dma_desc[i].ControlBufferSize = ETH_RDES1_RCH | PBUF_POOL_BUFSIZE;
-        //rx_dma_desc[i].pbuf = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
-        rx_dma_desc[i].Buffer1Addr = rx_dma_desc[i].pbuf->payload;
-        rx_dma_desc[i].Buffer2NextDescAddr = &rx_dma_desc[i+1];
-    }
-
-    rx_dma_desc[STIF_NUM_RX_DMA_DESC-1].Buffer2NextDescAddr = &rx_dma_desc[0];
-    ETH_DMARDLAR = (uint32_t) rx_dma_desc;
-    rx_cur_dma_desc = &rx_dma_desc[0];
-}
 
 /*----------------------------------------------------------------------------*/
 
@@ -201,107 +172,50 @@ void vConfigureUART() {
 // initialises the ethernet peripheral and handles the ethernet callbacks
 
 
-uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
+// uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
 
-struct eth_pkt {
-    uint8_t dest_mac[6];
-    uint8_t src_mac[6];
-    uint16_t ethertype;
-    uint8_t data[100];
-} pkt;
+// struct eth_pkt {
+//     uint8_t dest_mac[6];
+//     uint8_t src_mac[6];
+//     uint16_t ethertype;
+//     uint8_t data[100];
+// } pkt;
 
-union eth_frame_type {
-    struct eth_pkt pkt;
-    uint8_t data[sizeof(pkt)/sizeof(uint8_t)];
-} eth_frame;
+// union eth_frame_type {
+//     struct eth_pkt pkt;
+//     uint8_t data[sizeof(pkt)/sizeof(uint8_t)];
+// } eth_frame;
 
 /* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
 
 /* Configure Ethernet Peripheral */
 void vConfigureETH() {
 
-    // MPU STUFF?
+    networkInit();
+    // /* Soft MAC Reset */
+    // ETH_DMABMR |= ETH_DMABMR_SR;
+    // while (ETH_DMABMR & ETH_DMABMR_SR); 
 
-    /* Enable relavant clocks */
-    rcc_periph_clock_enable(RCC_ETHMAC);
-    rcc_periph_clock_enable(RCC_ETHMACRX);
-    rcc_periph_clock_enable(RCC_ETHMACTX);
+    // /* Initialise Ethernet Hardware */
+    // eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
+    // // // Do any customised PHY configuration here!
+    // /* Wait for Link to be established TEMPORARY */
+    // while(!phy_link_isup(PHY_ADDRESS)) { // For some reason this does not work right now
+    //     vTaskDelay(200);
+    //     printf("wait for link\n");
+    // }
+    // // Enable autonegotiation
+    // eth_smi_write(PHY_ADDRESS, PHY_REG_BCR, PHY_REG_BCR_AN);
+    // while(!(eth_smi_read(PHY_ADDRESS, PHY_REG_BSR) & PHY_REG_BSR_ANDONE)) {
+    //     vTaskDelay(200);
+    //     printf("autonegotiate\n");
+    // }
 
-    rcc_periph_clock_enable(RCC_GPIOA);
-    rcc_periph_clock_enable(RCC_GPIOB);
-    rcc_periph_clock_enable(RCC_GPIOC);
-    rcc_periph_clock_enable(RCC_GPIOG);
-    
+    // /* Enable Specific Interrupts */
+    // eth_irq_enable(ETH_DMAIER_NISE | ETH_DMAIER_RIE); // Might need to be moved later
 
-    /* Configure ethernet GPIOs */
-    /* GPIOA */
-    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP,
-            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDIO);
-    gpio_set_af(GPIOA, GPIO_AF11, GPIO_ETH_RMII_MDIO |
-            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDIO |
-            GPIO_ETH_RMII_REF_CLK | GPIO_ETH_RMII_CRS_DV);
-
-    /* GPIOB */
-    gpio_set_output_options(GPIOB, GPIO_OTYPE_PP,
-            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TXD1);
-    gpio_set_af(GPIOB, GPIO_AF11, GPIO_ETH_RMII_TXD1);
-    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
-    // PPS definition to go here when implemented
-
-    /* GPIOC */
-    gpio_set_output_options(GPIOC, GPIO_OTYPE_PP,
-            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_MDC);
-    gpio_set_af(GPIOC, GPIO_AF11, GPIO_ETH_RMII_MDC |
-            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
-    gpio_mode_setup(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_MDC |
-            GPIO_ETH_RMII_RXD0 | GPIO_ETH_RMII_RXD1);
-
-    /* GPIOG */
-    gpio_set_output_options(GPIOG, GPIO_OTYPE_PP,
-            GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
-    gpio_set_af(GPIOG, GPIO_AF11, GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
-    gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE,
-            GPIO_ETH_RMII_TX_EN | GPIO_ETH_RMII_TXD0);
-
-    /* NVIC Interrupt Configuration */
-    nvic_set_priority(NVIC_ETH_IRQ, 5);
-    nvic_enable_irq(NVIC_ETH_IRQ);
-
-    /* Configure to use RMII interface */
-    rcc_periph_clock_enable(RCC_SYSCFG);
-
-    rcc_periph_reset_hold(RST_ETHMAC);
-    SYSCFG_PMC |= (1 << 23);    // MII_RMII_SEL (use RMII)
-    rcc_periph_reset_release(RST_ETHMAC);
-
-    // 2 Clock cycles are required before accessing a peripheral after an RCC change
-    asm("NOP"); asm("NOP");
-
-    /* Soft MAC Reset */
-    ETH_DMABMR |= ETH_DMABMR_SR;
-    while (ETH_DMABMR & ETH_DMABMR_SR); 
-
-    /* Initialise Ethernet Hardware */
-    eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
-    // // Do any customised PHY configuration here!
-    /* Wait for Link to be established TEMPORARY */
-    while(!phy_link_isup(PHY_ADDRESS)) { // For some reason this does not work right now
-        vTaskDelay(200);
-        printf("wait for link\n");
-    }
-    // Enable autonegotiation
-    eth_smi_write(PHY_ADDRESS, PHY_REG_BCR, PHY_REG_BCR_AN);
-    while(!(eth_smi_read(PHY_ADDRESS, PHY_REG_BSR) & PHY_REG_BSR_ANDONE)) {
-        vTaskDelay(200);
-        printf("autonegotiate\n");
-    }
-
-    /* Enable Specific Interrupts */
-    eth_irq_enable(ETH_DMAIER_NISE | ETH_DMAIER_RIE); // Might need to be moved later
-
-    /* Set Station MAC Address */
-    eth_set_mac(en_mac);
+    // /* Set Station MAC Address */
+    //eth_set_mac(en_mac);
 
     // eth_desc_init(desc, ETH_TXBUFNB, ETH_RXBUFNB, ETH_TX_BUF_SIZE,
     //         ETH_RX_BUF_SIZE, false);
@@ -346,18 +260,3 @@ int _write(int file, char * ptr, int len)
     return -1;
 }
 
-/*------------------------------- ETHERNET ISR -------------------------------*/
-
-/* Ethernet ISR */
-void eth_isr(void) {
-    uint32_t interrupt = ETH_DMASR;
-    eth_irq_ack_pending(ETH_DMASR_NIS);
-    printf("%lu\n", interrupt);
-    vTaskDelay(100);
-    // uint32_t temp = ETH_DMASR;
-    // for(int i=0; i<32; i++) {
-    //     printf("%u", (temp & (1<<0)));
-    //     temp >>= 1;
-    // }
-    // printf("\n");
-}

@@ -42,8 +42,8 @@ void startTask3(void *args __attribute((unused))) {
         #ifdef DEBUG
         printf("Print Task!\n");
         #endif /* DEBUG */
-        int result = vSendETH();
-        printf("Eth Status: %d\n", result);
+        // int result = vSendETH();
+        // printf("Eth Status: %d\n", result);
         vTaskDelay(1000);
 	}
 }

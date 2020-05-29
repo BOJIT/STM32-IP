@@ -1,11 +1,6 @@
 #ifndef PORT_CONFIG
 #define PORT_CONFIG
 
-/* Move somewhere else? */
-#define ERR_OK 0
-#define ERR_FAULT 1
-#define ERR_TIMEOUT 2
-
 /* Enable Debug Options */
 #define DEBUG
 
