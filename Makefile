@@ -23,7 +23,7 @@ _FORMAT_OFF = \033[0m
 _BUILD_DIR = build
 
 # Project Source Files:
-_SRC := $(wildcard src/*.c) src/port/user/src/port_functions.c # temporary bodge
+_SRC := $(wildcard src/*.c) $(wildcard src/port/src/*.c)
 _LIB := $(wildcard lib/*.mk)
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 

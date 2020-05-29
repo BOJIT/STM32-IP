@@ -26,19 +26,17 @@ include $(_LIB_DIR)/Filelists.mk
 
 _SRC := $(COREFILES) $(CORE4FILES) $(APIFILES) $(NETIFFILES)
 
+# Get port-specific lwIP files 
+_SRC += src/port/src/arch/sys_arch.c
+
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/obj/%.o,$(_SRC))
 
-# Get port-specific lwIP files 
-_OBJ += src/port/sys_arch.c
 
 _LIB_CDEPS := -I$(_LIB_DIR)/include
 
 _LIB_LDEPS := -L$(_BUILD_DIR) -l$(_LIB_NAME)
 
 ################################## TARGETS #####################################
-
-# donothing:
-# 	echo "nothing"
 
 # Archive into static library
 $(_BUILD_DIR)/lib$(_LIB_NAME).a: $(_OBJ)

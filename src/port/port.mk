@@ -7,7 +7,7 @@ PORT_NAME := Nucleo_STM32F767xx
 PORT_CFLAGS := -mcpu=cortex-m7 -mthumb # Architecture flags
 PORT_CFLAGS += -mfloat-abi=hard -mfpu=fpv5-sp-d16 # Architecture flags
 PORT_CFLAGS += -DSTM32F7 # Libopencm3 definition
-PORT_CFLAGS += -Isrc/port/user/inc -Isrc/port/lwip/inc # Global include dirs
+PORT_CFLAGS += -Isrc/port/inc # Port include dirs
 
 # Port-specific linker flags
 PORT_LFLAGS := -Tsrc/port/stm32f767xx.ld # Linker script
