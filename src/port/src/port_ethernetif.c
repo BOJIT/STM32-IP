@@ -88,7 +88,7 @@ static struct netif netif;
 /* from lsgunth */
 struct dma_desc {
     volatile uint32_t   Status;
-    uint32_t   ControlBufferSize;
+    uint32_t   ControlBufferSize; // in actuality only first 12 bytes are size
     void *     Buffer1Addr;
     void *     Buffer2NextDescAddr;
     uint32_t   ExtendedStatus;
@@ -116,6 +116,89 @@ static struct dma_desc *rx_cur_dma_desc;
 SemaphoreHandle_t ETH_SEMPHR = NULL;
 
 /*--------------------- PRIVATE DEVICE-SPECIFIC FUNCTIONS --------------------*/
+static int recv_rxdma_buffer(struct netif *netif)
+{
+    static struct pbuf *first;
+
+    if (rx_cur_dma_desc->Status & ETH_RDES0_OWN)
+        return 0;
+
+    if (rx_cur_dma_desc->pbuf == NULL)
+        return 1;
+
+    int frame_length = (rx_cur_dma_desc->Status & ETH_RDES0_FL) 
+                                                >> ETH_RDES0_FL_SHIFT;
+
+    if (rx_cur_dma_desc->Status & ETH_RDES0_LS)
+        frame_length -=4; // Subtract off the CRC
+
+    rx_cur_dma_desc->pbuf->tot_len = frame_length;
+    rx_cur_dma_desc->pbuf->len = frame_length;
+
+    if (rx_cur_dma_desc->Status & ETH_RDES0_FS)
+        first = rx_cur_dma_desc->pbuf;
+    else
+        pbuf_cat(first, rx_cur_dma_desc->pbuf);
+
+    if (rx_cur_dma_desc->Status & ETH_RDES0_LS) {
+        if (netif->input(first, netif) != ERR_OK)
+        {
+            LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
+            pbuf_free(first);
+        }
+    }
+
+    rx_cur_dma_desc->pbuf = NULL;
+    rx_cur_dma_desc = rx_cur_dma_desc->Buffer2NextDescAddr;
+
+    return 1;
+}
+
+static int realloc_rxdma_buffers(void)
+{
+    static struct dma_desc *cur_desc = rx_dma_desc;
+
+    if (cur_desc->Status & ETH_RDES0_OWN) {
+        cur_desc = rx_cur_dma_desc;
+        return 0;
+    }
+
+    if (cur_desc->pbuf != NULL)
+        return 0;
+
+    cur_desc->pbuf = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
+    if (cur_desc->pbuf == NULL)
+        return 1;
+
+    cur_desc->Buffer1Addr = cur_desc->pbuf->payload;
+    cur_desc->Status = ETH_RDES0_OWN;
+
+    if (ETH_DMASR & ETH_DMASR_RBUS) {
+        ETH_DMASR = ETH_DMASR_RBUS;
+        ETH_DMARPDR = 0;
+    }
+
+    cur_desc = cur_desc->Buffer2NextDescAddr;
+
+    return 1;
+}
+
+/* Task for processing incoming ethernet frames */
+void ethernetif_input(void* argument)
+{
+    struct pbuf *p;
+    struct netif *netif = (struct netif *) argument;
+    
+    for(;;) {
+        if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
+            LOCK_TCPIP_CORE();
+            int ret = recv_rxdma_buffer(netif);
+            ret |= realloc_rxdma_buffers();
+            UNLOCK_TCPIP_CORE();
+        }
+    }
+}
+
 static void init_tx_dma_desc(void)
 {
     for (int i = 0; i < STIF_NUM_TX_DMA_DESC; i++) {
@@ -126,7 +209,7 @@ static void init_tx_dma_desc(void)
     // Chain buffers in a ring
     tx_dma_desc[STIF_NUM_TX_DMA_DESC-1].Buffer2NextDescAddr = &tx_dma_desc[0];
 
-    ETH_DMATDLAR = (uint32_t) tx_dma_desc;
+    ETH_DMATDLAR = (uint32_t) tx_dma_desc; // pointer to start of desc. list
     tx_cur_dma_desc = &tx_dma_desc[0];
 }
 
@@ -139,9 +222,9 @@ static void init_rx_dma_desc(void)
         rx_dma_desc[i].Buffer1Addr = rx_dma_desc[i].pbuf->payload;
         rx_dma_desc[i].Buffer2NextDescAddr = &rx_dma_desc[i+1];
     }
-
+    // Chain buffers in a ring
     rx_dma_desc[STIF_NUM_RX_DMA_DESC-1].Buffer2NextDescAddr = &rx_dma_desc[0];
-    ETH_DMARDLAR = (uint32_t) rx_dma_desc;
+    ETH_DMARDLAR = (uint32_t) rx_dma_desc; // pointer to start of desc. list
     rx_cur_dma_desc = &rx_dma_desc[0];
 }
 
@@ -307,13 +390,15 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
     // wait until the packet is freed by the DMA
     while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
 
-    // discard old pbuf pointer
+    // discard old pbuf pointer (in chain)
     if (tx_cur_dma_desc->pbuf != NULL)
         pbuf_free(tx_cur_dma_desc->pbuf);
 
+    // the pbuf field of the descriptor is not used by the DMA
     pbuf_ref(p);
     tx_cur_dma_desc->pbuf = p;
 
+    // tag first and last frames
     tx_cur_dma_desc->Status &= ~(ETH_TDES0_FS | ETH_TDES0_LS);
     if (first)
         tx_cur_dma_desc->Status |= ETH_TDES0_FS;
@@ -321,7 +406,8 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
         tx_cur_dma_desc->Status |= ETH_TDES0_LS;
 
     tx_cur_dma_desc->Buffer1Addr = p->payload;
-    tx_cur_dma_desc->ControlBufferSize = p->len;
+    tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
+    // ensure that p->len is never greater than 2^13!
     // Pass ownership back to DMA
     tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
 
@@ -332,42 +418,22 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
     struct pbuf *q;
 
+    // Iterate through pbuf chain until next-> == NULL
     for(q = p; q != NULL; q = q->next)
         prepare_tx_descr(q, q == p, q->next == NULL);
 
-    // Pass ownership of descriptor to ethernet MAC
+    // check if DMA is waiting for a descriptor it owns
     if (ETH_DMASR & ETH_DMASR_TBUS) {
-        ETH_DMASR = ETH_DMASR_TBUS;
-        ETH_DMATPDR = 0;
+        ETH_DMASR = ETH_DMASR_TBUS; // acknowledge
+        ETH_DMATPDR = 0; // ask DMA to carry on polling
     }
+    // the step above is not required if the DMA hasn't got through all the
+    // previous descriptors before the next packet is sent. potentially this
+    // behaviour should be flagged, as currently nothing is stopping descriptor
+    // overflow.
 
     return ERR_OK;
 }
-
-/* Task for processing incoming ethernet frames */
-void ethernetif_input(void* argument)
-{
-    struct pbuf *p;
-    struct netif *netif = (struct netif *) argument;
-    
-    for(;;) {
-        if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
-            do
-            {
-                LOCK_TCPIP_CORE();
-                p = low_level_input(netif);
-                if(p != NULL) {
-                    if(netif->input(p, netif) != ERR_OK) {
-                        pbuf_free(p);
-                    }
-                }
-                UNLOCK_TCPIP_CORE();
-            } while(p != NULL);
-        }
-    }
-}
-
-
 
 /*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
