@@ -186,17 +186,68 @@ static int realloc_rxdma_buffers(void)
 /* Task for processing incoming ethernet frames */
 void ethernetif_input(void* argument)
 {
-    struct pbuf *p;
     struct netif *netif = (struct netif *) argument;
     
     for(;;) {
         if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
             LOCK_TCPIP_CORE();
             int ret = recv_rxdma_buffer(netif);
-            ret |= realloc_rxdma_buffers();
+            ret |= realloc_rxdma_buffers(); // return can be used later
             UNLOCK_TCPIP_CORE();
         }
     }
+}
+
+/*--------------------------- Operation Functions ----------------------------*/
+
+static void prepare_tx_descr(struct pbuf *p, int first, int last)
+{
+    // wait until the packet is freed by the DMA
+    while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
+
+    // discard old pbuf pointer (in chain)
+    if (tx_cur_dma_desc->pbuf != NULL)
+        pbuf_free(tx_cur_dma_desc->pbuf);
+
+    // the pbuf field of the descriptor is not used by the DMA
+    pbuf_ref(p);
+    tx_cur_dma_desc->pbuf = p;
+
+    // tag first and last frames
+    tx_cur_dma_desc->Status &= ~(ETH_TDES0_FS | ETH_TDES0_LS);
+    if (first)
+        tx_cur_dma_desc->Status |= ETH_TDES0_FS;
+    if (last)
+        tx_cur_dma_desc->Status |= ETH_TDES0_LS;
+
+    tx_cur_dma_desc->Buffer1Addr = p->payload;
+    tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
+    // ensure that p->len is never greater than 2^13!
+    // Pass ownership back to DMA
+    tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
+
+    tx_cur_dma_desc = tx_cur_dma_desc->Buffer2NextDescAddr;
+}
+
+static err_t low_level_output(struct netif *netif, struct pbuf *p)
+{
+    struct pbuf *q;
+
+    // Iterate through pbuf chain until next-> == NULL
+    for(q = p; q != NULL; q = q->next)
+        prepare_tx_descr(q, q == p, q->next == NULL);
+
+    // check if DMA is waiting for a descriptor it owns
+    if (ETH_DMASR & ETH_DMASR_TBUS) {
+        ETH_DMASR = ETH_DMASR_TBUS; // acknowledge
+        ETH_DMATPDR = 0; // ask DMA to carry on polling
+    }
+    // the step above is not required if the DMA hasn't got through all the
+    // previous descriptors before the next packet is sent. potentially this
+    // behaviour should be flagged, as currently nothing is stopping descriptor
+    // overflow.
+
+    return ERR_OK;
 }
 
 static void init_tx_dma_desc(void)
@@ -302,7 +353,7 @@ static void low_level_init(struct netif *netif)
     nvic_enable_irq(NVIC_ETH_IRQ);
 }
 
-err_t netif_init(struct netif *netif)
+err_t ethernetif_init(struct netif *netif)
 {
     err_t ret;
 
@@ -383,58 +434,6 @@ void eth_hw_init(void)
     asm("NOP"); asm("NOP");
 }
 
-/*--------------------------- Operation Functions ----------------------------*/
-
-static void prepare_tx_descr(struct pbuf *p, int first, int last)
-{
-    // wait until the packet is freed by the DMA
-    while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
-
-    // discard old pbuf pointer (in chain)
-    if (tx_cur_dma_desc->pbuf != NULL)
-        pbuf_free(tx_cur_dma_desc->pbuf);
-
-    // the pbuf field of the descriptor is not used by the DMA
-    pbuf_ref(p);
-    tx_cur_dma_desc->pbuf = p;
-
-    // tag first and last frames
-    tx_cur_dma_desc->Status &= ~(ETH_TDES0_FS | ETH_TDES0_LS);
-    if (first)
-        tx_cur_dma_desc->Status |= ETH_TDES0_FS;
-    if (last)
-        tx_cur_dma_desc->Status |= ETH_TDES0_LS;
-
-    tx_cur_dma_desc->Buffer1Addr = p->payload;
-    tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
-    // ensure that p->len is never greater than 2^13!
-    // Pass ownership back to DMA
-    tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
-
-    tx_cur_dma_desc = tx_cur_dma_desc->Buffer2NextDescAddr;
-}
-
-static err_t low_level_output(struct netif *netif, struct pbuf *p)
-{
-    struct pbuf *q;
-
-    // Iterate through pbuf chain until next-> == NULL
-    for(q = p; q != NULL; q = q->next)
-        prepare_tx_descr(q, q == p, q->next == NULL);
-
-    // check if DMA is waiting for a descriptor it owns
-    if (ETH_DMASR & ETH_DMASR_TBUS) {
-        ETH_DMASR = ETH_DMASR_TBUS; // acknowledge
-        ETH_DMATPDR = 0; // ask DMA to carry on polling
-    }
-    // the step above is not required if the DMA hasn't got through all the
-    // previous descriptors before the next packet is sent. potentially this
-    // behaviour should be flagged, as currently nothing is stopping descriptor
-    // overflow.
-
-    return ERR_OK;
-}
-
 /*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
 void networkInit(void)
@@ -446,7 +445,7 @@ void networkInit(void)
     ip_addr_t gw_addr = {0};
  
     tcpip_init(NULL, NULL);
-    netif_add(&netif, &ip_addr, &net_mask, &gw_addr, NULL, netif_init,
+    netif_add(&netif, &ip_addr, &net_mask, &gw_addr, NULL, ethernetif_init,
               tcpip_input);
     //netif_set_status_callback(&netif, netif_status); add these later
     //netif_set_link_callback(&netif, netif_link);

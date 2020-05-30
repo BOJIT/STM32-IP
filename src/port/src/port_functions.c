@@ -224,23 +224,23 @@ void vConfigureETH() {
     // eth_start();
 }
 
-/* Test function to send an ethernet packet */
-int vSendETH(void) {
-    for(uint32_t i=0; i<NELEMS(eth_frame.pkt.dest_mac); i++) {
-        eth_frame.pkt.dest_mac[i] = 0xFF;
-    }
-    for(uint32_t i=0; i<NELEMS(eth_frame.pkt.src_mac); i++) {
-        eth_frame.pkt.src_mac[i] = en_mac[i];
-    }
-    eth_frame.pkt.ethertype = 0x88B5;
-    for(int i = 0; i<16; i++) {
-        printf("%d,", eth_frame.data[i]);
-    }
-    printf("\n");
-    printf("Link Status: %d\n", phy_link_isup(PHY_ADDRESS));
+// /* Test function to send an ethernet packet */
+// int vSendETH(void) {
+//     for(uint32_t i=0; i<NELEMS(eth_frame.pkt.dest_mac); i++) {
+//         eth_frame.pkt.dest_mac[i] = 0xFF;
+//     }
+//     for(uint32_t i=0; i<NELEMS(eth_frame.pkt.src_mac); i++) {
+//         eth_frame.pkt.src_mac[i] = en_mac[i];
+//     }
+//     eth_frame.pkt.ethertype = 0x88B5;
+//     for(int i = 0; i<16; i++) {
+//         printf("%d,", eth_frame.data[i]);
+//     }
+//     printf("\n");
+//     printf("Link Status: %d\n", phy_link_isup(PHY_ADDRESS));
 
-    return 0; //eth_tx(eth_frame.data, NELEMS(eth_frame.data));
-}
+//     return 0; //eth_tx(eth_frame.data, NELEMS(eth_frame.data));
+// }
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
