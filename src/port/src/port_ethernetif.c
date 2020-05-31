@@ -4,9 +4,9 @@
 /* lwIP Includes */
 #include <lwip/init.h>
 #include <lwip/netif.h>
-//#include <lwip/dhcp.h>
-//#include <lwip/autoip.h>
-//#include <lwip/stats.h>
+#include <lwip/dhcp.h>
+#include <lwip/autoip.h>
+#include <lwip/stats.h>
 #include <lwip/err.h>
 #include <lwip/netif.h>
 #include <lwip/tcpip.h>
@@ -460,18 +460,20 @@ void networkInit(void)
     //netif_set_link_callback(&netif, netif_link);
     netif_set_default(&netif);
     //netif_set_hostname(&netif, "lwip");
-    if (netif_is_link_up(&netif)) { // From ST's HAL
-        netif_set_up(&netif);
-    }
-    else {
-        netif_set_down(&netif);
-    }
+    netif_set_link_up(&netif);
+    netif_set_up(&netif);
+
+    dhcp_start(&netif);
 
     printf("Mac Address: %02x:%02x:%02x:%02x:%02x:%02x\n",
            netif.hwaddr[0], netif.hwaddr[1], netif.hwaddr[2],
            netif.hwaddr[3], netif.hwaddr[4], netif.hwaddr[5]);
 
     //igmp_start(&netif); // LATER
+}
+
+void printIP(void) {
+    //printf("test print\n");
 }
 
 

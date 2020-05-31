@@ -10,5 +10,6 @@
 
 /* Include Device-Specific Functions */
 #include "port_functions.h"
+#include "port_ethernetif.h"
 
 #endif

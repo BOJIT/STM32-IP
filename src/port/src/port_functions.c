@@ -167,50 +167,6 @@ void vConfigureUART() {
 }
 #endif /* DEBUG */
 
-/* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
-// Eventually the ethernet descriptors will be declared in the task that
-// initialises the ethernet peripheral and handles the ethernet callbacks
-
-
-// uint8_t en_mac[6] = {1, 2, 3, 4, 5, 6}; // For example purposes only
-
-// struct eth_pkt {
-//     uint8_t dest_mac[6];
-//     uint8_t src_mac[6];
-//     uint16_t ethertype;
-//     uint8_t data[100];
-// } pkt;
-
-// union eth_frame_type {
-//     struct eth_pkt pkt;
-//     uint8_t data[sizeof(pkt)/sizeof(uint8_t)];
-// } eth_frame;
-
-/* TEMPORARY GLOBAL VARIABLES! --------------------------------------------------- */
-
-/* Configure Ethernet Peripheral */
-void vConfigureETH() {
-    networkInit();  // temporary redirect
-}
-
-// /* Test function to send an ethernet packet */
-// int vSendETH(void) {
-//     for(uint32_t i=0; i<NELEMS(eth_frame.pkt.dest_mac); i++) {
-//         eth_frame.pkt.dest_mac[i] = 0xFF;
-//     }
-//     for(uint32_t i=0; i<NELEMS(eth_frame.pkt.src_mac); i++) {
-//         eth_frame.pkt.src_mac[i] = en_mac[i];
-//     }
-//     eth_frame.pkt.ethertype = 0x88B5;
-//     for(int i = 0; i<16; i++) {
-//         printf("%d,", eth_frame.data[i]);
-//     }
-//     printf("\n");
-//     printf("Link Status: %d\n", phy_link_isup(PHY_ADDRESS));
-
-//     return 0; //eth_tx(eth_frame.data, NELEMS(eth_frame.data));
-// }
-
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
 /* Redirect 'printf' to UART */

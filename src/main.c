@@ -35,12 +35,12 @@ void startTask2(void *args __attribute((unused))) {
 /* Task 3 - Blink Warning LED */
 void startTask3(void *args __attribute((unused))) {
 
-    vConfigureETH(); // Configure Ethernet GPIOs and registers
+    networkInit(); // Configure Ethernet GPIOs and registers
 
     for (;;) {
         vWarningLEDToggle();
         #ifdef DEBUG
-        //printf("Print Task!\n");
+        printIP();
         #endif /* DEBUG */
         vTaskDelay(1000);
 	}

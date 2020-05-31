@@ -40,16 +40,16 @@
 #define LWIP_DHCP_AUTOIP_COOP       1
 #define LWIP_DHCP_AUTOIP_COOP_TRIES 5
 
-#define LWIP_NETIF_HOSTNAME        1
+#define LWIP_NETIF_HOSTNAME        0
 #define LWIP_NETIF_API             0
-#define LWIP_NETIF_STATUS_CALLBACK 1
-#define LWIP_NETIF_LINK_CALLBACK   1
+#define LWIP_NETIF_STATUS_CALLBACK 0
+#define LWIP_NETIF_LINK_CALLBACK   0
 
 #define LWIP_SOCKET  0
 #define LWIP_NETCONN 0
 
 #define SO_REUSE     1
-#define LWIP_IGMP    1
+#define LWIP_IGMP    0
 
 // #include <stmlib/rand.h>
 // #define LWIP_RAND    rand_value
@@ -59,4 +59,6 @@
 
 // temporary debug
 #define LWIP_DEBUG
-#define PBUF_DEBUG                      LWIP_DBG_ON
+#define PBUF_DEBUG      LWIP_DBG_ON
+#define ICMP_DEBUG      LWIP_DBG_ON
+#define DHCP_DEBUG      LWIP_DBG_ON
