@@ -40,10 +40,8 @@ void startTask3(void *args __attribute((unused))) {
     for (;;) {
         vWarningLEDToggle();
         #ifdef DEBUG
-        printf("Print Task!\n");
+        //printf("Print Task!\n");
         #endif /* DEBUG */
-        // int result = vSendETH();
-        // printf("Eth Status: %d\n", result);
         vTaskDelay(1000);
 	}
 }
