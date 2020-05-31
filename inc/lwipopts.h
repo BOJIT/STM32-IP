@@ -56,3 +56,5 @@
 
 #define LWIP_STATS         1
 #define LWIP_STATS_DISPLAY 1
+// temporary debug
+#define PBUF_DEBUG                      LWIP_DBG_ON

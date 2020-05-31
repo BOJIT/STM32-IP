@@ -191,6 +191,7 @@ void ethernetif_input(void* argument)
     for(;;) {
         if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
             LOCK_TCPIP_CORE();
+            printf("ethernetif_input: Packet Recieved!\n");
             int ret = recv_rxdma_buffer(netif);
             ret |= realloc_rxdma_buffers(); // return can be used later
             UNLOCK_TCPIP_CORE();
@@ -289,6 +290,14 @@ static err_t mac_init(void)
     ETH_MACMIIAR = ETH_CLK_060_100MHZ; // Change depending on HCLK speed
 	phy_reset(PHY_ADDRESS);
     // Check link status initially here
+    printf("mac_init: Wait for link\n");
+    while(!phy_link_isup(PHY_ADDRESS))
+        vTaskDelay(200);
+    // Enable autonegotiation
+    eth_smi_write(PHY_ADDRESS, PHY_REG_BCR, PHY_REG_BCR_AN);
+    printf("mac_init: autonegotiate\n");
+    while(!(eth_smi_read(PHY_ADDRESS, PHY_REG_BSR) & PHY_REG_BSR_ANDONE))
+        vTaskDelay(200);
 
     /* Configure ethernet MAC */
     ETH_MACCR |= (ETH_MACCR_FES | ETH_MACCR_ROD |

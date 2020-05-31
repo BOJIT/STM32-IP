@@ -190,38 +190,7 @@ void vConfigureUART() {
 
 /* Configure Ethernet Peripheral */
 void vConfigureETH() {
-
-    networkInit();
-    // /* Soft MAC Reset */
-    // ETH_DMABMR |= ETH_DMABMR_SR;
-    // while (ETH_DMABMR & ETH_DMABMR_SR); 
-
-    // /* Initialise Ethernet Hardware */
-    // eth_init(PHY_ADDRESS, ETH_CLK_060_100MHZ);
-    // // // Do any customised PHY configuration here!
-    // /* Wait for Link to be established TEMPORARY */
-    // while(!phy_link_isup(PHY_ADDRESS)) { // For some reason this does not work right now
-    //     vTaskDelay(200);
-    //     printf("wait for link\n");
-    // }
-    // // Enable autonegotiation
-    // eth_smi_write(PHY_ADDRESS, PHY_REG_BCR, PHY_REG_BCR_AN);
-    // while(!(eth_smi_read(PHY_ADDRESS, PHY_REG_BSR) & PHY_REG_BSR_ANDONE)) {
-    //     vTaskDelay(200);
-    //     printf("autonegotiate\n");
-    // }
-
-    // /* Enable Specific Interrupts */
-    // eth_irq_enable(ETH_DMAIER_NISE | ETH_DMAIER_RIE); // Might need to be moved later
-
-    // /* Set Station MAC Address */
-    //eth_set_mac(en_mac);
-
-    // eth_desc_init(desc, ETH_TXBUFNB, ETH_RXBUFNB, ETH_TX_BUF_SIZE,
-    //         ETH_RX_BUF_SIZE, false);
-
-
-    // eth_start();
+    networkInit();  // temporary redirect
 }
 
 // /* Test function to send an ethernet packet */
