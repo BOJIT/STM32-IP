@@ -8,7 +8,6 @@
 #include <lwip/autoip.h>
 #include <lwip/stats.h>
 #include <lwip/err.h>
-#include <lwip/netif.h>
 #include <lwip/tcpip.h>
 
 #include <netif/etharp.h>
@@ -151,6 +150,8 @@ static int recv_rxdma_buffer(struct netif *netif)
     rx_cur_dma_desc->pbuf = NULL;
     rx_cur_dma_desc = rx_cur_dma_desc->Buffer2NextDescAddr;
 
+    //printf("Desc: %p\n", rx_cur_dma_desc);
+
     return 1;
 }
 
@@ -191,10 +192,10 @@ void ethernetif_input(void* argument)
     for(;;) {
         if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
             LOCK_TCPIP_CORE();
-            printf("ethernetif_input: Packet Recieved!\n");
             int ret = recv_rxdma_buffer(netif);
             ret |= realloc_rxdma_buffers(); // return can be used later
             UNLOCK_TCPIP_CORE();
+            //printf("ethernetif_input: Packet Recieved!\n");
         }
     }
 }
@@ -205,6 +206,8 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
 {
     // wait until the packet is freed by the DMA
     while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
+
+    printf("Buf Address 1: %p\n", tx_cur_dma_desc->pbuf);
 
     // discard old pbuf pointer (in chain)
     if (tx_cur_dma_desc->pbuf != NULL)
@@ -224,6 +227,11 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
     tx_cur_dma_desc->Buffer1Addr = p->payload;
     tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
     // ensure that p->len is never greater than 2^13!
+
+    printf("Buf Address 2: %p\n", tx_cur_dma_desc->Buffer1Addr);
+
+    printf("Buf Len 2: %u\n", tx_cur_dma_desc->ControlBufferSize);
+
     // Pass ownership back to DMA
     tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
 
@@ -232,6 +240,7 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
 
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
+    printf("------------------------\n");
     struct pbuf *q;
 
     // Iterate through pbuf chain until next-> == NULL
@@ -306,13 +315,13 @@ static err_t mac_init(void)
     ETH_MACFFR = 0;
     ETH_MACFCR = 0;
 
-    ETH_DMAOMR = (ETH_DMAOMR_DTCEFD | ETH_DMAOMR_RSF |
-                   ETH_DMAOMR_TSF | ETH_DMAOMR_OSF);
-
     ETH_DMABMR = (ETH_DMABMR_AAB | ETH_DMABMR_FB | ETH_DMABMR_PM_2_1 |
                    (32 << ETH_DMABMR_RDP_SHIFT) |  //RX Burst Length
                    (32 << ETH_DMABMR_PBL_SHIFT)  |  //TX Burst Length
                    ETH_DMABMR_USP | ETH_DMABMR_EDFE);
+
+    ETH_DMAOMR = (ETH_DMAOMR_DTCEFD | ETH_DMAOMR_RSF |
+                   ETH_DMAOMR_TSF | ETH_DMAOMR_OSF);
 
     return ERR_OK;
 }
@@ -452,8 +461,14 @@ void networkInit(void)
     ip_addr_t ip_addr = {0};
     ip_addr_t net_mask = {0};
     ip_addr_t gw_addr = {0};
+    #if(LWIP_DHCP==0)
+        IP4_ADDR(&ip_addr, 192, 168, 50, 51);
+        IP4_ADDR(&net_mask, 255, 255, 255, 0);
+        IP4_ADDR(&gw_addr, 192, 168, 50, 1);  
+    #endif
  
     tcpip_init(NULL, NULL);
+
     netif_add(&netif, &ip_addr, &net_mask, &gw_addr, NULL, ethernetif_init,
               tcpip_input);
     //netif_set_status_callback(&netif, netif_status); add these later
@@ -463,7 +478,9 @@ void networkInit(void)
     netif_set_link_up(&netif);
     netif_set_up(&netif);
 
-    dhcp_start(&netif);
+    #if(LWIP_DHCP==1)
+        dhcp_start(&netif);
+    #endif
 
     printf("Mac Address: %02x:%02x:%02x:%02x:%02x:%02x\n",
            netif.hwaddr[0], netif.hwaddr[1], netif.hwaddr[2],
@@ -474,6 +491,7 @@ void networkInit(void)
 
 void printIP(void) {
     //printf("test print\n");
+    //printf("Link Status: %u\n", phy_link_isup(PHY_ADDRESS));
 }
 
 

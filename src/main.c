@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include "main.h"
 
+#include <lwip/api.h>
+#include <string.h>
+
 /* Stack Overflow Handler */
 extern void vApplicationStackOverflowHook(
     xTaskHandle *pxTask,
@@ -12,6 +15,10 @@ void vApplicationStackOverflowHook(
   signed portCHAR *pcTaskName __attribute((unused))
 ) {
     for(;;);    // Loop forever here..
+}
+
+void gdb_break() {
+    // empty - convenient tag for GDB
 }
 
 /* Task 1 - Blink System LED */
@@ -37,12 +44,34 @@ void startTask3(void *args __attribute((unused))) {
 
     networkInit(); // Configure Ethernet GPIOs and registers
 
+    struct netconn *conn;
+    char msg1[] = "alpha";
+    char msg2[] = "beta";
+    struct netbuf *buf;
+    char * data;
+
+    conn = netconn_new(NETCONN_UDP);
+    netconn_bind(conn, IP_ADDR_ANY, 1234); //local port
+
+    netconn_connect(conn, IP_ADDR_BROADCAST, 1235);
+
     for (;;) {
         vWarningLEDToggle();
+        buf = netbuf_new();
+        data =netbuf_alloc(buf, sizeof(msg1));
+        memcpy(data, msg1, sizeof(msg1));
+        netconn_send(conn, buf);
+        netbuf_delete(buf); // De-allocate packet buffer
+        buf = netbuf_new();
+        data =netbuf_alloc(buf, sizeof(msg2));
+        memcpy(data, msg2, sizeof(msg2));
+        netconn_send(conn, buf);
+        netbuf_delete(buf); // De-allocate packet buffer
         #ifdef DEBUG
         printIP();
         #endif /* DEBUG */
         vTaskDelay(1000);
+        gdb_break();
 	}
 }
 
