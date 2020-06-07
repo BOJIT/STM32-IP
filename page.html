@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('page.html',''); initResizable(); });
 Porting Guide:</h1>
 <p>THIS DOCUMENT NEEDS UPDATING!</p>
 <ul>
-<li><code><a class="el" href="port__config_8h.html">inc/port_config.h</a></code> - contains port-specific definitions (clock speed, RTOS commands, etc...)</li>
+<li><code><a class="el" href="port__config_8h.html" title="Port-specific application configuration.">inc/port_config.h</a></code> - contains port-specific definitions (clock speed, RTOS commands, etc...)</li>
 <li><code>***.ld</code> - linker script for the target processor. The name of the file is defined in <code>port.mk</code>.</li>
 <li><code>port.mk</code> - included makefile which defines port-specific flags, frameworks, linker scripts and RTOS build settings.</li>
 <li><code>flash.sh</code> - this is the script that is called when 'make flash' is run. It is optional, and by default does nothing, but flashing commands such as <code>st-flash</code>. The script is passed any extra makefile flags as arguments, and can be configured to run different instructions if <code>-g</code> is passed. </li>

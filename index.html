@@ -86,11 +86,9 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">Overview </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="mainpage"></a></p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-STM32-IP</h1>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Basic framework for using lwIP and FreeRTOS with libopencm3:</h2>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> </p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Basic framework for using lwIP and FreeRTOS with libopencm3:</h1>
 <p>This framework is completely independent of the STM32 HAL, and is designed with a zero-copy Ethernet driver that supports PTP. This framework is also designed to be cross-platform, and easily portable to other ARM Cortex-M microcontrollers.</p>
 <p>TODO:</p>
 <ul>
@@ -108,22 +106,22 @@ Basic framework for using lwIP and FreeRTOS with libopencm3:</h2>
 <li>Start Adding PTP functionality to the Ethernet Driver</li>
 <li>get PTP daemon running on STM32F7. Port F4 code</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Reference Software Tools:</h2>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Reference Software Tools:</h1>
 <ul>
 <li>ANEMAN <a href="https://www.aneman.net/">https://www.aneman.net/</a> : This is similar to Dante Controller, but works with a plugin format that means anyone can create a device profile/protocol that can interoperate with an AES67 network.</li>
 <li>Merging VAD <a href="https://www.merging.com/products/aes67_vad_standard">https://www.merging.com/products/aes67_vad_standard</a> : OSX only, but allows for up to 64 channels of IO with the free version. Plays nicely with ANEMAN.</li>
 <li>Ravenna RVSC <a href="https://www.ravenna-network.com/resources/">https://www.ravenna-network.com/resources/</a> : a windows-compatible AES67 virtual soundcard which can be used for testing up to 16 channels of IO.</li>
 <li>Open-Source AES67 Daemon <a href="https://github.com/bondagit/aes67-linux-daemon">https://github.com/bondagit/aes67-linux-daemon</a> : recently released, looks good, might free any long-term RAVENNA dependencies. Not really a production release yet.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Project Structure:</h2>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Project Structure:</h1>
 <ul>
 <li>The project is designed to work using the CMSIS interface: this means that the core code should run on any Cortex-M microcontroller with appropriate peripherals</li>
 <li>Note that while the CMSIS standard provides a selection of function declarations to interact with the MCU hardware, the implementation is up to you/the manufacturer. The folder labelled <code>port/</code> contains implementations of any port-specific functions. These have to be re-written if porting to another architecture.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
-Building this Project:</h2>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Building this Project:</h1>
 <ul>
 <li>To build the firmware for all devices, simply run <code>make</code>. ELFs and binaries will be generated in the appropriate <code>bin/</code> folder. Similarly, <code>make clean</code> will clean all devices. </li>
 </ul>

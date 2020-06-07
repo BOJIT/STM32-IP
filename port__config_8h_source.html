@@ -87,63 +87,63 @@ $(document).ready(function(){initNavTree('port__config_8h_source.html',''); init
 </div><!--header-->
 <div class="contents">
 <a href="port__config_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef __PORT_CONFIG__</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#define __PORT_CONFIG__</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">/* Configuration includes */</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="global__config_8h.html">global_config.h</a>&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef __PORT_CONFIG__</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define __PORT_CONFIG__</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/* Clock configuration */</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define HSE_FREQ         8000000    </span></div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="port__config_8h.html#a5f4ac23af1e14562d11a6d66e3f492aa">   17</a></span>&#160;<span class="preprocessor">#define SYSCLK_FREQ      96000000   </span></div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="port__config_8h.html#ac93a56346a5b4aecdfd5503944de7aa4">   18</a></span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/* LED configuration */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define SYSTEM_LED_PORT     GPIOB       </span></div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="port__config_8h.html#a1f489a84b9c667f4a92003ef3ffd97cd">   23</a></span>&#160;<span class="preprocessor">#define SYSTEM_LED_PIN      GPIO0       </span></div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="port__config_8h.html#a518869bf9809946d068e978f9efb0d50">   24</a></span>&#160;<span class="preprocessor">#define SYSTEM_LED_RCC      RCC_GPIOB   </span></div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="port__config_8h.html#a37ca1e85e279a39054563fd4ec2ff9a6">   25</a></span>&#160;<span class="preprocessor">#define STATUS_LED_PORT     GPIOB       </span></div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="port__config_8h.html#a5b8353569a7ac1ec1f773fbd28495b43">   26</a></span>&#160;<span class="preprocessor">#define STATUS_LED_PIN      GPIO7       </span></div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="port__config_8h.html#a089a71f836911c71b3f73fdd3b4b890b">   27</a></span>&#160;<span class="preprocessor">#define STATUS_LED_RCC      RCC_GPIOB   </span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="port__config_8h.html#aa914559b2c35027f45ceef8b75eafa4d">   28</a></span>&#160;<span class="preprocessor">#define WARNING_LED_PORT    GPIOB       </span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="port__config_8h.html#a3f29c56666c638749113eda84068c027">   29</a></span>&#160;<span class="preprocessor">#define WARNING_LED_PIN     GPIO14      </span></div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="port__config_8h.html#a603033af98a346b732741df36d2b9a46">   30</a></span>&#160;<span class="preprocessor">#define WARNING_LED_RCC     RCC_GPIOB   </span></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="port__config_8h.html#a33604c4405e1c2d8acfd3771d5fccc88">   31</a></span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/* Serial configuration */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define DEBUG_UART_PORT     GPIOD     </span></div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="port__config_8h.html#a1c9052d1656e86f50326fd275c54ca67">   37</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_TX       GPIO8     </span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="port__config_8h.html#a2fb01f7597c73a81d32d1bc55854fa88">   38</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_RX       GPIO9     </span></div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="port__config_8h.html#a44deb111256827042ee9de18db2a31e0">   39</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_RCC      RCC_GPIOD </span></div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="port__config_8h.html#a4c0ab900c81a2bcdd756d32925607982">   40</a></span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/* Ethernet configuration */</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define PHY_ADDRESS         PHY0        </span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="port__config_8h.html#a6d90b77a939f982c12f749bb1158b9b6">   46</a></span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_MDIO      GPIO2    </span><span class="comment">/* PA2 THESE MIGHT MOVE*/</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_MDC       GPIO1    </span><span class="comment">/* PC1 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_PPS_OUT   GPIO5    </span><span class="comment">/* PB5 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TX_EN     GPIO11   </span><span class="comment">/* PG11 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TXD0      GPIO13   </span><span class="comment">/* PG13 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TXD1      GPIO13   </span><span class="comment">/* PB13 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_REF_CLK   GPIO1    </span><span class="comment">/* PA1 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_CRS_DV    GPIO7    </span><span class="comment">/* PA7 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_RXD0      GPIO4    </span><span class="comment">/* PC4 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_RXD1      GPIO5    </span><span class="comment">/* PC5 */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT_CONFIG__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/* Configuration includes */</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="global__config_8h.html">global_config.h</a>&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/* Clock configuration */</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#define HSE_FREQ         8000000    </span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="port__config_8h.html#a5f4ac23af1e14562d11a6d66e3f492aa">   20</a></span>&#160;<span class="preprocessor">#define SYSCLK_FREQ      96000000   </span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="port__config_8h.html#ac93a56346a5b4aecdfd5503944de7aa4">   21</a></span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/* LED configuration */</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#define SYSTEM_LED_PORT     GPIOB       </span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="port__config_8h.html#a1f489a84b9c667f4a92003ef3ffd97cd">   26</a></span>&#160;<span class="preprocessor">#define SYSTEM_LED_PIN      GPIO0       </span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="port__config_8h.html#a518869bf9809946d068e978f9efb0d50">   27</a></span>&#160;<span class="preprocessor">#define SYSTEM_LED_RCC      RCC_GPIOB   </span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="port__config_8h.html#a37ca1e85e279a39054563fd4ec2ff9a6">   28</a></span>&#160;<span class="preprocessor">#define STATUS_LED_PORT     GPIOB       </span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="port__config_8h.html#a5b8353569a7ac1ec1f773fbd28495b43">   29</a></span>&#160;<span class="preprocessor">#define STATUS_LED_PIN      GPIO7       </span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="port__config_8h.html#a089a71f836911c71b3f73fdd3b4b890b">   30</a></span>&#160;<span class="preprocessor">#define STATUS_LED_RCC      RCC_GPIOB   </span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="port__config_8h.html#aa914559b2c35027f45ceef8b75eafa4d">   31</a></span>&#160;<span class="preprocessor">#define WARNING_LED_PORT    GPIOB       </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="port__config_8h.html#a3f29c56666c638749113eda84068c027">   32</a></span>&#160;<span class="preprocessor">#define WARNING_LED_PIN     GPIO14      </span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="port__config_8h.html#a603033af98a346b732741df36d2b9a46">   33</a></span>&#160;<span class="preprocessor">#define WARNING_LED_RCC     RCC_GPIOB   </span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="port__config_8h.html#a33604c4405e1c2d8acfd3771d5fccc88">   34</a></span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">/* Serial configuration */</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define DEBUG_UART_PORT     GPIOD     </span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="port__config_8h.html#a1c9052d1656e86f50326fd275c54ca67">   40</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_TX       GPIO8     </span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="port__config_8h.html#a2fb01f7597c73a81d32d1bc55854fa88">   41</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_RX       GPIO9     </span></div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="port__config_8h.html#a44deb111256827042ee9de18db2a31e0">   42</a></span>&#160;<span class="preprocessor">#define DEBUG_UART_RCC      RCC_GPIOD </span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="port__config_8h.html#a4c0ab900c81a2bcdd756d32925607982">   43</a></span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/* Ethernet configuration */</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define PHY_ADDRESS         PHY0        </span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="port__config_8h.html#a6d90b77a939f982c12f749bb1158b9b6">   49</a></span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_MDIO      GPIO2    </span><span class="comment">/* PA2 THESE MIGHT MOVE*/</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_MDC       GPIO1    </span><span class="comment">/* PC1 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_PPS_OUT   GPIO5    </span><span class="comment">/* PB5 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TX_EN     GPIO11   </span><span class="comment">/* PG11 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TXD0      GPIO13   </span><span class="comment">/* PG13 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_TXD1      GPIO13   </span><span class="comment">/* PB13 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_REF_CLK   GPIO1    </span><span class="comment">/* PA1 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_CRS_DV    GPIO7    </span><span class="comment">/* PA7 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_RXD0      GPIO4    </span><span class="comment">/* PC4 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#define GPIO_ETH_RMII_RXD1      GPIO5    </span><span class="comment">/* PC5 */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT_CONFIG__ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aglobal__config_8h_html"><div class="ttname"><a href="global__config_8h.html">global_config.h</a></div></div>
+<div class="ttc" id="aglobal__config_8h_html"><div class="ttname"><a href="global__config_8h.html">global_config.h</a></div><div class="ttdoc">Global application configuration.</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

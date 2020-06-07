@@ -26,12 +26,10 @@ var NAVTREE =
 [
   [ "STM32-IP", "index.html", [
     [ "Overview", "index.html", [
-      [ "STM32-IP", "index.html#autotoc_md1", [
-        [ "Basic framework for using lwIP and FreeRTOS with libopencm3:", "index.html#autotoc_md2", null ],
-        [ "Reference Software Tools:", "index.html#autotoc_md3", null ],
-        [ "Project Structure:", "index.html#autotoc_md4", null ],
-        [ "Building this Project:", "index.html#autotoc_md5", null ]
-      ] ]
+      [ "Basic framework for using lwIP and FreeRTOS with libopencm3:", "index.html#autotoc_md2", null ],
+      [ "Reference Software Tools:", "index.html#autotoc_md3", null ],
+      [ "Project Structure:", "index.html#autotoc_md4", null ],
+      [ "Building this Project:", "index.html#autotoc_md5", null ]
     ] ],
     [ "Porting", "page.html", [
       [ "Porting Guide:", "page.html#autotoc_md0", null ]
@@ -53,7 +51,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_free_r_t_o_s_config_8h_source.html"
+"_free_r_t_o_s_config_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
