@@ -1,8 +1,9 @@
+Porting  {#page}
+================
+
 # Porting Guide:
 
-- ```port_functions.c``` - contains all port-specific functions that must be
-  provided when porting to a new device (these functions are declared in
-  ```port_functions.h```)
+THIS DOCUMENT NEEDS UPDATING!
 
 - ```inc/port_config.h``` - contains port-specific definitions (clock speed,
   RTOS commands, etc...)

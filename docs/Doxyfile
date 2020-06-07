@@ -10,12 +10,16 @@
 @INCLUDE            = ./Doxyfile_common
 
 #---------------------------------------------------------------------------
-# Local settings
+# Project settings
 #---------------------------------------------------------------------------
 
-PROJECT_NAME           = "STM32-IP"
+PROJECT_NAME        = "STM32-IP"
 
-PROJECT_BRIEF          = "Framework for using lwIP and FreeRTOS with libopencm3"
+PROJECT_BRIEF       = "Framework for using lwIP and FreeRTOS with libopencm3"
+
+#---------------------------------------------------------------------------
+# Source settings
+#---------------------------------------------------------------------------
 
 INPUT               = ../inc ../src ../README.md
 
@@ -23,8 +27,16 @@ RECURSIVE           = YES
 
 STRIP_FROM_PATH     = ../
 
-OPTIMIZE_OUTPUT_FOR_C  = YES
+INCLUDE_PATH        = ../inc ../src/port/inc
 
-GENERATE_LATEX      = NO
+#---------------------------------------------------------------------------
+# Doxygen settings
+#---------------------------------------------------------------------------
 
-USE_MDFILE_AS_MAINPAGE = ../README.md
+OPTIMIZE_OUTPUT_FOR_C       = YES
+
+GENERATE_LATEX              = NO
+
+GENERATE_TREEVIEW           = YES
+
+DISTRIBUTE_GROUP_DOC        = YES

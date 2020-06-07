@@ -349,6 +349,8 @@ void eth_hw_init(void)
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOG);
+
+    /* TODO Have not initialised PPS pin for debug! */
     
 
     /* Configure ethernet GPIOs */

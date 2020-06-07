@@ -1,74 +1,33 @@
 /**
  * @file
- * port temp
+ * @brief port-specific clock configuration
+ * 
+ * The clock configuration is specific to any implementation, but the two most
+ * important attributes (HSE_FREQ and SYSCLK_FREQ) are set in the main
+ * configuration file. The settings in this file should be decided in accordance
+ * with those chosen values.
  *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
  */
 
-#include "port_functions.h"
-
-/* Inclue FreeRTOS Headers */
-#include "FreeRTOS.h"
-#include "task.h"
-
-/* Libopencm3 Includes */
-#include <libopencm3/cm3/nvic.h>
+/* Libopencm3 includes */
 #include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/syscfg.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/flash.h>
-#include <libopencm3/stm32/pwr.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/ethernet/mac.h>
-#include <libopencm3/ethernet/phy.h>
 
-/* LWIP includes */
-// #include "lwip/mem.h"
-// #include "netif/etharp.h"
+/* Configuration includes */
+#include <global_config.h>
+#include <port_config.h>
 
-/* Global Port-Specific Definitions */
-#include "port_config.h"
-#include "port_ethernetif.h"
+/*---------------------------- PRIVATE FUNCTIONS -----------------------------*/
 
 #ifdef DEBUG
-#include <stdio.h>
-#endif /* DEBUG */
-
-// /*-------------------- Static Global Variables (DMA) -------------------------------*/
-// /* from lsgunth */
-// struct dma_desc {
-//     volatile uint32_t   Status;
-//     uint32_t   ControlBufferSize;
-//     void *     Buffer1Addr;
-//     void *     Buffer2NextDescAddr;
-//     uint32_t   ExtendedStatus;
-//     uint32_t   Reserved1;
-//     uint32_t   TimeStampLow;
-//     uint32_t   TimeStampHigh;
-//     struct pbuf *pbuf;
-// };
-
-// #ifndef STIF_NUM_TX_DMA_DESC
-// #define STIF_NUM_TX_DMA_DESC 20
-// #endif
-// static struct dma_desc tx_dma_desc[STIF_NUM_TX_DMA_DESC];
-// static struct dma_desc *tx_cur_dma_desc;
-
-// #ifndef STIF_NUM_RX_DMA_DESC
-// #define STIF_NUM_RX_DMA_DESC 5
-// #endif
-// static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
-// static struct dma_desc *rx_cur_dma_desc;
-// // These variables are global to avoid silly stack sizes - they should only
-// // ever be accessed by the Ethernet handler thread!
-
-/*---------------------------- Ethernet Driver -------------------------------*/
-
-
-/*----------------------------------------------------------------------------*/
-
-#ifdef DEBUG
-/* Function to Map SYSCLK/4 to GPIO PC9 */
-static void prvMcoSetup(void)
+/** 
+ * @brief map the SYSCLK to a GPIO for inspection with an oscilloscope
+*/
+static void mco_setup(void)
 {
     /* PA8 to AF 0 for MCO */
     rcc_periph_clock_enable(RCC_GPIOC);
@@ -86,43 +45,12 @@ static void prvMcoSetup(void)
 }
 #endif /* DEBUG */
 
-/*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
+/*----------------------------- PUBLIC FUNCTIONS -----------------------------*/
 
-/* Function to Initialise all GPIOs */
-void vLEDInitialize() {
-    /* Enable GPIO clocks */
-    rcc_periph_clock_enable(SYSTEM_LED_RCC);
-    rcc_periph_clock_enable(STATUS_LED_RCC);
-    rcc_periph_clock_enable(WARNING_LED_RCC);
-    /* System LED */
-    gpio_mode_setup(SYSTEM_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
-            SYSTEM_LED_PIN);
-    /* Status LED */
-    gpio_mode_setup(STATUS_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
-            STATUS_LED_PIN);
-    /* Warning LED */
-    gpio_mode_setup(WARNING_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
-            WARNING_LED_PIN);
-}
-
-/* Function to Toggle System LED */
-void vSystemLEDToggle() {
-    gpio_toggle(SYSTEM_LED_PORT, SYSTEM_LED_PIN);
-}
-
-/* Function to Toggle Status LED */
-void vStatusLEDToggle() {
-    gpio_toggle(STATUS_LED_PORT, STATUS_LED_PIN);
-}
-
-/* Function to Toggle Warning LED */
-void vWarningLEDToggle() {
-    gpio_toggle(WARNING_LED_PORT, WARNING_LED_PIN);
-}
-
-/* Initialise All System Clock Architecture */
-// TODO: investigate systick divisor (currently 64 seems to work)
-void vConfigureClock() {
+/** 
+ * @brief Initialise the main system clock tree
+*/
+void portClockInit(void) {
 
     struct rcc_clock_scale rcc_config;
 
@@ -148,52 +76,3 @@ void vConfigureClock() {
     prvMcoSetup();
     #endif /* DEBUG */
 }
-
-#ifdef DEBUG
-/* Configure UART for debugging messages */
-void vConfigureUART() {
-    /* Enable GPIOD and USART3 clock. */
-    rcc_periph_clock_enable(DEBUG_UART_RCC);
-    rcc_periph_clock_enable(RCC_USART3);
-    /* Setup GPIO pins for USART3 transmit. */
-    gpio_mode_setup(DEBUG_UART_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE,
-            DEBUG_UART_TX | DEBUG_UART_RX);
-    gpio_set_af(DEBUG_UART_PORT, GPIO_AF7, DEBUG_UART_TX | DEBUG_UART_RX);
-
-    /* Setup USART3 parameters. */
-    usart_set_baudrate(USART3, 115200);
-    usart_set_databits(USART3, 8);
-    usart_set_stopbits(USART3, USART_STOPBITS_1);
-    usart_set_mode(USART3, USART_MODE_TX);
-    usart_set_parity(USART3, USART_PARITY_NONE);
-    usart_set_flow_control(USART3, USART_FLOWCONTROL_NONE);
-
-    /* Finally enable the USART. */
-    usart_enable(USART3);
-}
-#endif /* DEBUG */
-
-/*----------------------------- NEWLIB OVERRIDES -----------------------------*/
-
-/** 
- * @brief Overrides the <b>newlib</b> "_write" function that is used by printf().
- * @param fd file descriptor - handled by <b>newlib</b>.
- * @param ptr pointer to char array - handled by <b>newlib</b>. 
- * @param len length of char array - handled by <b>newlib</b>. 
- * @retval length of char array, or -1 on failure.
-*/
-int _write(int file, char * ptr, int len)
-{
-    int i;
-
-    if (file == 1) {
-        for (i = 0; i < len; i++) {
-            if (ptr[i] == '\n')
-                usart_send_blocking(USART3, '\r');
-            usart_send_blocking(USART3, ptr[i]);
-        }
-        return i;
-    }
-    return -1;
-}
-

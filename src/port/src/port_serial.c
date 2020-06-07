@@ -1,31 +1,34 @@
 /**
  * @file
- * port-specific UART implementation (used for <b>printf()</b> debugging).
+ * @brief Port-specific Serial/UART implementation
+ * (used for <b>printf()</b> debugging)
  *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
  */
-
-/**
- *  Libopencm3 Includes 
- * */
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
-
-/** Global Port-Specific Definitions */
-#include "port_config.h"
 
 #ifdef DEBUG
 #include <stdio.h>
 #endif /* DEBUG */
 
+/* Libopencm3 includes */
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/usart.h>
+
+/* Configuration includes */
+#include <global_config.h>
+#include <port_config.h>
+
 /*----------------------------- PUBLIC FUNCTIONS -----------------------------*/
 
 #ifdef DEBUG
 /** 
- * @brief Initialise the UART that is designated for the debug interface.
+ * @brief Initialise the Serial interface that is designated for debugging
  * @param baud Sets the baud-rate of the UART
 */
-void portUartInit(int baud) {
+void portSerialInit(int baud) {
     /* Enable GPIOD and USART3 clock. */
     rcc_periph_clock_enable(DEBUG_UART_RCC);
     rcc_periph_clock_enable(RCC_USART3);
@@ -49,12 +52,14 @@ void portUartInit(int baud) {
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
+#ifdef DEBUG
 /** 
- * @brief Overrides the <b>newlib</b> "_write" function that is used by printf().
- * @param fd file descriptor - handled by <b>newlib</b>.
- * @param ptr pointer to char array - handled by <b>newlib</b>. 
- * @param len length of char array - handled by <b>newlib</b>. 
- * @retval length of char array, or -1 on failure.
+ * @brief Overrides the <b>newlib</b> "_write" function that is used by 
+ * <b>printf()</b>
+ * @param fd file descriptor - handled by <b>newlib</b>
+ * @param ptr pointer to char array - handled by <b>newlib</b>
+ * @param len length of char array - handled by <b>newlib</b>
+ * @retval length of char array, or -1 on failure
 */
 int _write(int file, char * ptr, int len)
 {
@@ -70,4 +75,4 @@ int _write(int file, char * ptr, int len)
     }
     return -1;
 }
-
+#endif /* DEBUG */

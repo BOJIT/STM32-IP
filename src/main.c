@@ -4,12 +4,12 @@
  *
  */
 
+#include <string.h>
 #ifdef DEBUG
 #include <stdio.h>
 #endif /* DEBUG */
 
 #include <lwip/api.h>
-#include <string.h>
 
 /* Inclue FreeRTOS Headers */
 #include "FreeRTOS.h"
@@ -20,7 +20,7 @@
 
 /* Include Device-Specific Functions */
 #include "port.h"
-#include "port_ethernetif.h"
+#include "global_config.h"
 
 /* Stack Overflow Handler - move elsewhere */
 extern void vApplicationStackOverflowHook(
@@ -38,7 +38,7 @@ void vApplicationStackOverflowHook(
 void startTask1(void *args __attribute((unused))) {
 
     for (;;) {
-        vSystemLEDToggle();
+        portSystemLEDToggle();
         vTaskDelay(100);
 	}
 }
@@ -47,7 +47,7 @@ void startTask1(void *args __attribute((unused))) {
 void startTask2(void *args __attribute((unused))) {
 
     for (;;) {
-        vStatusLEDToggle();
+        portStatusLEDToggle();
         vTaskDelay(500);
 	}
 }
@@ -68,7 +68,7 @@ void startTask3(void *args __attribute((unused))) {
     netconn_connect(conn, IP_ADDR_BROADCAST, 1235);
 
     for (;;) {
-        vWarningLEDToggle();
+        portWarningLEDToggle();
         buf = netbuf_new();
         data =netbuf_alloc(buf, sizeof(msg));
         memcpy(data, msg, sizeof(msg));
@@ -83,9 +83,9 @@ void startTask3(void *args __attribute((unused))) {
 */
 int main(void) {
 
-    vConfigureClock();  // Configure RCC, System Clock Tree, PLL, etc...
+    portClockInit();  // Configure RCC, System Clock Tree, PLL, etc...
 
-    vLEDInitialize();   // Set onboard LED GPIOs as outputs
+    portLEDInit();   // Set onboard LED GPIOs as outputs
 
     #ifdef DEBUG
     portUartInit(115200);   // Configure UART as output for debugging

@@ -1,61 +1,60 @@
 /**
  * @file
- * port-specific global configuration options
+ * Port-specific configuration
  *
  */
 
 #ifndef __PORT_CONFIG__
 #define __PORT_CONFIG__
 
-#define DEBUG           ///< Enables all system debugging
+/* Configuration includes */
+#include <global_config.h>
 
-/* Global Clock Configuration */
-#define HSE_FREQ         8000000 // 8 MHz External Crystal
-#define SYSCLK_FREQ      96000000 // 96 MHz System Frequency
+/*----------------------------------------------------------------------------*/
 
-/* LED Pins (can be mapped by user to any other pin) */
-#define SYSTEM_LED_PORT     GPIOB
-#define SYSTEM_LED_PIN      GPIO0
-#define SYSTEM_LED_RCC      RCC_GPIOB
-#define STATUS_LED_PORT     GPIOB
-#define STATUS_LED_PIN      GPIO7
-#define STATUS_LED_RCC      RCC_GPIOB
-#define WARNING_LED_PORT    GPIOB
-#define WARNING_LED_PIN     GPIO14
-#define WARNING_LED_RCC     RCC_GPIOB
+/* Clock configuration */
+#define HSE_FREQ         8000000    ///< MCU input oscillator frequency
+#define SYSCLK_FREQ      96000000   ///< Core MCU system frequency
 
-/**
- *  UART DEBUG Pins (should be on the same port)
- */
+/*----------------------------------------------------------------------------*/
+
+/* LED configuration */
+#define SYSTEM_LED_PORT     GPIOB       ///< GPIO Port for System LED
+#define SYSTEM_LED_PIN      GPIO0       ///< GPIO Pin for System LED
+#define SYSTEM_LED_RCC      RCC_GPIOB   ///< RCC (clock enable) for System LED
+#define STATUS_LED_PORT     GPIOB       ///< GPIO Port for Status LED
+#define STATUS_LED_PIN      GPIO7       ///< GPIO Pin for StatusLED
+#define STATUS_LED_RCC      RCC_GPIOB   ///< RCC (clock enable) for Status LED
+#define WARNING_LED_PORT    GPIOB       ///< GPIO Port for Warning LED
+#define WARNING_LED_PIN     GPIO14      ///< GPIO Pin for Status LED
+#define WARNING_LED_RCC     RCC_GPIOB   ///< RCC (clock enable) for Warning LED
+
+/*----------------------------------------------------------------------------*/
+
 #ifdef DEBUG
-#define DEBUG_UART_PORT     GPIOD
-#define DEBUG_UART_TX       GPIO8
-#define DEBUG_UART_RX       GPIO9
-#define DEBUG_UART_RCC      RCC_GPIOD
+/* Serial configuration */
+#define DEBUG_UART_PORT     GPIOD     ///< GPIO Port for UART Rx <b>AND</b> TX!
+#define DEBUG_UART_TX       GPIO8     ///< GPIO Pin for Tx Pin
+#define DEBUG_UART_RX       GPIO9     ///< GPIO Pin for Rx Pin
+#define DEBUG_UART_RCC      RCC_GPIOD ///< RCC (clock enable) for UART
 #endif /* DEBUG */
 
-/* Ethernet Pins and Configuration */
-#define GPIO_ETH_RMII_MDIO GPIO2    /* PA2 */
-#define GPIO_ETH_RMII_MDC GPIO1     /* PC1 */
-//#define GPIO_ETH_RMII_PPS_OUT GPIO5 /* PB5 */ USE LATER
-#define GPIO_ETH_RMII_TX_EN GPIO11  /* PG11 */
-#define GPIO_ETH_RMII_TXD0 GPIO13   /* PG13 */
-#define GPIO_ETH_RMII_TXD1 GPIO13   /* PB13 */
-#define GPIO_ETH_RMII_REF_CLK GPIO1 /* PA1 */
-#define GPIO_ETH_RMII_CRS_DV GPIO7  /* PA7 */
-#define GPIO_ETH_RMII_RXD0 GPIO4    /* PC4 */
-#define GPIO_ETH_RMII_RXD1 GPIO5    /* PC5 */
-/* Note that the ports themselves are defined in vConfigureETH()! */
+/*----------------------------------------------------------------------------*/
 
-/* Definitions for Ethernet Descriptor Buffers */
-// #define ETH_TXBUFNB 4
-// #define ETH_RXBUFNB 4
-// #define ETH_TX_BUF_SIZE (1520 + 16)
-// #define ETH_RX_BUF_SIZE (1520 + 16)
+/* Ethernet configuration */
+#define PHY_ADDRESS         PHY0        ///< PHY Address for SMI bus
 
-#define PHY_ADDRESS PHY0
+#define GPIO_ETH_RMII_MDIO      GPIO2    /* PA2 THESE MIGHT MOVE*/
+#define GPIO_ETH_RMII_MDC       GPIO1    /* PC1 */
+#define GPIO_ETH_RMII_PPS_OUT   GPIO5    /* PB5 */
+#define GPIO_ETH_RMII_TX_EN     GPIO11   /* PG11 */
+#define GPIO_ETH_RMII_TXD0      GPIO13   /* PG13 */
+#define GPIO_ETH_RMII_TXD1      GPIO13   /* PB13 */
+#define GPIO_ETH_RMII_REF_CLK   GPIO1    /* PA1 */
+#define GPIO_ETH_RMII_CRS_DV    GPIO7    /* PA7 */
+#define GPIO_ETH_RMII_RXD0      GPIO4    /* PC4 */
+#define GPIO_ETH_RMII_RXD1      GPIO5    /* PC5 */
 
-/* Handy Macros */
-#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+/*----------------------------------------------------------------------------*/
 
 #endif /* __PORT_CONFIG__ */

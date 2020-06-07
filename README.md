@@ -1,3 +1,6 @@
+Overview  {#mainpage}
+=====================
+
 # STM32-IP
 ## Basic framework for using lwIP and FreeRTOS with libopencm3:
 
