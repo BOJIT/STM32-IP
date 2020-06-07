@@ -1,8 +1,9 @@
 /**
  * @file
- * main functions used throughout the stack.
+ * Main entry point for the program
  *
  */
+
 #include <stdio.h>
 #include "main.h"
 

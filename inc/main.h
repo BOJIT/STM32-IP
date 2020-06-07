@@ -1,3 +1,9 @@
+/**
+ * @file
+ * Headers required in every application space program
+ *
+ */
+
 #ifndef MAIN
 #define MAIN
 
