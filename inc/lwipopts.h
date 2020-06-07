@@ -20,8 +20,8 @@
 #define CHECKSUM_CHECK_TCP  0
 #define CHECKSUM_CHECK_ICMP 0
 
-// Don't know if this is necessary
-#define SYS_LIGHTWEIGHT_PROT            1
+// // Don't know if this is necessary
+// #define SYS_LIGHTWEIGHT_PROT            1
 
 #define LWIP_ETHERNET 1
 #define TCPIP_THREAD_STACKSIZE 1024
@@ -35,10 +35,10 @@
 #define DEFAULT_ACCEPTMBOX_SIZE 6
 #define RECV_BUFSIZE_DEFAULT 2000000000
 
-// #define LWIP_DHCP                   1
-// #define LWIP_AUTOIP                 1
-// #define LWIP_DHCP_AUTOIP_COOP       1
-// #define LWIP_DHCP_AUTOIP_COOP_TRIES 3
+#define LWIP_DHCP                   1
+#define LWIP_AUTOIP                 1
+#define LWIP_DHCP_AUTOIP_COOP       1
+#define LWIP_DHCP_AUTOIP_COOP_TRIES 3
 
 //#define LWIP_NETIF_HOSTNAME        0
 //#define LWIP_NETIF_API             0
@@ -53,18 +53,18 @@
 
 // #include <stmlib/rand.h>
 // #define LWIP_RAND    rand_value
-
+ 
 #define LWIP_STATS         1
 #define LWIP_STATS_DISPLAY 1
 
 // temporary debug
 #define LWIP_DEBUG
-#define MEMP_DEBUG      LWIP_DBG_ON
-#define PBUF_DEBUG      LWIP_DBG_ON
-#define ICMP_DEBUG      LWIP_DBG_ON
-#define TCPIP_DEBUG      LWIP_DBG_ON
+// #define MEMP_DEBUG      LWIP_DBG_ON
+// #define PBUF_DEBUG      LWIP_DBG_ON
+// #define ICMP_DEBUG      LWIP_DBG_ON
+// #define TCPIP_DEBUG      LWIP_DBG_ON
 // #define IP_DEBUG        LWIP_DBG_ON
-// #define DHCP_DEBUG      LWIP_DBG_ON
-#define NETIF_DEBUG     LWIP_DBG_ON
+#define DHCP_DEBUG      LWIP_DBG_ON
+// #define NETIF_DEBUG     LWIP_DBG_ON
 // #define RAW_DEBUG     LWIP_DBG_ON
-#define SYS_DEBUG     LWIP_DBG_ON
+// #define SYS_DEBUG     LWIP_DBG_ON

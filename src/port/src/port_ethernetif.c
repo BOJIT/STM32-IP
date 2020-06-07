@@ -36,53 +36,6 @@
 // Network Interface Struct
 static struct netif netif;
 
-// static enum {
-//     NO_CHANGE,
-//     LINK_UP,
-//     LINK_DOWN,
-// } phy_link_status; // Implement later
-
-// static void netif_status(struct netif *n)
-// {
-//     if (n->flags & NETIF_FLAG_UP) {
-//         printf("Interface Up %s:\n",
-//                n->flags & NETIF_FLAG_DHCP ? "(DHCP)" : "(STATIC)");
-
-//         printf("  IP Address: " IP_F "\n", IP_ARGS(&n->ip_addr));
-//         printf("  Net Mask:   " IP_F "\n", IP_ARGS(&n->netmask));
-//         printf("  Gateway:    " IP_F "\n", IP_ARGS(&n->gw));
-
-//         const char *speed = "10Mb/s";
-//         if (ETH->MACCR & ETH_MACCR_FES)
-//             speed = "100Mb/s";
-
-//         const char *duplex = "Half";
-//         if (ETH->MACCR & ETH_MACCR_DM)
-//             duplex = "Full";
-
-//         printf("  Mode:       %s  %s Duplex\n", speed, duplex);
-
-//     } else {
-//         printf("Interface Down.\n");
-//     }
-// }
-
-// static void netif_link(struct netif *n)
-// {
-//     static int dhcp_started = 0;
-
-//     if (n->flags & NETIF_FLAG_LINK_UP) {
-//         printf("Link Up.\n");
-
-//         if (!dhcp_started) {
-//             dhcp_started = 1;
-//             dhcp_start(n);
-//         }
-
-//     } else {
-//         printf("Link Down.\n");
-//     }
-// }
 /*-------------------- Static Global Variables (DMA) -------------------------------*/
 /* from lsgunth */
 struct dma_desc {
@@ -98,13 +51,13 @@ struct dma_desc {
 };
 
 #ifndef STIF_NUM_TX_DMA_DESC
-#define STIF_NUM_TX_DMA_DESC 20
+#define STIF_NUM_TX_DMA_DESC 10
 #endif
 static struct dma_desc tx_dma_desc[STIF_NUM_TX_DMA_DESC];
 static struct dma_desc *tx_cur_dma_desc;
 
 #ifndef STIF_NUM_RX_DMA_DESC
-#define STIF_NUM_RX_DMA_DESC 5
+#define STIF_NUM_RX_DMA_DESC 10
 #endif
 static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
 static struct dma_desc *rx_cur_dma_desc;
@@ -150,8 +103,6 @@ static int recv_rxdma_buffer(struct netif *netif)
     rx_cur_dma_desc->pbuf = NULL;
     rx_cur_dma_desc = rx_cur_dma_desc->Buffer2NextDescAddr;
 
-    //printf("Desc: %p\n", rx_cur_dma_desc);
-
     return 1;
 }
 
@@ -191,11 +142,10 @@ void ethernetif_input(void* argument)
     
     for(;;) {
         if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
-            LOCK_TCPIP_CORE();
+            LOCK_TCPIP_CORE();  // Don't know if locking is really necessary
             int ret = recv_rxdma_buffer(netif);
             ret |= realloc_rxdma_buffers(); // return can be used later
             UNLOCK_TCPIP_CORE();
-            //printf("ethernetif_input: Packet Recieved!\n");
         }
     }
 }
@@ -206,8 +156,6 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
 {
     // wait until the packet is freed by the DMA
     while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
-
-    printf("Buf Address 1: %p\n", tx_cur_dma_desc->pbuf);
 
     // discard old pbuf pointer (in chain)
     if (tx_cur_dma_desc->pbuf != NULL)
@@ -228,10 +176,6 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
     tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
     // ensure that p->len is never greater than 2^13!
 
-    printf("Buf Address 2: %p\n", tx_cur_dma_desc->Buffer1Addr);
-
-    printf("Buf Len 2: %u\n", tx_cur_dma_desc->ControlBufferSize);
-
     // Pass ownership back to DMA
     tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
 
@@ -240,7 +184,6 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
 
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
-    printf("------------------------\n");
     struct pbuf *q;
 
     // Iterate through pbuf chain until next-> == NULL
@@ -312,7 +255,7 @@ static err_t mac_init(void)
     ETH_MACCR |= (ETH_MACCR_FES | ETH_MACCR_ROD |
                    ETH_MACCR_IPCO | ETH_MACCR_DM);
 
-    ETH_MACFFR = 0;
+    ETH_MACFFR |= ETH_MACFFR_RA; // No Filtering Currently
     ETH_MACFCR = 0;
 
     ETH_DMABMR = (ETH_DMABMR_AAB | ETH_DMABMR_FB | ETH_DMABMR_PM_2_1 |
@@ -332,12 +275,12 @@ static void low_level_init(struct netif *netif)
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
     //read_hwaddr_from_otp(netif); // TEMPORARY HARD-CODED MAC ADDRESS
-    netif->hwaddr[0] = 0x01;
-    netif->hwaddr[1] = 0x02;
-    netif->hwaddr[2] = 0x03;
-    netif->hwaddr[3] = 0x04;
-    netif->hwaddr[4] = 0x05;
-    netif->hwaddr[5] = 0x06;
+    netif->hwaddr[0] = 0x00;
+    netif->hwaddr[1] = 0x80;
+    netif->hwaddr[2] = 0xE1;
+    netif->hwaddr[3] = 0x01;
+    netif->hwaddr[4] = 0x02;
+    netif->hwaddr[5] = 0x03;
 
     /* Set MAC Address */
     eth_set_mac(netif->hwaddr);
@@ -358,13 +301,13 @@ static void low_level_init(struct netif *netif)
     /* Setup task and semaphore to process incoming frames */
     ETH_SEMPHR = xSemaphoreCreateBinary();
 
-    xTaskCreate(ethernetif_input, "ETH", 350, netif, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(ethernetif_input, "ETH", 1024, netif, configMAX_PRIORITIES-1, NULL);
 
     /* Enable MAC and DMA transmission and reception */
     eth_start(); 
 
     // ethIRQenable() in libopencm3
-    ETH_DMAIER = ETH_DMAIER_ERIE | ETH_DMAIER_RIE | ETH_DMAIER_NISE;
+    ETH_DMAIER = ETH_DMAIER_RIE | ETH_DMAIER_RBUIE | ETH_DMAIER_NISE;
 
     /* NVIC Interrupt Configuration */
     nvic_set_priority(NVIC_ETH_IRQ, 5);
@@ -377,10 +320,10 @@ err_t ethernetif_init(struct netif *netif)
 
     LWIP_ASSERT("netif != NULL", (netif != NULL));
 
-// #if LWIP_NETIF_HOSTNAME
-//     /* Initialize interface hostname */
-//     netif->hostname = "lwip";
-// #endif /* LWIP_NETIF_HOSTNAME */
+    // #if LWIP_NETIF_HOSTNAME
+    //     /* Initialize interface hostname */
+    //     netif->hostname = "lwip";
+    // #endif /* LWIP_NETIF_HOSTNAME */
 
     netif->name[0] = 's';
     netif->name[1] = 't';
@@ -489,9 +432,10 @@ void networkInit(void)
     //igmp_start(&netif); // LATER
 }
 
-void printIP(void) {
-    //printf("test print\n");
-    //printf("Link Status: %u\n", phy_link_isup(PHY_ADDRESS));
+void gdb_break() {
+    // empty - convenient tag for GDB
+    printf("ERROR\n");
+    for(;;);
 }
 
 
@@ -502,7 +446,13 @@ void eth_isr(void)
 {
     static BaseType_t task_yield = pdFALSE;
     // Clear ethernetif_input semaphore
-    xSemaphoreGiveFromISR(ETH_SEMPHR, &task_yield);
-    ETH_DMASR = ETH_DMASR_ERS | ETH_DMASR_RS | ETH_DMASR_NIS;
-    portYIELD_FROM_ISR(task_yield);
+    if((ETH_DMASR & ETH_DMASR_RS) == ETH_DMASR_RS) {    // Packet Recieved
+        xSemaphoreGiveFromISR(ETH_SEMPHR, &task_yield);
+        ETH_DMASR = ETH_DMASR_RS;
+        portYIELD_FROM_ISR(task_yield);
+    }
+    else {  // Error Condition
+        gdb_break();    // TODO properly
+    }
+    ETH_DMASR = ETH_DMAIER_NISE; // Clear Normal Interrupt Summary
 }

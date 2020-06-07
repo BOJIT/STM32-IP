@@ -17,16 +17,12 @@ void vApplicationStackOverflowHook(
     for(;;);    // Loop forever here..
 }
 
-void gdb_break() {
-    // empty - convenient tag for GDB
-}
-
 /* Task 1 - Blink System LED */
 void startTask1(void *args __attribute((unused))) {
 
     for (;;) {
         vSystemLEDToggle();
-        vTaskDelay(50);
+        vTaskDelay(100);
 	}
 }
 
@@ -45,8 +41,7 @@ void startTask3(void *args __attribute((unused))) {
     networkInit(); // Configure Ethernet GPIOs and registers
 
     struct netconn *conn;
-    char msg1[] = "alpha";
-    char msg2[] = "beta";
+    char msg[] = "alpha";
     struct netbuf *buf;
     char * data;
 
@@ -58,20 +53,11 @@ void startTask3(void *args __attribute((unused))) {
     for (;;) {
         vWarningLEDToggle();
         buf = netbuf_new();
-        data =netbuf_alloc(buf, sizeof(msg1));
-        memcpy(data, msg1, sizeof(msg1));
+        data =netbuf_alloc(buf, sizeof(msg));
+        memcpy(data, msg, sizeof(msg));
         netconn_send(conn, buf);
         netbuf_delete(buf); // De-allocate packet buffer
-        buf = netbuf_new();
-        data =netbuf_alloc(buf, sizeof(msg2));
-        memcpy(data, msg2, sizeof(msg2));
-        netconn_send(conn, buf);
-        netbuf_delete(buf); // De-allocate packet buffer
-        #ifdef DEBUG
-        printIP();
-        #endif /* DEBUG */
         vTaskDelay(1000);
-        gdb_break();
 	}
 }
 

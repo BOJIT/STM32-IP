@@ -5,6 +5,16 @@ TODO:
 
 * get basic TCP/IP example up and running: basic DHCP Autodiscovery vs. Static IP
 
+* Ethernetif Driver:
+  - Sort Ethernet Interrupts
+  - Get Recieve Demo/ICMP working
+  - Add Static IP Override
+  - Neaten Driver Code
+  - Add IGMP Support
+  - Add Link Polling/Detection
+
+* Start Adding PTP functionality to the Ethernet Driver
+
 * get PTP daemon running on STM32F7. Port F4 code
 
 ## Reference Software Tools:
