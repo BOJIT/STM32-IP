@@ -73,6 +73,6 @@ void portClockInit(void) {
 
     #ifdef DEBUG
     /* Map system clock to PC9 (MCO2 output) */
-    prvMcoSetup();
+    mco_setup();
     #endif /* DEBUG */
 }

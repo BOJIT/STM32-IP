@@ -1,3 +1,18 @@
+/**
+ * @file
+ * @brief lwIP application configuration
+ *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
+ */
+
+/* Configuration includes */
+#include <global_config.h>
+
+/*----------------------------------------------------------------------------*/
+
+// NEED TO ORGANISE!
 #define MEM_ALIGNMENT 4
 #define MEM_SIZE      (32*1024)
 
@@ -10,7 +25,9 @@
 
 #define PBUF_POOL_SIZE 32
 
-//Checksum handled by hardware
+/*----------------------------------------------------------------------------*/
+
+/* Checksum disable (calculated in hardware) */
 #define CHECKSUM_GEN_IP     0
 #define CHECKSUM_GEN_UDP    0
 #define CHECKSUM_GEN_TCP    0
@@ -20,9 +37,9 @@
 #define CHECKSUM_CHECK_TCP  0
 #define CHECKSUM_CHECK_ICMP 0
 
-// // Don't know if this is necessary
-// #define SYS_LIGHTWEIGHT_PROT            1
+/*----------------------------------------------------------------------------*/
 
+// NEED TO ORGANISE!
 #define LWIP_ETHERNET 1
 #define TCPIP_THREAD_STACKSIZE 1024
 #define TCPIP_THREAD_PRIO 24
@@ -35,6 +52,12 @@
 #define DEFAULT_ACCEPTMBOX_SIZE 6
 #define RECV_BUFSIZE_DEFAULT 2000000000
 
+/*----------------------------------------------------------------------------*/
+
+/* Application feature configuration */
+#define LWIP_SOCKET  0
+#define LWIP_NETCONN 1      ///< Application uses Netconn API exclusively
+
 #define LWIP_DHCP                   1
 #define LWIP_AUTOIP                 1
 #define LWIP_DHCP_AUTOIP_COOP       1
@@ -42,29 +65,26 @@
 
 //#define LWIP_NETIF_HOSTNAME        0
 //#define LWIP_NETIF_API             0
-#define LWIP_NETIF_STATUS_CALLBACK 0
-#define LWIP_NETIF_LINK_CALLBACK   0
+#define LWIP_NETIF_STATUS_CALLBACK 0  //!
+#define LWIP_NETIF_LINK_CALLBACK   0  //!
 
-#define LWIP_SOCKET  0
-#define LWIP_NETCONN 1
-
-#define SO_REUSE     1
+#define SO_REUSE     1 //?
 #define LWIP_IGMP    0
-
-// #include <stmlib/rand.h>
-// #define LWIP_RAND    rand_value
  
-#define LWIP_STATS         1
-#define LWIP_STATS_DISPLAY 1
+#define LWIP_STATS         1 //?
+#define LWIP_STATS_DISPLAY 1 //?
 
-// temporary debug
+/*----------------------------------------------------------------------------*/
+#ifdef DEBUG
+/* Use lwIP's built-in printf debugging */
 #define LWIP_DEBUG
 // #define MEMP_DEBUG      LWIP_DBG_ON
 // #define PBUF_DEBUG      LWIP_DBG_ON
 // #define ICMP_DEBUG      LWIP_DBG_ON
-// #define TCPIP_DEBUG      LWIP_DBG_ON
+// #define TCPIP_DEBUG     LWIP_DBG_ON
 // #define IP_DEBUG        LWIP_DBG_ON
 #define DHCP_DEBUG      LWIP_DBG_ON
 // #define NETIF_DEBUG     LWIP_DBG_ON
-// #define RAW_DEBUG     LWIP_DBG_ON
-// #define SYS_DEBUG     LWIP_DBG_ON
+// #define RAW_DEBUG       LWIP_DBG_ON
+// #define SYS_DEBUG       LWIP_DBG_ON
+#endif

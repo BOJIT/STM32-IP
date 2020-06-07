@@ -1,6 +1,6 @@
 /**
  * @file
- * Main entry point for the program
+ * @brief Main entry point for the program
  *
  */
 
@@ -18,9 +18,11 @@
 /* Include FreeRTOS Tasks and Config */
 #include "FreeRTOSConfig.h"
 
-/* Include Device-Specific Functions */
-#include "port.h"
-#include "global_config.h"
+/* Configuration includes */
+#include <global_config.h>
+
+/* Device-Specific includes */
+#include "port.h"       ///< 
 
 /* Stack Overflow Handler - move elsewhere */
 extern void vApplicationStackOverflowHook(
@@ -88,7 +90,7 @@ int main(void) {
     portLEDInit();   // Set onboard LED GPIOs as outputs
 
     #ifdef DEBUG
-    portUartInit(115200);   // Configure UART as output for debugging
+    portSerialInit(115200);   // Configure UART as output for debugging
     #endif /* DEBUG */
 
     xTaskCreate(startTask1, "task1", 350, NULL, 5, NULL);

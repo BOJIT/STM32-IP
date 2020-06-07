@@ -29,6 +29,8 @@ STRIP_FROM_PATH     = ../
 
 INCLUDE_PATH        = ../inc ../src/port/inc
 
+USE_MDFILE_AS_MAINPAGE = ../README.md
+
 #---------------------------------------------------------------------------
 # Doxygen settings
 #---------------------------------------------------------------------------
@@ -38,5 +40,3 @@ OPTIMIZE_OUTPUT_FOR_C       = YES
 GENERATE_LATEX              = NO
 
 GENERATE_TREEVIEW           = YES
-
-DISTRIBUTE_GROUP_DOC        = YES

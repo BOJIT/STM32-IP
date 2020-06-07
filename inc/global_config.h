@@ -1,7 +1,10 @@
 /**
  * @file
- * Global application configuration
+ * @brief Global application configuration
  *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
  */
 
 #ifndef __GLOBAL_CONFIG__

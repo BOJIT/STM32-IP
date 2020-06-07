@@ -1,7 +1,10 @@
 /**
  * @file
- * Port-specific configuration
+ * @brief Port-specific application configuration
+ * 
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
  *
+ * @date 7 June 2020
  */
 
 #ifndef __PORT_CONFIG__

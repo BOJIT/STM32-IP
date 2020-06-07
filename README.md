@@ -1,7 +1,5 @@
-Overview  {#mainpage}
-=====================
+# Overview
 
-# STM32-IP
 ## Basic framework for using lwIP and FreeRTOS with libopencm3:
 
 This framework is completely independent of the STM32 HAL, and is designed with a zero-copy Ethernet driver that supports PTP.

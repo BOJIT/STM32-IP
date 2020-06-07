@@ -1,14 +1,25 @@
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
+/**
+ * @file
+ * @brief FreeRTOS application configuration
+ *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
+ */
 
-#include "port_config.h"
+#ifndef __FREERTOS_CONFIG__
+#define __FREERTOS_CONFIG__
+
+/* Configuration includes */
+#include <global_config.h>
+#include <port_config.h>
 
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_DYNAMIC_ALLOCATION         1
 #define configUSE_IDLE_HOOK                      0
 #define configUSE_TICK_HOOK                      0
 #define configCPU_CLOCK_HZ		( ( unsigned long ) SYSCLK_FREQ )
-#define configSYSTICK_CLOCK_HZ		( configCPU_CLOCK_HZ / 8 ) /* vTaskDelay() fix */
+#define configSYSTICK_CLOCK_HZ		( configCPU_CLOCK_HZ / 8 )
 #define configTICK_RATE_HZ		( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES		( 10 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 128 )
@@ -70,4 +81,4 @@ NVIC value of 255. */
 #define xPortPendSVHandler pend_sv_handler
 #define xPortSysTickHandler sys_tick_handler
 
-#endif /* FREERTOS_CONFIG_H */
+#endif /* __FREERTOS_CONFIG__ */
