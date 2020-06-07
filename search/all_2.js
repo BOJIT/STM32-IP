@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['main_8',['main',['../main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main.c']]],
-  ['main_2ec_9',['main.c',['../main_8c.html',1,'']]]
+  ['global_5fconfig_2eh_11',['global_config.h',['../global__config_8h.html',1,'']]]
 ];

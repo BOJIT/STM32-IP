@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -46,6 +50,23 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('port__leds_8c.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fd8b95245ffcce776715f180c056b450.html">port</a></li><li class="navelem"><a class="el" href="dir_9dc27f79e0ebd19ea42c6c85d5f84a57.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
@@ -72,101 +88,47 @@ $(function() {
 <div class="title">port_leds.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="port_8h_source.html">port.h</a>&quot;</code><br />
-<code>#include &quot;FreeRTOS.h&quot;</code><br />
-<code>#include &quot;task.h&quot;</code><br />
-<code>#include &lt;libopencm3/cm3/nvic.h&gt;</code><br />
-<code>#include &lt;libopencm3/stm32/rcc.h&gt;</code><br />
-<code>#include &lt;libopencm3/stm32/syscfg.h&gt;</code><br />
+
+<p>port-specific LED control and initialisation  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;libopencm3/stm32/rcc.h&gt;</code><br />
 <code>#include &lt;libopencm3/stm32/gpio.h&gt;</code><br />
-<code>#include &lt;libopencm3/stm32/flash.h&gt;</code><br />
-<code>#include &lt;libopencm3/stm32/pwr.h&gt;</code><br />
-<code>#include &lt;libopencm3/stm32/usart.h&gt;</code><br />
-<code>#include &lt;libopencm3/ethernet/mac.h&gt;</code><br />
-<code>#include &lt;libopencm3/ethernet/phy.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="port__config_8h_source.html">port_config.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="global__config_8h_source.html">global_config.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="port__config_8h_source.html">port_config.h</a>&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab5c57c12eb7ab18d27b9b21d641d5f03"><td class="memItemLeft" align="right" valign="top"><a id="ab5c57c12eb7ab18d27b9b21d641d5f03"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vLEDInitialize</b> ()</td></tr>
-<tr class="separator:ab5c57c12eb7ab18d27b9b21d641d5f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a3a8b40a19fd38cc9b2416613170175"><td class="memItemLeft" align="right" valign="top"><a id="a6a3a8b40a19fd38cc9b2416613170175"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vSystemLEDToggle</b> ()</td></tr>
-<tr class="separator:a6a3a8b40a19fd38cc9b2416613170175"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01e18a6e6cf60d4d4c7b53d3a9296938"><td class="memItemLeft" align="right" valign="top"><a id="a01e18a6e6cf60d4d4c7b53d3a9296938"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vStatusLEDToggle</b> ()</td></tr>
-<tr class="separator:a01e18a6e6cf60d4d4c7b53d3a9296938"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcf23bd2e96eb4fe9dd56b4e751ae56b"><td class="memItemLeft" align="right" valign="top"><a id="adcf23bd2e96eb4fe9dd56b4e751ae56b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vWarningLEDToggle</b> ()</td></tr>
-<tr class="separator:adcf23bd2e96eb4fe9dd56b4e751ae56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbb02f5f7e9692bf5c9cf1aaf4bef8cd"><td class="memItemLeft" align="right" valign="top"><a id="adbb02f5f7e9692bf5c9cf1aaf4bef8cd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vConfigureClock</b> ()</td></tr>
-<tr class="separator:adbb02f5f7e9692bf5c9cf1aaf4bef8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa025a12d45f60c7d0eae249e61f0c7f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__leds_8c.html#aa025a12d45f60c7d0eae249e61f0c7f9">_write</a> (int file, char *ptr, int len)</td></tr>
-<tr class="memdesc:aa025a12d45f60c7d0eae249e61f0c7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overrides the <b>newlib</b> "_write" function that is used by printf().  <a href="port__leds_8c.html#aa025a12d45f60c7d0eae249e61f0c7f9">More...</a><br /></td></tr>
-<tr class="separator:aa025a12d45f60c7d0eae249e61f0c7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a881db45a94dfd621c5c698d22c2edcf2"><td class="memItemLeft" align="right" valign="top"><a id="a881db45a94dfd621c5c698d22c2edcf2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__leds_8c.html#a881db45a94dfd621c5c698d22c2edcf2">portLEDInit</a> (void)</td></tr>
+<tr class="memdesc:a881db45a94dfd621c5c698d22c2edcf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the LEDs as outputs. <br /></td></tr>
+<tr class="separator:a881db45a94dfd621c5c698d22c2edcf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d27381d46b54c4c942753a2017ca0af"><td class="memItemLeft" align="right" valign="top"><a id="a9d27381d46b54c4c942753a2017ca0af"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__leds_8c.html#a9d27381d46b54c4c942753a2017ca0af">portSystemLEDToggle</a> (void)</td></tr>
+<tr class="memdesc:a9d27381d46b54c4c942753a2017ca0af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle the <b>SYSTEM</b> LED. <br /></td></tr>
+<tr class="separator:a9d27381d46b54c4c942753a2017ca0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad686946b95a6c077b30617dc13563f5"><td class="memItemLeft" align="right" valign="top"><a id="aad686946b95a6c077b30617dc13563f5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__leds_8c.html#aad686946b95a6c077b30617dc13563f5">portStatusLEDToggle</a> (void)</td></tr>
+<tr class="memdesc:aad686946b95a6c077b30617dc13563f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle the <b>STATUS</b> LED. <br /></td></tr>
+<tr class="separator:aad686946b95a6c077b30617dc13563f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20d8f6b35d67e0990707c36e76a7af0e"><td class="memItemLeft" align="right" valign="top"><a id="a20d8f6b35d67e0990707c36e76a7af0e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__leds_8c.html#a20d8f6b35d67e0990707c36e76a7af0e">portWarningLEDToggle</a> (void)</td></tr>
+<tr class="memdesc:a20d8f6b35d67e0990707c36e76a7af0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle the <b>WARNING</b> LED. <br /></td></tr>
+<tr class="separator:a20d8f6b35d67e0990707c36e76a7af0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>port temp </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="aa025a12d45f60c7d0eae249e61f0c7f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa025a12d45f60c7d0eae249e61f0c7f9">&#9670;&nbsp;</a></span>_write()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int _write </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Overrides the <b>newlib</b> "_write" function that is used by printf(). </p>
-<p>Overrides the <b>newlib</b> "_write" function that is used by <b>printf()</b>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fd</td><td>file descriptor - handled by <b>newlib</b>. </td></tr>
-    <tr><td class="paramname">ptr</td><td>pointer to char array - handled by <b>newlib</b>. </td></tr>
-    <tr><td class="paramname">len</td><td>length of char array - handled by <b>newlib</b>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">length</td><td>of char array, or -1 on failure. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-</div><!-- contents -->
+<div class="textblock"><p>port-specific LED control and initialisation </p>
+<dl class="section author"><dt>Author</dt><dd> &copy;  2020 James Bennion-Pedley</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>7 June 2020 </dd></dl>
+</div></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.18
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fd8b95245ffcce776715f180c056b450.html">port</a></li><li class="navelem"><a class="el" href="dir_9dc27f79e0ebd19ea42c6c85d5f84a57.html">src</a></li><li class="navelem"><a class="el" href="port__leds_8c.html">port_leds.c</a></li>
+    <li class="footer">Generated by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
+  </ul>
+</div>
 </body>
 </html>

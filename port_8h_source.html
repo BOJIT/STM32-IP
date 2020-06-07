@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -46,6 +50,23 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('port_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,55 +81,68 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html">inc</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">port.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="port_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef __PORT__</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define __PORT__</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*----------------------------- PUBLIC FUNCTIONS -----------------------------*/</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/* Function to Initialise all GPIOs */</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> vLEDInitialize();</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef __PORT__</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define __PORT__</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/* Function to Toggle System LED */</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> vSystemLEDToggle();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/* Configuration includes */</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="global__config_8h.html">global_config.h</a>&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/* Function to Toggle Status LED */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> vStatusLEDToggle();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/* Function to Toggle Warning LED */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> vWarningLEDToggle();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">/* Initialise All System Clock Architecture */</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">void</span> vConfigureClock();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">   34</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">portUartInit</a>(<span class="keywordtype">int</span> baud);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> networkInit(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/*----------------------------- NEWLIB OVERRIDES -----------------------------*/</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/*----------------------------- PUBLIC FUNCTIONS -----------------------------*/</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a78aff024b3035cfd704727915ec0d04f">portClockInit</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a881db45a94dfd621c5c698d22c2edcf2">portLEDInit</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a9d27381d46b54c4c942753a2017ca0af">portSystemLEDToggle</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#aad686946b95a6c077b30617dc13563f5">portStatusLEDToggle</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a20d8f6b35d67e0990707c36e76a7af0e">portWarningLEDToggle</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b">portSerialInit</a>(<span class="keywordtype">int</span> baud);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// YET TO CONFIRM PUBLIC INTERFACE!</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span> networkInit(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/*----------------------------- NEWLIB OVERRIDES -----------------------------*/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aport_8h_html_a0c1fa2d02c07b22bf2ebd769a028b852"><div class="ttname"><a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a></div><div class="ttdeci">int _write(int fd, char *ptr, int len)</div><div class="ttdoc">Overrides the newlib &quot;_write&quot; function that is used by printf().</div><div class="ttdef"><b>Definition:</b> port_clock.c:185</div></div>
-<div class="ttc" id="aport_8h_html_a7161d740fd9c9e08cf67b67b826bde4e"><div class="ttname"><a href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">portUartInit</a></div><div class="ttdeci">void portUartInit(int baud)</div><div class="ttdoc">Initialise the UART that is designated for the debug interface.</div></div>
+</div><!-- doc-content -->
+<div class="ttc" id="aport_8h_html_a78aff024b3035cfd704727915ec0d04f"><div class="ttname"><a href="port_8h.html#a78aff024b3035cfd704727915ec0d04f">portClockInit</a></div><div class="ttdeci">void portClockInit(void)</div><div class="ttdoc">Initialise the main system clock tree.</div><div class="ttdef"><b>Definition:</b> port_clock.c:53</div></div>
+<div class="ttc" id="aport_8h_html_aad686946b95a6c077b30617dc13563f5"><div class="ttname"><a href="port_8h.html#aad686946b95a6c077b30617dc13563f5">portStatusLEDToggle</a></div><div class="ttdeci">void portStatusLEDToggle(void)</div><div class="ttdoc">Toggle the STATUS LED.</div><div class="ttdef"><b>Definition:</b> port_leds.c:49</div></div>
+<div class="ttc" id="aport_8h_html_a20d8f6b35d67e0990707c36e76a7af0e"><div class="ttname"><a href="port_8h.html#a20d8f6b35d67e0990707c36e76a7af0e">portWarningLEDToggle</a></div><div class="ttdeci">void portWarningLEDToggle(void)</div><div class="ttdoc">Toggle the WARNING LED.</div><div class="ttdef"><b>Definition:</b> port_leds.c:56</div></div>
+<div class="ttc" id="aport_8h_html_a0c1fa2d02c07b22bf2ebd769a028b852"><div class="ttname"><a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a></div><div class="ttdeci">int _write(int fd, char *ptr, int len)</div><div class="ttdoc">Overrides the newlib &quot;_write&quot; function that is used by printf()</div><div class="ttdef"><b>Definition:</b> port_serial.c:64</div></div>
+<div class="ttc" id="aport_8h_html_a9d27381d46b54c4c942753a2017ca0af"><div class="ttname"><a href="port_8h.html#a9d27381d46b54c4c942753a2017ca0af">portSystemLEDToggle</a></div><div class="ttdeci">void portSystemLEDToggle(void)</div><div class="ttdoc">Toggle the SYSTEM LED.</div><div class="ttdef"><b>Definition:</b> port_leds.c:42</div></div>
+<div class="ttc" id="aglobal__config_8h_html"><div class="ttname"><a href="global__config_8h.html">global_config.h</a></div></div>
+<div class="ttc" id="aport_8h_html_a881db45a94dfd621c5c698d22c2edcf2"><div class="ttname"><a href="port_8h.html#a881db45a94dfd621c5c698d22c2edcf2">portLEDInit</a></div><div class="ttdeci">void portLEDInit(void)</div><div class="ttdoc">Initialise the LEDs as outputs.</div><div class="ttdef"><b>Definition:</b> port_leds.c:23</div></div>
+<div class="ttc" id="aport_8h_html_ac5d8ae5fbaf7e1294ce727f048327e5b"><div class="ttname"><a href="port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b">portSerialInit</a></div><div class="ttdeci">void portSerialInit(int baud)</div><div class="ttdoc">Initialise the Serial interface that is designated for debugging.</div><div class="ttdef"><b>Definition:</b> port_serial.c:31</div></div>
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.18
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html">inc</a></li><li class="navelem"><a class="el" href="port_8h.html">port.h</a></li>
+    <li class="footer">Generated by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
+  </ul>
+</div>
 </body>
 </html>
