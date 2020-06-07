@@ -1,8 +1,13 @@
-#ifndef PORT_CONFIG
-#define PORT_CONFIG
+/**
+ * @file
+ * port-specific global configuration options
+ *
+ */
 
-/* Enable Debug Options */
-#define DEBUG
+#ifndef __PORT_CONFIG__
+#define __PORT_CONFIG__
+
+#define DEBUG           ///< Enables all system debugging
 
 /* Global Clock Configuration */
 #define HSE_FREQ         8000000 // 8 MHz External Crystal
@@ -19,7 +24,9 @@
 #define WARNING_LED_PIN     GPIO14
 #define WARNING_LED_RCC     RCC_GPIOB
 
-/* UART DEBUG Pins (should be on the same port) */
+/**
+ *  UART DEBUG Pins (should be on the same port)
+ */
 #ifdef DEBUG
 #define DEBUG_UART_PORT     GPIOD
 #define DEBUG_UART_TX       GPIO8
@@ -51,4 +58,4 @@
 /* Handy Macros */
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
 
-#endif /* PORT_CONFIG */
+#endif /* __PORT_CONFIG__ */

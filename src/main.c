@@ -4,7 +4,9 @@
  *
  */
 
+#ifdef DEBUG
 #include <stdio.h>
+#endif /* DEBUG */
 
 #include <lwip/api.h>
 #include <string.h>
@@ -20,7 +22,7 @@
 #include "port.h"
 #include "port_ethernetif.h"
 
-/* Stack Overflow Handler */
+/* Stack Overflow Handler - move elsewhere */
 extern void vApplicationStackOverflowHook(
     xTaskHandle *pxTask,
     signed portCHAR *pcTaskName);
@@ -76,9 +78,8 @@ void startTask3(void *args __attribute((unused))) {
 	}
 }
 
-/**
- * This is the main function
- * 
+/** 
+ * @brief This is the main entry point to the program
 */
 int main(void) {
 
@@ -87,7 +88,7 @@ int main(void) {
     vLEDInitialize();   // Set onboard LED GPIOs as outputs
 
     #ifdef DEBUG
-    vConfigureUART();   // Configure UART as output for debugging
+    portUartInit(115200);   // Configure UART as output for debugging
     #endif /* DEBUG */
 
     xTaskCreate(startTask1, "task1", 350, NULL, 5, NULL);
@@ -96,7 +97,7 @@ int main(void) {
 
     vTaskStartScheduler();
 
-    // This point is never reached!
+    /* This point is never reached, as the scheduler is blocking! */
     for (;;);
     return 0;
 }

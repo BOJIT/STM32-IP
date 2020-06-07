@@ -1,5 +1,4 @@
 #include "port_config.h"
-#include "port_ethernetif.h"
 
 /* lwIP Includes */
 #include <lwip/init.h>
@@ -20,7 +19,6 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/pwr.h>
-#include <libopencm3/stm32/usart.h>
 #include <libopencm3/ethernet/mac.h>
 #include <libopencm3/ethernet/phy.h>
 

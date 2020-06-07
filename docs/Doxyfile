@@ -13,6 +13,10 @@
 # Local settings
 #---------------------------------------------------------------------------
 
+PROJECT_NAME           = "STM32-IP"
+
+PROJECT_BRIEF          = "Framework for using lwIP and FreeRTOS with libopencm3"
+
 INPUT               = ../inc ../src ../README.md
 
 RECURSIVE           = YES

@@ -3,14 +3,14 @@
  * Contains declarations of all the public functions that must be provided by
  * the architecture-specific port. All functions should start with the word
  * 'port' so as to make it clear which parts of the application are
- * architecture-specific.
+ * architecture-specific (<b>_write</b> is the only exception to this rule).
  *
  */
 
 #ifndef __PORT__
 #define __PORT__
 
-/*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
+/*----------------------------- PUBLIC FUNCTIONS -----------------------------*/
 
 /* Function to Initialise all GPIOs */
 void vLEDInitialize();
@@ -27,19 +27,20 @@ void vWarningLEDToggle();
 /* Initialise All System Clock Architecture */
 void vConfigureClock();
 
-/* Configure UART for debugging messages */
-void vConfigureUART();
+/** 
+ * @brief Initialise the UART that is designated for the debug interface.
+ * @param baud Sets the baud-rate of the UART
+*/
+void portUartInit(int baud);
 
-/* Configure Ethernet Peripheral */
-void vConfigureETH();
 
-/* Test function to send an ethernet packet */
-int vSendETH(void);
+void networkInit(void);
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
 /** 
- * @brief Overrides the <b>newlib</b> "_write" function that is used by printf().
+ * @brief Overrides the <b>newlib</b> "_write" function that is used by 
+ * <b>printf()</b>.
  * @param fd file descriptor - handled by <b>newlib</b>.
  * @param ptr pointer to char array - handled by <b>newlib</b>. 
  * @param len length of char array - handled by <b>newlib</b>. 
