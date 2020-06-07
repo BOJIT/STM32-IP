@@ -1,5 +1,14 @@
-#ifndef PORT_FUNCTIONS
-#define PORT_FUNCTIONS
+/**
+ * @file
+ * Contains declarations of all the public functions that must be provided by
+ * the architecture-specific port. All functions should start with the word
+ * 'port' so as to make it clear which parts of the application are
+ * architecture-specific.
+ *
+ */
+
+#ifndef __PORT__
+#define __PORT__
 
 /*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
@@ -29,7 +38,13 @@ int vSendETH(void);
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
-/* Redirect 'printf' to UART */
+/** 
+ * @brief Overrides the <b>newlib</b> "_write" function that is used by printf().
+ * @param fd file descriptor - handled by <b>newlib</b>.
+ * @param ptr pointer to char array - handled by <b>newlib</b>. 
+ * @param len length of char array - handled by <b>newlib</b>. 
+ * @retval length of char array, or -1 on failure.
+*/
 int _write(int fd, char *ptr, int len);
 
-#endif /* PORT_FUNCTIONS */
+#endif /* __PORT__ */

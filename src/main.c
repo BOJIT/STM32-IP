@@ -5,10 +5,20 @@
  */
 
 #include <stdio.h>
-#include "main.h"
 
 #include <lwip/api.h>
 #include <string.h>
+
+/* Inclue FreeRTOS Headers */
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Include FreeRTOS Tasks and Config */
+#include "FreeRTOSConfig.h"
+
+/* Include Device-Specific Functions */
+#include "port.h"
+#include "port_ethernetif.h"
 
 /* Stack Overflow Handler */
 extern void vApplicationStackOverflowHook(

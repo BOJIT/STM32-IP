@@ -1,4 +1,4 @@
-# Required Port-Specific Components:
+# Porting Guide:
 
 - ```port_functions.c``` - contains all port-specific functions that must be
   provided when porting to a new device (these functions are declared in

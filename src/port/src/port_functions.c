@@ -1,3 +1,9 @@
+/**
+ * @file
+ * port temp
+ *
+ */
+
 #include "port_functions.h"
 
 /* Inclue FreeRTOS Headers */
@@ -169,7 +175,13 @@ void vConfigureUART() {
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 
-/* Redirect 'printf' to UART */
+/** 
+ * @brief Overrides the <b>newlib</b> "_write" function that is used by printf().
+ * @param fd file descriptor - handled by <b>newlib</b>.
+ * @param ptr pointer to char array - handled by <b>newlib</b>. 
+ * @param len length of char array - handled by <b>newlib</b>. 
+ * @retval length of char array, or -1 on failure.
+*/
 int _write(int file, char * ptr, int len)
 {
     int i;
