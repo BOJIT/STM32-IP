@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Open-AES67: PTP.STM32</title>
+<title>Open-AES67: STM32-IP</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,10 +63,13 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">PTP.STM32 </div>  </div>
+<div class="title">STM32-IP </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a>PTPv2 grandmaster based on the ARM CMSIS standard interface</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Basic framework for using lwIP and FreeRTOS with libopencm3:</h1>
+<p>This framework is completely independent of the STM32 HAL, and is designed with a zero-copy Ethernet driver that supports PTP. This framework is also designed to be cross-platform, and easily portable to other ARM Cortex-M microcontrollers.</p>
 <p>TODO:</p>
 <ul>
 <li>get basic TCP/IP example up and running: basic DHCP Autodiscovery vs. Static IP</li>
@@ -77,12 +80,13 @@ $(function() {
 <li>Neaten Driver Code</li>
 <li>Add IGMP Support</li>
 <li>Add Link Polling/Detection</li>
+<li>Finish Doxygen documentation</li>
 </ul>
 </li>
 <li>Start Adding PTP functionality to the Ethernet Driver</li>
 <li>get PTP daemon running on STM32F7. Port F4 code</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Reference Software Tools:</h1>
 <ul>
 <li>ANEMAN <a href="https://www.aneman.net/">https://www.aneman.net/</a> : This is similar to Dante Controller, but works with a plugin format that means anyone can create a device profile/protocol that can interoperate with an AES67 network.</li>
@@ -90,19 +94,16 @@ Reference Software Tools:</h1>
 <li>Ravenna RVSC <a href="https://www.ravenna-network.com/resources/">https://www.ravenna-network.com/resources/</a> : a windows-compatible AES67 virtual soundcard which can be used for testing up to 16 channels of IO.</li>
 <li>Open-Source AES67 Daemon <a href="https://github.com/bondagit/aes67-linux-daemon">https://github.com/bondagit/aes67-linux-daemon</a> : recently released, looks good, might free any long-term RAVENNA dependencies. Not really a production release yet.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Project Structure:</h1>
 <ul>
 <li>The project is designed to work using the CMSIS interface: this means that the core code should run on any Cortex-M microcontroller with appropriate peripherals</li>
-<li>Note that while the CMSIS standard provides a selection of function declarations to interact with the MCU hardware, the implementation is up to you/the manufacturer. The folder labelled <code>dev/</code> contains implementations of the CMSIS functions and any other low-level setup code.</li>
-<li>To port this project to another ARM MCU, make a device folder following the structure illustrated in the <code>dev/stm32f767xx/</code> folder. Note that the device folder is the ONLY folder that can contain device-specific/non-CMSIS-Compliant code. The src code should work with all devices without modification.</li>
+<li>Note that while the CMSIS standard provides a selection of function declarations to interact with the MCU hardware, the implementation is up to you/the manufacturer. The folder labelled <code>port/</code> contains implementations of any port-specific functions. These have to be re-written if porting to another architecture.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Building this Project:</h1>
 <ul>
-<li>To build the firmware for all devices, simply run <code>make</code>. ELFs and binaries will be generated in the appropriate <code>bin/</code> folder. Similarly, <code>make clean</code> will clean all devices.</li>
-<li><code>make flash</code> will build the code for all devices, then run each device's <code>prog/'device'/flash.sh</code> script. These scripts do not initially do anything, and should be set up by the user to suit their programming setup. Some example targets are provided at the bottom of the script. If the project is built with <code>make flash FLAGS=-g</code>, then the script can be configured to launch a 'debug' version of the flash program (e.g. launch GDB, etc...)</li>
-<li>To build/clean/flash only a single device, suffix the make command with <code>_'device'</code>, e.g. <code>make stm32f767xx</code>, <code>make clean_stm32f767xxx</code>, <code>make flash_stm32f767xxx</code>, etc... </li>
+<li>To build the firmware for all devices, simply run <code>make</code>. ELFs and binaries will be generated in the appropriate <code>bin/</code> folder. Similarly, <code>make clean</code> will clean all devices. </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
