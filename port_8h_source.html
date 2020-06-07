@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Open-AES67: inc/port.h Source File</title>
+<title>STM32-IP: inc/port.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,9 +21,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Open-AES67
+   <div id="projectname">STM32-IP
    </div>
-   <div id="projectbrief">Simple PTP for STM32</div>
+   <div id="projectbrief">Framework for using lwIP and FreeRTOS with libopencm3</div>
   </td>
  </tr>
  </tbody>
@@ -74,7 +74,7 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef __PORT__</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define __PORT__</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/*----------------------------- PUBLIC FUNCTIONS -----------------------------*/</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">/* Function to Initialise all GPIOs */</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> vLEDInitialize();</div>
@@ -91,22 +91,19 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">/* Initialise All System Clock Architecture */</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">void</span> vConfigureClock();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/* Configure UART for debugging messages */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> vConfigureUART();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">/* Configure Ethernet Peripheral */</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> vConfigureETH();</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">   34</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">portUartInit</a>(<span class="keywordtype">int</span> baud);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">/* Test function to send an ethernet packet */</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">int</span> vSendETH(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> networkInit(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/*----------------------------- NEWLIB OVERRIDES -----------------------------*/</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aport_8h_html_a0c1fa2d02c07b22bf2ebd769a028b852"><div class="ttname"><a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a></div><div class="ttdeci">int _write(int fd, char *ptr, int len)</div><div class="ttdoc">Overrides the newlib &quot;_write&quot; function that is used by printf().</div><div class="ttdef"><b>Definition:</b> port_functions.c:185</div></div>
+<div class="ttc" id="aport_8h_html_a0c1fa2d02c07b22bf2ebd769a028b852"><div class="ttname"><a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a></div><div class="ttdeci">int _write(int fd, char *ptr, int len)</div><div class="ttdoc">Overrides the newlib &quot;_write&quot; function that is used by printf().</div><div class="ttdef"><b>Definition:</b> port_clock.c:185</div></div>
+<div class="ttc" id="aport_8h_html_a7161d740fd9c9e08cf67b67b826bde4e"><div class="ttname"><a href="port_8h.html#a7161d740fd9c9e08cf67b67b826bde4e">portUartInit</a></div><div class="ttdeci">void portUartInit(int baud)</div><div class="ttdoc">Initialise the UART that is designated for the debug interface.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
