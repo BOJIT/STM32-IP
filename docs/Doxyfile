@@ -1,0 +1,26 @@
+# Doxygen include file to generate top level entry document
+
+# 07 June 2020
+# (C) James Bennion-Pedley
+
+#---------------------------------------------------------------------------
+# Common Include File
+#---------------------------------------------------------------------------
+
+@INCLUDE            = ./Doxyfile_common
+
+#---------------------------------------------------------------------------
+# Local settings
+#---------------------------------------------------------------------------
+
+INPUT               = ../inc ../src ../README.md
+
+RECURSIVE           = YES
+
+STRIP_FROM_PATH     = ../
+
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+GENERATE_LATEX      = NO
+
+USE_MDFILE_AS_MAINPAGE = ../README.md

@@ -1,4 +1,8 @@
-/* MAIN USER APPLICATION */
+/**
+ * @file
+ * main functions used throughout the stack.
+ *
+ */
 #include <stdio.h>
 #include "main.h"
 
@@ -61,7 +65,10 @@ void startTask3(void *args __attribute((unused))) {
 	}
 }
 
-
+/**
+ * This is the main function
+ * 
+*/
 int main(void) {
 
     vConfigureClock();  // Configure RCC, System Clock Tree, PLL, etc...

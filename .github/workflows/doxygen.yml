@@ -1,0 +1,15 @@
+name: Generate Doxygen for gh-pages
+
+on: push
+
+jobs:
+  doxygen:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Doxygen Action
+      uses: mattnotmitt/doxygen-action@v1.1.0
+      with:
+        working-directory: 'docs/'

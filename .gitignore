@@ -1,6 +1,7 @@
 .vscode/*
 bin/*
 build/*
+docs/html/*
 *.o
 *.bin
 *.elf
