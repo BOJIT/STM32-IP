@@ -1,4 +1,11 @@
-#include "port_config.h"
+/**
+ * @file
+ * @brief port-specific ethernet driver for lwIP
+ *
+ * @author @htmlonly &copy; @endhtmlonly 2020 James Bennion-Pedley
+ *
+ * @date 7 June 2020
+ */
 
 /* lwIP Includes */
 #include <lwip/init.h>
@@ -28,6 +35,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+
+/* Configuration includes */
+#include <global_config.h>
+#include <port_config.h>
 
 /* Phy Register Includes */
 #ifdef PHY_LAN8742A
@@ -448,10 +459,6 @@ err_t ethernetif_init(struct netif *netif)
                 configMAX_PRIORITIES-1, NULL);
     xTaskCreate(ethernetif_phy, "ETH_phy", 350, netif, 1, NULL);
 
-    /* NVIC Interrupt Configuration */
-    nvic_set_priority(NVIC_ETH_IRQ, 5);
-    nvic_enable_irq(NVIC_ETH_IRQ);
-
     /* Enable MAC and DMA transmission and reception */
     eth_start();
 
@@ -514,7 +521,9 @@ void eth_hw_init(void)
     SYSCFG_PMC |= (1 << 23);    // MII_RMII_SEL (use RMII)
     rcc_periph_reset_release(RST_ETHMAC);
 
-    vTaskDelay(10); // Wait for peripheral to power on
+    /* NVIC Interrupt Configuration */
+    nvic_set_priority(NVIC_ETH_IRQ, 5);
+    nvic_enable_irq(NVIC_ETH_IRQ);
 }
 
 /*---------------------------- CALLBACK FUNCTIONS ----------------------------*/
