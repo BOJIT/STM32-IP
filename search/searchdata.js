@@ -1,9 +1,9 @@
 var indexSectionsWithContent =
 {
-  0: "_dfghlmnopstvw",
+  0: "_defghlmnopstvw",
   1: "_dw",
   2: "fglmp",
-  3: "_mpv",
+  3: "_empv",
   4: "dhlnpstw",
   5: "opt"
 };
