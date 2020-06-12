@@ -16,6 +16,7 @@ var port__config_8h =
     [ "GPIO_ETH_RMII_TXD1", "port__config_8h.html#a78b2178b9344f460f03e03092777c318", null ],
     [ "HSE_FREQ", "port__config_8h.html#a5f4ac23af1e14562d11a6d66e3f492aa", null ],
     [ "PHY_ADDRESS", "port__config_8h.html#a6d90b77a939f982c12f749bb1158b9b6", null ],
+    [ "PHY_LAN8742A", "port__config_8h.html#a0fc8534eb3ab147fa7858c4f1b0d98f7", null ],
     [ "STATUS_LED_PIN", "port__config_8h.html#a089a71f836911c71b3f73fdd3b4b890b", null ],
     [ "STATUS_LED_PORT", "port__config_8h.html#a5b8353569a7ac1ec1f773fbd28495b43", null ],
     [ "STATUS_LED_RCC", "port__config_8h.html#aa914559b2c35027f45ceef8b75eafa4d", null ],

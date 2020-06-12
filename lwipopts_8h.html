@@ -160,6 +160,10 @@ Macros</h2></td></tr>
 <tr class="memitem:a8cf210ad4e4bf616860a45fbd140fd06"><td class="memItemLeft" align="right" valign="top"><a id="a8cf210ad4e4bf616860a45fbd140fd06"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TCPIP_MBOX_SIZE</b>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:a8cf210ad4e4bf616860a45fbd140fd06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a405e604e4328e1feb878c6fe1798a587"><td class="memItemLeft" align="right" valign="top"><a id="a405e604e4328e1feb878c6fe1798a587"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lwipopts_8h.html#a405e604e4328e1feb878c6fe1798a587">TCPIP_THREAD_NAME</a>&#160;&#160;&#160;&quot;ETH_lwip&quot;</td></tr>
+<tr class="memdesc:a405e604e4328e1feb878c6fe1798a587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Consistent with other threads. <br /></td></tr>
+<tr class="separator:a405e604e4328e1feb878c6fe1798a587"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f93dfeaed4021061959f822def602cb"><td class="memItemLeft" align="right" valign="top"><a id="a7f93dfeaed4021061959f822def602cb"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT_THREAD_STACKSIZE</b>&#160;&#160;&#160;1024</td></tr>
 <tr class="separator:a7f93dfeaed4021061959f822def602cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,11 +201,13 @@ Macros</h2></td></tr>
 <tr class="memitem:a4ff3f941b4c71a04b0c30fbee5b198c2"><td class="memItemLeft" align="right" valign="top"><a id="a4ff3f941b4c71a04b0c30fbee5b198c2"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>LWIP_DHCP_AUTOIP_COOP_TRIES</b>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:a4ff3f941b4c71a04b0c30fbee5b198c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add45fb65f2d0e6de5a0d14ff9e101b77"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lwipopts_8h.html#add45fb65f2d0e6de5a0d14ff9e101b77">LWIP_NETIF_API</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:add45fb65f2d0e6de5a0d14ff9e101b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affb97d89516c38d3fcb9e44e5d707f36"><td class="memItemLeft" align="right" valign="top"><a id="affb97d89516c38d3fcb9e44e5d707f36"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LWIP_NETIF_STATUS_CALLBACK</b>&#160;&#160;&#160;0</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LWIP_NETIF_STATUS_CALLBACK</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:affb97d89516c38d3fcb9e44e5d707f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a446932dd927cc4136ba654c13bb97b"><td class="memItemLeft" align="right" valign="top"><a id="a1a446932dd927cc4136ba654c13bb97b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LWIP_NETIF_LINK_CALLBACK</b>&#160;&#160;&#160;0</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LWIP_NETIF_LINK_CALLBACK</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a1a446932dd927cc4136ba654c13bb97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3822feed320cf8439b083ee525e4942"><td class="memItemLeft" align="right" valign="top"><a id="af3822feed320cf8439b083ee525e4942"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>SO_REUSE</b>&#160;&#160;&#160;1</td></tr>
@@ -221,12 +227,31 @@ Macros</h2></td></tr>
 <tr class="memitem:a97927ceecabcdb5f41735bf372a05cee"><td class="memItemLeft" align="right" valign="top"><a id="a97927ceecabcdb5f41735bf372a05cee"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>DHCP_DEBUG</b>&#160;&#160;&#160;LWIP_DBG_ON</td></tr>
 <tr class="separator:a97927ceecabcdb5f41735bf372a05cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dfad02b075a7f9a8791a66fe40864a4"><td class="memItemLeft" align="right" valign="top"><a id="a2dfad02b075a7f9a8791a66fe40864a4"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NETIF_DEBUG</b>&#160;&#160;&#160;LWIP_DBG_ON</td></tr>
+<tr class="separator:a2dfad02b075a7f9a8791a66fe40864a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>lwIP application configuration </p>
 <dl class="section author"><dt>Author</dt><dd> &copy;  2020 James Bennion-Pedley</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>7 June 2020 </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="add45fb65f2d0e6de5a0d14ff9e101b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add45fb65f2d0e6de5a0d14ff9e101b77">&#9670;&nbsp;</a></span>LWIP_NETIF_API</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LWIP_NETIF_API&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Allow <em>netif</em> functions to be called from another thread </p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

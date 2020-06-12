@@ -22,6 +22,7 @@ var lwipopts_8h =
     [ "LWIP_ETHERNET", "lwipopts_8h.html#a30e02dc217cc2995d0fd241d510c904f", null ],
     [ "LWIP_IGMP", "lwipopts_8h.html#adaf25915ae1fd69c0943ef68cbb38923", null ],
     [ "LWIP_NETCONN", "lwipopts_8h.html#a478041b8544461258f6961bf0f3c1a77", null ],
+    [ "LWIP_NETIF_API", "lwipopts_8h.html#add45fb65f2d0e6de5a0d14ff9e101b77", null ],
     [ "LWIP_NETIF_LINK_CALLBACK", "lwipopts_8h.html#a1a446932dd927cc4136ba654c13bb97b", null ],
     [ "LWIP_NETIF_STATUS_CALLBACK", "lwipopts_8h.html#affb97d89516c38d3fcb9e44e5d707f36", null ],
     [ "LWIP_SOCKET", "lwipopts_8h.html#a1cb62ce61ac39d7d6728ae5d3d3b927f", null ],
@@ -32,6 +33,7 @@ var lwipopts_8h =
     [ "MEMP_NUM_PBUF", "lwipopts_8h.html#a92b30aed958ec59334d936d4ca725418", null ],
     [ "MEMP_NUM_TCP_PCB", "lwipopts_8h.html#a73beecc19cfbc3114768f9b32b2cd70e", null ],
     [ "MEMP_NUM_TCP_SEG", "lwipopts_8h.html#aa35fb3a1a76661e3ffb9722a57092de3", null ],
+    [ "NETIF_DEBUG", "lwipopts_8h.html#a2dfad02b075a7f9a8791a66fe40864a4", null ],
     [ "PBUF_POOL_SIZE", "lwipopts_8h.html#a50eaadc4cad0716410332691e382c38a", null ],
     [ "RECV_BUFSIZE_DEFAULT", "lwipopts_8h.html#a5dbd0a61f30ae6c6bfbda635095f138d", null ],
     [ "SO_REUSE", "lwipopts_8h.html#af3822feed320cf8439b083ee525e4942", null ],
@@ -39,6 +41,7 @@ var lwipopts_8h =
     [ "TCP_SND_BUF", "lwipopts_8h.html#a871d111968d8c6c7880ff36b93c5c4dd", null ],
     [ "TCP_WND", "lwipopts_8h.html#a7f535a6efb5cdf86c3210e35ece1d6a7", null ],
     [ "TCPIP_MBOX_SIZE", "lwipopts_8h.html#a8cf210ad4e4bf616860a45fbd140fd06", null ],
+    [ "TCPIP_THREAD_NAME", "lwipopts_8h.html#a405e604e4328e1feb878c6fe1798a587", null ],
     [ "TCPIP_THREAD_PRIO", "lwipopts_8h.html#a42b2c7a3042d7c3efd00f367f5837435", null ],
     [ "TCPIP_THREAD_STACKSIZE", "lwipopts_8h.html#aa02b84eafa0c8b09b158b97c96d79db0", null ]
 ];
