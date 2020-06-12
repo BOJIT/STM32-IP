@@ -45,6 +45,8 @@
 #define TCPIP_THREAD_PRIO 24
 #define TCPIP_MBOX_SIZE 6
 
+#define TCPIP_THREAD_NAME       "ETH_lwip"  ///< Consistent with other threads
+
 #define DEFAULT_THREAD_STACKSIZE 1024
 #define DEFAULT_THREAD_PRIO 3
 #define DEFAULT_UDP_RECVMBOX_SIZE 6
@@ -64,9 +66,11 @@
 #define LWIP_DHCP_AUTOIP_COOP_TRIES 3
 
 //#define LWIP_NETIF_HOSTNAME        0
-//#define LWIP_NETIF_API             0
-#define LWIP_NETIF_STATUS_CALLBACK 0  //!
-#define LWIP_NETIF_LINK_CALLBACK   0  //!
+
+/** Allow <i>netif</i> functions to be called from another thread */
+#define LWIP_NETIF_API             1
+#define LWIP_NETIF_STATUS_CALLBACK 1
+#define LWIP_NETIF_LINK_CALLBACK   1
 
 #define SO_REUSE     1 //?
 #define LWIP_IGMP    0
@@ -84,7 +88,7 @@
 // #define TCPIP_DEBUG     LWIP_DBG_ON
 // #define IP_DEBUG        LWIP_DBG_ON
 #define DHCP_DEBUG      LWIP_DBG_ON
-// #define NETIF_DEBUG     LWIP_DBG_ON
+#define NETIF_DEBUG     LWIP_DBG_ON
 // #define RAW_DEBUG       LWIP_DBG_ON
 // #define SYS_DEBUG       LWIP_DBG_ON
 #endif

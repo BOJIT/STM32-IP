@@ -46,7 +46,20 @@
 
 /* Ethernet configuration */
 #define PHY_ADDRESS         PHY0        ///< PHY Address for SMI bus
+#define PHY_LAN8742A    ///< PHY chipset
 
+//#define MAC_ADDR_MANUAL  ///< If left undefined a PR address will be created
+
+#ifdef MAC_ADDR_MANUAL
+    #define MAC_ADDR_0 0x00
+    #define MAC_ADDR_1 0x80
+    #define MAC_ADDR_2 0xE1
+    #define MAC_ADDR_3 0x01
+    #define MAC_ADDR_4 0x02
+    #define MAC_ADDR_5 0x03
+#endif /* MAC_ADDRESS_MANUAL */
+
+/* Pinout */
 #define GPIO_ETH_RMII_MDIO      GPIO2    /* PA2 THESE MIGHT MOVE*/
 #define GPIO_ETH_RMII_MDC       GPIO1    /* PC1 */
 #define GPIO_ETH_RMII_PPS_OUT   GPIO5    /* PB5 */
