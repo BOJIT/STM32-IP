@@ -38,13 +38,13 @@
 #endif /* PHY_KS8081 */
 
 #ifdef DEBUG
-#include <stdio.h> // Eventually can be removed, as LWIP handles the debugging
+#include <stdio.h> /// @todo Eventually can be removed, as LWIP handles debug
 #endif /* DEBUG */
 
 // Network Interface Struct
 static struct netif ethernetif;
 
-/* Conversion Struct */
+/* Type Conversion Struct */
 union word_byte {
     u32_t word;
     u8_t byte[4];
@@ -209,11 +209,15 @@ static int realloc_rxdma_buffers(void)
 
     return 1;
 }
-// TODO MAKE THESE RX ONE FUNCTION
+/// @todo MAKE THESE RX ONE FUNCTION
 
 /*------------------------------- Phy Functions ------------------------------*/
 
-static void phy_negotiate(void)
+/** 
+ * @brief gets phy autonegotiation status on link change - configures the MAC
+ * accordingly
+*/
+static err_t phy_negotiate(void)
 {
     int regval = ETH_MACCR;
     regval &= ~(ETH_MACCR_DM | ETH_MACCR_FES); // Clear mode and duplex bits
@@ -246,6 +250,8 @@ static void phy_negotiate(void)
     LWIP_DEBUGF(NETIF_DEBUG, ("mac_init: autonegotiate status: %d\n", regval));
 
     ETH_MACCR = regval;     // Write speed and duplex to control register
+
+    return ERR_OK;
 }
 
 /*------------------------------- FreeRTOS Tasks -----------------------------*/
@@ -260,7 +266,7 @@ void ethernetif_input(void* argument)
     
     for(;;) {
 
-        // This can be done more efficiently with direct-to-task notification
+        /// @todo This can be done more efficiently with direct-to-task notification
         if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
             //LOCK_TCPIP_CORE();  // Don't know if locking is really necessary
             int ret = recv_rxdma_buffer(netif);
@@ -320,6 +326,10 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
     return ERR_OK;
 }
 
+/** 
+ * @brief Initialises the ethernet peripheral's registers for use with the
+ * provided descriptors
+*/
 static err_t mac_init(void)
 {
     /* Soft reset ethernet MAC */
@@ -334,7 +344,7 @@ static err_t mac_init(void)
                    ETH_MACCR_IPCO | ETH_MACCR_DM);
 
     ETH_MACFFR |= ETH_MACFFR_RA; // No Filtering Currently
-    ETH_MACFCR = 0;
+    ETH_MACFCR = 0;     // Default Flow Control
 
     ETH_DMABMR = (ETH_DMABMR_AAB | ETH_DMABMR_FB | ETH_DMABMR_PM_2_1 |
                    (32 << ETH_DMABMR_RDP_SHIFT) |  //RX Burst Length
@@ -344,14 +354,36 @@ static err_t mac_init(void)
     ETH_DMAOMR = (ETH_DMAOMR_DTCEFD | ETH_DMAOMR_RSF |
                    ETH_DMAOMR_TSF | ETH_DMAOMR_OSF);
 
+    // Configure interrupts on reception only (PTP may change this later)
+    ETH_DMAIER = ETH_DMAIER_RIE | ETH_DMAIER_RBUIE | ETH_DMAIER_NISE;
+
     return ERR_OK;
 }
 
-static void low_level_init(struct netif *netif)
+/** 
+ * @brief Initialise the <i>netif</i> struct with the relevant operational
+ * settings
+ * @param netif network interface struct
+*/
+static err_t net_init(struct netif *netif)
 {
+    /* Check no netif already exists */
+    LWIP_ASSERT("netif != NULL", (netif != NULL));
+
+    #if LWIP_NETIF_HOSTNAME
+        /* Initialize interface hostname */
+        netif->hostname = LWIP_HOSTNAME;
+    #endif /* LWIP_NETIF_HOSTNAME */
+
+    netif->name[0] = 'e';
+    netif->name[1] = 'n';
+    netif->output = etharp_output;
+    netif->linkoutput = low_level_output;
+
     /* set MAC hardware address length */
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
+    /* Set MAC address, generate one if not provided */
     #ifdef MAC_ADDR_MANUAL
         netif->hwaddr[0] = MAC_ADDR_0;
         netif->hwaddr[1] = MAC_ADDR_1;
@@ -386,28 +418,49 @@ static void low_level_init(struct netif *netif)
     // netif_set_igmp_mac_filter(netif, mac_filter); // LATER
     // #endif
 
+    return ERR_OK;
+}
+
+/** 
+ * @brief Callback for initialising the ethernet interface
+ * @param netif network interface struct
+*/
+err_t ethernetif_init(struct netif *netif)
+{
+    err_t ret;
+
+    /* Initialise ethernet peripheral */
+    if ((ret = mac_init()) != ERR_OK)
+        return ret;
+
+    /* Initialize the netif struct */
+    if ((ret = net_init(netif)) != ERR_OK)
+        return ret;
+
+    /* Initialise DMA Descriptor rings */
     init_tx_dma_desc();
     init_rx_dma_desc();
 
     /* FreeRTOS Setup */
-    ETH_SEMPHR = xSemaphoreCreateBinary();
+    ETH_SEMPHR = xSemaphoreCreateBinary(); /// @todo change to task notification
 
     xTaskCreate(ethernetif_input, "ETH_input", 1024, netif, 
                 configMAX_PRIORITIES-1, NULL);
     xTaskCreate(ethernetif_phy, "ETH_phy", 350, netif, 1, NULL);
 
-    /* Enable MAC and DMA transmission and reception */
-    eth_start(); 
-
-    // Configure interrupts on reception only (PTP may change this later)
-    ETH_DMAIER = ETH_DMAIER_RIE | ETH_DMAIER_RBUIE | ETH_DMAIER_NISE;
-
     /* NVIC Interrupt Configuration */
     nvic_set_priority(NVIC_ETH_IRQ, 5);
     nvic_enable_irq(NVIC_ETH_IRQ);
+
+    /* Enable MAC and DMA transmission and reception */
+    eth_start();
+
+    return ERR_OK;
 }
 
-/* Initialise hardware ready for Ethernet */
+/** 
+ * @brief Initialise MCU hardware for use of the ethernet peripheral
+*/
 void eth_hw_init(void)
 {
     /* Enable relavant clocks */
@@ -420,7 +473,7 @@ void eth_hw_init(void)
     rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOG);
 
-    /* TODO Have not initialised PPS pin for debug! */
+    /// @todo Have not initialised PPS pin for debug!
     
 
     /* Configure ethernet GPIOs */
@@ -437,7 +490,7 @@ void eth_hw_init(void)
             GPIO_OSPEED_50MHZ, GPIO_ETH_RMII_TXD1);
     gpio_set_af(GPIOB, GPIO_AF11, GPIO_ETH_RMII_TXD1);
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_ETH_RMII_TXD1);
-    // PPS definition to go here when implemented
+    /// @todo PPS definition to go here when implemented
 
     /* GPIOC */
     gpio_set_output_options(GPIOC, GPIO_OTYPE_PP,
@@ -466,24 +519,33 @@ void eth_hw_init(void)
 
 /*---------------------------- CALLBACK FUNCTIONS ----------------------------*/
 
-static void ethernetif_status(struct netif *netif)
+/** 
+ * @brief Callback on ethernet status changes (set up/down or address change)
+ * @param netif network interface struct
+*/
+static void ethernetif_status_callback(struct netif *netif)
 {
     if(netif_is_up(netif)) {
-        #if(LWIP_DHCP==1)
+        #if LWIP_DHCP
             netifapi_dhcp_start(&ethernetif);
-        #endif
+        #endif /* LWIP_DHCP */
         //igmp_start(&netif); // LATER
     }
     else {
-        #if(LWIP_DHCP==1)
+        #if LWIP_DHCP
             netifapi_dhcp_stop(&ethernetif);
-        #endif
+        #endif /* LWIP_DHCP */
     }
 }
 
-static void ethernetif_link(struct netif *netif)
+/** 
+ * @brief Callback on ethernet link change - restarts network services and phy
+ * configuration
+ * @param netif network interface struct
+*/
+static void ethernetif_link_callback(struct netif *netif)
 {
-    // Restart services with a semaphore! + any ETH Mac reinitialisation
+    /// @todo Restart services with a semaphore! + any ETH Mac reinitialisation
 
     if(netif_is_link_up(netif)) {
         phy_negotiate();                // Blocks until negotiation is finished
@@ -494,72 +556,48 @@ static void ethernetif_link(struct netif *netif)
     }
 }
 
-err_t ethernetif_init(struct netif *netif)
-{
-    err_t ret;
-
-    LWIP_ASSERT("netif != NULL", (netif != NULL));
-
-    // #if LWIP_NETIF_HOSTNAME
-    //     /* Initialize interface hostname */
-    //     netif->hostname = "lwip";
-    // #endif /* LWIP_NETIF_HOSTNAME */
-
-    netif->name[0] = 's';
-    netif->name[1] = 't';
-    netif->output = etharp_output;
-    netif->linkoutput = low_level_output;
-
-    if ((ret = mac_init()) != ERR_OK)
-        return ret;
-
-    /* initialize the hardware */
-    low_level_init(netif);
-
-    return ERR_OK;
-}
-
 /*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 
 void networkInit(void)
 {
-    eth_hw_init();  // Initialise RCC, GPIOs, Registers, etc... (MSP)
+    /* Hardware (MSP) Configuration */
+    eth_hw_init();
     
-    tcpip_init(NULL, NULL);     // Initialises main lwIP core thread
+    tcpip_init(NULL, NULL);
 
+    /* IP Configuration */
     ip_addr_t ip_addr = {0};
     ip_addr_t net_mask = {0};
     ip_addr_t gw_addr = {0};
-    #if(LWIP_DHCP==0)           // Static IP configuration
-        IP4_ADDR(&ip_addr, 192, 168, 50, 51);
-        IP4_ADDR(&net_mask, 255, 255, 255, 0);
-        IP4_ADDR(&gw_addr, 192, 168, 50, 1);  
+    #if !(LWIP_DHCP)
+        IP4_ADDR(&ip_addr, LWIP_IP_0, LWIP_IP_1, LWIP_IP_2, LWIP_IP_3);
+        IP4_ADDR(&net_mask, LWIP_NM_0, LWIP_NM_1, LWIP_NM_2, LWIP_NM_3);
+        IP4_ADDR(&gw_addr, LWIP_GW_0, LWIP_GW_1, LWIP_GW_2, LWIP_GW_3);  
     #endif
 
+    /* Add ethernet interface (currently only one interface supported) */
     netif_add(&ethernetif, &ip_addr, &net_mask, &gw_addr, NULL,
                        ethernetif_init, tcpip_input); 
     netif_set_default(&ethernetif);
 
-    // netif_set_hostname(&netif, "lwip");
-
-    netif_set_status_callback(&ethernetif, ethernetif_status);
-    netif_set_link_callback(&ethernetif, ethernetif_link);
-
-    netifapi_netif_set_link_up(&ethernetif);
+    /* Set callbacks for link events (restarting when cable is unplugged) */
+    netif_set_status_callback(&ethernetif, ethernetif_status_callback);
+    netif_set_link_callback(&ethernetif, ethernetif_link_callback);
 
     LWIP_DEBUGF(NETIF_DEBUG, ("Mac Address: %02x:%02x:%02x:%02x:%02x:%02x\n",
-           ethernetif.hwaddr[0], ethernetif.hwaddr[1], ethernetif.hwaddr[2],
-           ethernetif.hwaddr[3], ethernetif.hwaddr[4], ethernetif.hwaddr[5]));
+                              ethernetif.hwaddr[0], ethernetif.hwaddr[1],
+                              ethernetif.hwaddr[2], ethernetif.hwaddr[3],
+                              ethernetif.hwaddr[4], ethernetif.hwaddr[5]));
 }
 
-void gdb_break() {
+/*------------------------------- ETHERNET ISR -------------------------------*/
+
+void gdb_break()
+{
     // empty - convenient tag for GDB
     printf("ERROR\n");
     for(;;);
 }
-
-
-/*------------------------------- ETHERNET ISR -------------------------------*/
 
 /* Ethernet ISR */
 void eth_isr(void)

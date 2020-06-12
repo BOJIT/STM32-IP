@@ -60,12 +60,12 @@
 #define LWIP_SOCKET  0
 #define LWIP_NETCONN 1      ///< Application uses Netconn API exclusively
 
-#define LWIP_DHCP                   1
-#define LWIP_AUTOIP                 1
-#define LWIP_DHCP_AUTOIP_COOP       1
-#define LWIP_DHCP_AUTOIP_COOP_TRIES 3
+// #define LWIP_DHCP                   1
+// #define LWIP_AUTOIP                 1
+// #define LWIP_DHCP_AUTOIP_COOP       1
+// #define LWIP_DHCP_AUTOIP_COOP_TRIES 3
 
-//#define LWIP_NETIF_HOSTNAME        0
+#define LWIP_NETIF_HOSTNAME        1
 
 /** Allow <i>netif</i> functions to be called from another thread */
 #define LWIP_NETIF_API             1
