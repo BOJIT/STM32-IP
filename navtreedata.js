@@ -34,6 +34,7 @@ var NAVTREE =
     [ "Porting", "page.html", [
       [ "Porting Guide:", "page.html#autotoc_md0", null ]
     ] ],
+    [ "Todo List", "todo.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ]

@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "fglmp",
   3: "_mpv",
   4: "dhlnpstw",
-  5: "op"
+  5: "opt"
 };
 
 var indexSectionNames =
