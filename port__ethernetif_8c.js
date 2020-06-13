@@ -10,6 +10,5 @@ var port__ethernetif_8c =
     [ "ethernetif_input", "port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3", null ],
     [ "ethernetif_phy", "port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56", null ],
     [ "gdb_break", "port__ethernetif_8c.html#a4520bf61ba5df78eb37294889b4f1867", null ],
-    [ "networkInit", "port__ethernetif_8c.html#a7e268a2a94b9a42f17f71d9687beaca5", null ],
-    [ "ETH_SEMPHR", "port__ethernetif_8c.html#a6c3722ad663e43d2ba3cb1494967bf3f", null ]
+    [ "networkInit", "port__ethernetif_8c.html#a7e268a2a94b9a42f17f71d9687beaca5", null ]
 ];
