@@ -52,10 +52,14 @@
 #include <stdio.h> /// @todo Eventually can be removed, as LWIP handles debug
 #endif /* DEBUG */
 
-// Network Interface Struct
+/** 
+ * @brief Network interface struct for ethernet port
+*/
 static struct netif ethernetif;
 
-/* Type Conversion Struct */
+/** 
+ * @brief Generic union for conveniently extracting bytes from words
+*/
 union word_byte {
     u32_t word;
     u8_t byte[4];
@@ -78,24 +82,37 @@ struct dma_desc {
     struct pbuf *pbuf;
 };
 
+/** 
+ * @brief Transmit descriptor ring - adjust length from <b>port_config</b>
+ * to tailor for your application
+*/
 #ifndef STIF_NUM_TX_DMA_DESC
     #define STIF_NUM_TX_DMA_DESC 10
 #endif /* STIF_NUM_TX_DMA_DESC */
 static struct dma_desc tx_dma_desc[STIF_NUM_TX_DMA_DESC];
 static struct dma_desc *tx_cur_dma_desc;
 
+/** 
+ * @brief Recieve descriptor ring - adjust length from <b>port_config</b>
+ * to tailor for your application
+*/
 #ifndef STIF_NUM_RX_DMA_DESC
     #define STIF_NUM_RX_DMA_DESC 10
 #endif /* STIF_NUM_RX_DMA_DESC */
 static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
 static struct dma_desc *rx_cur_dma_desc;
 
-/* FreeRTOS Semaphore for Ethernet Interrupt */
-//SemaphoreHandle_t ETH_SEMPHR = NULL;
+/** 
+ * @brief Task handle for triggering packet reception with a FreeRTOS
+ * direct task notification
+*/
 static TaskHandle_t eth_task = NULL;
 
 /*------------------------------ DMA Functions -------------------------------*/
 
+/** 
+ * @brief Initialise the transmit descriptor ring with generic attributes
+*/
 static void init_tx_dma_desc(void)
 {
     for (int i = 0; i < STIF_NUM_TX_DMA_DESC; i++) {
@@ -110,6 +127,9 @@ static void init_tx_dma_desc(void)
     tx_cur_dma_desc = &tx_dma_desc[0];
 }
 
+/** 
+ * @brief Initialise the recieve descriptor ring with generic attributes
+*/
 static void init_rx_dma_desc(void)
 {
     for (int i = 0; i < STIF_NUM_RX_DMA_DESC; i++) {
@@ -125,7 +145,7 @@ static void init_rx_dma_desc(void)
     rx_cur_dma_desc = &rx_dma_desc[0];
 }
 
-static void prepare_tx_descr(struct pbuf *p, int first, int last)
+static void process_tx_descr(struct pbuf *p, int first, int last)
 {
     // wait until the packet is freed by the DMA
     while (tx_cur_dma_desc->Status & ETH_TDES0_OWN);
@@ -146,8 +166,7 @@ static void prepare_tx_descr(struct pbuf *p, int first, int last)
         tx_cur_dma_desc->Status |= ETH_TDES0_LS;
 
     tx_cur_dma_desc->Buffer1Addr = p->payload;
-    tx_cur_dma_desc->ControlBufferSize = p->len; // overrides default pbuf size
-    // ensure that p->len is never greater than 2^13!
+    tx_cur_dma_desc->ControlBufferSize = p->len;
 
     // Pass ownership back to DMA
     tx_cur_dma_desc->Status |= ETH_TDES0_OWN;
@@ -327,7 +346,7 @@ static err_t ethernetif_output(struct netif *netif, struct pbuf *p)
 
     // Iterate through pbuf chain until next-> == NULL
     for(q = p; q != NULL; q = q->next)
-        prepare_tx_descr(q, q == p, q->next == NULL);
+        process_tx_descr(q, q == p, q->next == NULL);
 
     // check if DMA is waiting for a descriptor it owns
     if (ETH_DMASR & ETH_DMASR_TBUS) {
@@ -541,16 +560,11 @@ void eth_hw_init(void)
 static void ethernetif_status_callback(struct netif *netif)
 {
     if(netif_is_up(netif)) {
-        #if LWIP_DHCP
-            netifapi_dhcp_start(&ethernetif);
-        #endif /* LWIP_DHCP */
         //igmp_start(&netif); // LATER
     }
-    else {
-        #if LWIP_DHCP
-            netifapi_dhcp_stop(&ethernetif);
-        #endif /* LWIP_DHCP */
-    }
+    // else {
+
+    // }
 }
 
 /** 
@@ -565,9 +579,15 @@ static void ethernetif_link_callback(struct netif *netif)
     if(netif_is_link_up(netif)) {
         phy_negotiate();                // Blocks until negotiation is finished
         netifapi_netif_set_up(netif);
+        #if LWIP_DHCP
+            netifapi_dhcp_start(&ethernetif);
+        #endif /* LWIP_DHCP */
     }
     else {
         netifapi_netif_set_down(netif);
+        #if LWIP_DHCP
+            netifapi_dhcp_stop(&ethernetif);
+        #endif /* LWIP_DHCP */
     }
 }
 

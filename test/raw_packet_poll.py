@@ -1,8 +1,8 @@
 import socket
 
-UDP_IP = "169.254.1.46"
+UDP_IP = "192.168.50.11"
 UDP_PORT = 1883
-MESSAGE = "Hello, World!"
+MESSAGE = "My offspring wanted scuba gear for his birthday. Thats all he wanted. I am not letting him swim off by himself to be taken for a baby seal by a great white and I will be fucked if I am going in there with him to be taken for an old skinny seal by a great white. When I explained to him that scuba gear is only for the sea and he, being such a small human, would be taken for a baby seal by a great white, he stated that he would see them coming because of the mask and added 'speargun' and 'knife' to his birthday list."
 
 print ("UDP target IP:", UDP_IP)
 print ("UDP target port:", UDP_PORT)
