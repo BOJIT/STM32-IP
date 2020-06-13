@@ -145,6 +145,14 @@ static void init_rx_dma_desc(void)
     rx_cur_dma_desc = &rx_dma_desc[0];
 }
 
+/** 
+ * @brief Process Tx descriptor ready for packet transmission
+ * This function is designed to work with pbuf chains, so unlike the
+ * Rx descriptors which are strictly one pbuf per packet.
+ * @param p The pbuf that is being processed (may be part of a chain)
+ * @param first A bool that is true if the pbuf is the first in a chain
+ * @param last A bool that is true if the pbuf is the last in a chain
+*/
 static void process_tx_descr(struct pbuf *p, int first, int last)
 {
     // wait until the packet is freed by the DMA
@@ -174,73 +182,56 @@ static void process_tx_descr(struct pbuf *p, int first, int last)
     tx_cur_dma_desc = tx_cur_dma_desc->Buffer2NextDescAddr;
 }
 
-static int recv_rxdma_buffer(struct netif *netif)
+/** 
+ * @brief Process Rx descriptor, pass to lwIP, then allocate a new pbuf to the
+ * descriptor
+ * @param netif network interface struct
+*/
+static int process_rx_descr(struct netif *netif)
 {
-    static struct pbuf *first;
+    /* Descriptor 'sanity checks' */
+    if(rx_cur_dma_desc->Status & ETH_RDES0_OWN)
+        return 1;   // Descriptor is still owned by the DMA controller
 
-    if (rx_cur_dma_desc->Status & ETH_RDES0_OWN)
-        return 0;
+    if(rx_cur_dma_desc->pbuf == NULL)
+        return 1;   // No pbuf was allocated to this descriptor!
+    
+    if(!((ETH_RDES0_LS | ETH_RDES0_FS) == 
+                (rx_cur_dma_desc->Status & (ETH_RDES0_LS | ETH_RDES0_FS))))
+        return 1;   // In store and forward mode this should never trigger
 
-    if (rx_cur_dma_desc->pbuf == NULL)
-        return 1;
 
     int frame_length = (rx_cur_dma_desc->Status & ETH_RDES0_FL) 
                                                 >> ETH_RDES0_FL_SHIFT;
 
-    if (rx_cur_dma_desc->Status & ETH_RDES0_LS)
-        frame_length -=4; // Subtract off the CRC
-
     rx_cur_dma_desc->pbuf->tot_len = frame_length;
     rx_cur_dma_desc->pbuf->len = frame_length;
 
-    if (rx_cur_dma_desc->Status & ETH_RDES0_FS)
-        first = rx_cur_dma_desc->pbuf;
-    else
-        pbuf_cat(first, rx_cur_dma_desc->pbuf);
+    /// @todo check frame validity + frame length +/- CRC?
 
-    if (rx_cur_dma_desc->Status & ETH_RDES0_LS) {
-        if (netif->input(first, netif) != ERR_OK)   // Pass packet to lwIP
-        {
-            LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
-            pbuf_free(first);
-        }
+    /* Pass packet to lwIP */
+    if (netif->input(rx_cur_dma_desc->pbuf, netif) != ERR_OK) {
+        LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
+        pbuf_free(rx_cur_dma_desc->pbuf); // Free if lwIP won't take the packet
     }
 
-    rx_cur_dma_desc->pbuf = NULL;
-    rx_cur_dma_desc = rx_cur_dma_desc->Buffer2NextDescAddr;
+    /* Reallocate new pbuf to descriptor */
+    rx_cur_dma_desc->pbuf = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
+    if (rx_cur_dma_desc->pbuf == NULL)
+        return 1;   // Pbuf allocation failed!
 
-    return 1;
-}
-
-static int realloc_rxdma_buffers(void)
-{
-    static struct dma_desc *cur_desc = rx_dma_desc;
-
-    if (cur_desc->Status & ETH_RDES0_OWN) {
-        cur_desc = rx_cur_dma_desc;
-        return 0;
-    }
-
-    if (cur_desc->pbuf != NULL)
-        return 0;
-
-    cur_desc->pbuf = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
-    if (cur_desc->pbuf == NULL)
-        return 1;
-
-    cur_desc->Buffer1Addr = cur_desc->pbuf->payload;
-    cur_desc->Status = ETH_RDES0_OWN;
+    rx_cur_dma_desc->Buffer1Addr = rx_cur_dma_desc->pbuf->payload;
+    rx_cur_dma_desc->Status = ETH_RDES0_OWN;   // Pass ownership back to DMA
 
     if (ETH_DMASR & ETH_DMASR_RBUS) {
-        ETH_DMASR = ETH_DMASR_RBUS;
+        ETH_DMASR = ETH_DMASR_RBUS; // Acknowledge DMA if in suspended state
         ETH_DMARPDR = 0;
     }
 
-    cur_desc = cur_desc->Buffer2NextDescAddr;
+    rx_cur_dma_desc = rx_cur_dma_desc->Buffer2NextDescAddr; // Next descriptor
 
-    return 1;
+    return 0;
 }
-/// @todo MAKE THESE RX ONE FUNCTION
 
 /*------------------------------- Phy Functions ------------------------------*/
 
@@ -306,8 +297,13 @@ void ethernetif_input(void* argument)
         configASSERT(eth_task == NULL);
         eth_task = xTaskGetCurrentTaskHandle();
 
-        int ret = recv_rxdma_buffer(netif); // Combine later
-        ret |= realloc_rxdma_buffers(); // return can be used later
+        if(process_rx_descr(netif))
+            LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: descriptor error!\n"));
+
+        /** @todo if this task and the ISR get out of sync (under heavy load),
+         * the DMA controller and the processing loop could get out of sync. 
+         * Ideally implement support for 'catch-up'/'overflow' handling.
+        */
     }
 }
 
@@ -353,10 +349,10 @@ static err_t ethernetif_output(struct netif *netif, struct pbuf *p)
         ETH_DMASR = ETH_DMASR_TBUS; // acknowledge
         ETH_DMATPDR = 0; // ask DMA to carry on polling
     }
-    // the step above is not required if the DMA hasn't got through all the
-    // previous descriptors before the next packet is sent. potentially this
-    // behaviour should be flagged, as currently nothing is stopping descriptor
-    // overflow.
+    /// @todo the step above is not required if the DMA hasn't got through the
+    /// previous descriptors before the next packet is sent. potentially this
+    /// behaviour should be flagged, as currently nothing is stopping descriptor
+    /// overflow.
 
     return ERR_OK;
 }
