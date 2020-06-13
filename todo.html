@@ -89,11 +89,13 @@ $(document).ready(function(){initNavTree('todo.html',''); initResizable(); });
 <div class="textblock"><dl class="reflist">
 </dl>
 <p><a class="anchor" id="_todo000001"></a>Eventually can be removed, as LWIP handles debug </p>
-<p><a class="anchor" id="_todo000002"></a>MAKE THESE RX ONE FUNCTION  </p>
-<p>Global <a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a>  (void) <a class="anchor" id="_todo000003"></a>Have not initialised PPS pin for debug! </p>
-<p><a class="anchor" id="_todo000004"></a>PPS definition to go here when implemented  </p>
-<p>"  <a class="anchor" id="_todo000005"></a>Restart services with a semaphore! + any ETH Mac reinitialisation  </p>
-<p>Global <a class="el" href="port__ethernetif_8c.html#a0c6254f543dbc4e73a297b2ad606d3b9">eth_isr</a>  (void) <a class="anchor" id="_todo000006"></a>implement separate transmission callbacks </p>
+<p><a class="anchor" id="_todo000002"></a>check frame validity + frame length +/- CRC?  </p>
+<p>Global <a class="el" href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">ethernetif_input</a>  (void *argument) <a class="anchor" id="_todo000003"></a>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling.  </p>
+<p>"  <a class="anchor" id="_todo000004"></a>the step above is not required if the DMA hasn't got through the previous descriptors before the next packet is sent. potentially this behaviour should be flagged, as currently nothing is stopping descriptor overflow.  </p>
+<p>Global <a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a>  (void) <a class="anchor" id="_todo000005"></a>Have not initialised PPS pin for debug! </p>
+<p><a class="anchor" id="_todo000006"></a>PPS definition to go here when implemented  </p>
+<p>"  <a class="anchor" id="_todo000007"></a>Restart services with a semaphore! + any ETH Mac reinitialisation  </p>
+<p>Global <a class="el" href="port__ethernetif_8c.html#a0c6254f543dbc4e73a297b2ad606d3b9">eth_isr</a>  (void) <a class="anchor" id="_todo000008"></a>implement separate transmission callbacks </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
