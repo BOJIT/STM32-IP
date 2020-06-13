@@ -60,10 +60,12 @@
 #define LWIP_SOCKET  0
 #define LWIP_NETCONN 1      ///< Application uses Netconn API exclusively
 
-// #define LWIP_DHCP                   1
-// #define LWIP_AUTOIP                 1
-// #define LWIP_DHCP_AUTOIP_COOP       1
-// #define LWIP_DHCP_AUTOIP_COOP_TRIES 3
+#define LWIP_DHCP                   1
+#define LWIP_AUTOIP                 1
+#define LWIP_DHCP_AUTOIP_COOP       1
+#define LWIP_DHCP_AUTOIP_COOP_TRIES 3
+
+#define LWIP_DHCP_BOOTP_FILE        1
 
 #define LWIP_NETIF_HOSTNAME        1
 
@@ -72,7 +74,7 @@
 #define LWIP_NETIF_STATUS_CALLBACK 1
 #define LWIP_NETIF_LINK_CALLBACK   1
 
-#define SO_REUSE     1 //?
+//#define SO_REUSE     1 //?
 #define LWIP_IGMP    0
  
 #define LWIP_STATS         1 //?

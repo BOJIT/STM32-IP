@@ -91,7 +91,8 @@ static struct dma_desc rx_dma_desc[STIF_NUM_RX_DMA_DESC];
 static struct dma_desc *rx_cur_dma_desc;
 
 /* FreeRTOS Semaphore for Ethernet Interrupt */
-SemaphoreHandle_t ETH_SEMPHR = NULL;
+//SemaphoreHandle_t ETH_SEMPHR = NULL;
+static TaskHandle_t eth_task = NULL;
 
 /*------------------------------ DMA Functions -------------------------------*/
 
@@ -179,7 +180,7 @@ static int recv_rxdma_buffer(struct netif *netif)
         pbuf_cat(first, rx_cur_dma_desc->pbuf);
 
     if (rx_cur_dma_desc->Status & ETH_RDES0_LS) {
-        if (netif->input(first, netif) != ERR_OK)
+        if (netif->input(first, netif) != ERR_OK)   // Pass packet to lwIP
         {
             LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
             pbuf_free(first);
@@ -274,16 +275,20 @@ static err_t phy_negotiate(void)
 void ethernetif_input(void* argument)
 {
     struct netif *netif = (struct netif *) argument;
+
+    /* Block the task before running for the first time */
+    configASSERT(eth_task == NULL);
+    eth_task = xTaskGetCurrentTaskHandle();
     
     for(;;) {
+        ulTaskNotifyTake(pdFALSE, portMAX_DELAY); // Block until ISR releases
 
-        /// @todo This can be done more efficiently with direct-to-task notification
-        if(xSemaphoreTake(ETH_SEMPHR, portMAX_DELAY) == pdTRUE) {
-            //LOCK_TCPIP_CORE();  // Don't know if locking is really necessary
-            int ret = recv_rxdma_buffer(netif);
-            ret |= realloc_rxdma_buffers(); // return can be used later
-            //UNLOCK_TCPIP_CORE();
-        }
+        /* Reset the task notifier for next ISR */
+        configASSERT(eth_task == NULL);
+        eth_task = xTaskGetCurrentTaskHandle();
+
+        int ret = recv_rxdma_buffer(netif); // Combine later
+        ret |= realloc_rxdma_buffers(); // return can be used later
     }
 }
 
@@ -316,7 +321,7 @@ void ethernetif_phy(void* argument)
 
 /*--------------------------- Operation Functions ----------------------------*/
 
-static err_t low_level_output(struct netif *netif, struct pbuf *p)
+static err_t ethernetif_output(struct netif *netif, struct pbuf *p)
 {
     struct pbuf *q;
 
@@ -340,6 +345,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 /** 
  * @brief Initialises the ethernet peripheral's registers for use with the
  * provided descriptors
+ * @retval lwIP-style error status
 */
 static err_t mac_init(void)
 {
@@ -375,21 +381,22 @@ static err_t mac_init(void)
  * @brief Initialise the <i>netif</i> struct with the relevant operational
  * settings
  * @param netif network interface struct
+ * @retval lwIP-style error status
 */
 static err_t net_init(struct netif *netif)
 {
     /* Check no netif already exists */
     LWIP_ASSERT("netif != NULL", (netif != NULL));
 
+    netif->name[0] = 'e';
+    netif->name[1] = 'n';
+    netif->output = etharp_output;
+    netif->linkoutput = ethernetif_output;
+
     #if LWIP_NETIF_HOSTNAME
         /* Initialize interface hostname */
         netif->hostname = LWIP_HOSTNAME;
     #endif /* LWIP_NETIF_HOSTNAME */
-
-    netif->name[0] = 'e';
-    netif->name[1] = 'n';
-    netif->output = etharp_output;
-    netif->linkoutput = low_level_output;
 
     /* set MAC hardware address length */
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
@@ -435,6 +442,7 @@ static err_t net_init(struct netif *netif)
 /** 
  * @brief Callback for initialising the ethernet interface
  * @param netif network interface struct
+ * @retval lwIP-style error status
 */
 err_t ethernetif_init(struct netif *netif)
 {
@@ -452,12 +460,10 @@ err_t ethernetif_init(struct netif *netif)
     init_tx_dma_desc();
     init_rx_dma_desc();
 
-    /* FreeRTOS Setup */
-    ETH_SEMPHR = xSemaphoreCreateBinary(); /// @todo change to task notification
-
-    xTaskCreate(ethernetif_input, "ETH_input", 1024, netif, 
-                configMAX_PRIORITIES-1, NULL);
+    /* FreeRTOS task initiation */
     xTaskCreate(ethernetif_phy, "ETH_phy", 350, netif, 1, NULL);
+    xTaskCreate(ethernetif_input, "ETH_input", 1024, netif, 
+                                  configMAX_PRIORITIES-1, NULL);
 
     /* Enable MAC and DMA transmission and reception */
     eth_start();
@@ -608,18 +614,22 @@ void gdb_break()
     for(;;);
 }
 
-/* Ethernet ISR */
+/** 
+ * @brief Hardware ethernet interrupt (see reference manual for details)
+*/
 void eth_isr(void)
 {
-    static BaseType_t task_yield = pdFALSE;
-    // Clear ethernetif_input semaphore
+    BaseType_t task_yield = pdFALSE;
     if((ETH_DMASR & ETH_DMASR_RS) == ETH_DMASR_RS) {    // Packet Recieved
-        xSemaphoreGiveFromISR(ETH_SEMPHR, &task_yield);
+        configASSERT(eth_task != NULL);
+        vTaskNotifyGiveFromISR(eth_task, &task_yield);
+        eth_task = NULL;
         portYIELD_FROM_ISR(task_yield);
+
         ETH_DMASR = ETH_DMASR_RS;
     }
     else {  // Error Condition
-        gdb_break();    // TODO properly
+        gdb_break();    /// @todo implement separate transmission callbacks
     }
     ETH_DMASR = ETH_DMAIER_NISE; // Clear Normal Interrupt Summary
 }
