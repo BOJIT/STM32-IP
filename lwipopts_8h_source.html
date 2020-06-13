@@ -140,39 +140,37 @@ $(document).ready(function(){initNavTree('lwipopts_8h_source.html',''); initResi
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define LWIP_SOCKET  0</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define LWIP_NETCONN 1      </span></div>
 <div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="lwipopts_8h.html#a478041b8544461258f6961bf0f3c1a77">   62</a></span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define LWIP_DHCP                   1</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define LWIP_AUTOIP                 1</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define LWIP_DHCP                   1   </span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="lwipopts_8h.html#a8a6ec62dc121064ac591b1fd8567bee9">   64</a></span>&#160;<span class="preprocessor">#define LWIP_AUTOIP                 1</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define LWIP_DHCP_AUTOIP_COOP       1</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define LWIP_DHCP_AUTOIP_COOP_TRIES 3</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define LWIP_DHCP_BOOTP_FILE        1</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define LWIP_NETIF_HOSTNAME        1</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define LWIP_NETIF_HOSTNAME        1</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define LWIP_NETIF_API             1</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="lwipopts_8h.html#add45fb65f2d0e6de5a0d14ff9e101b77">   74</a></span>&#160;<span class="preprocessor">#define LWIP_NETIF_STATUS_CALLBACK 1</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#define LWIP_NETIF_LINK_CALLBACK   1</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">//#define SO_REUSE     1 //?</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#define LWIP_IGMP    0</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#define LWIP_STATS         1 //?</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#define LWIP_STATS_DISPLAY 1 //?</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/* Use lwIP&#39;s built-in printf debugging */</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#define LWIP_DEBUG</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// #define MEMP_DEBUG      LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// #define PBUF_DEBUG      LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// #define ICMP_DEBUG      LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// #define TCPIP_DEBUG     LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// #define IP_DEBUG        LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#define DHCP_DEBUG      LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#define NETIF_DEBUG     LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// #define RAW_DEBUG       LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// #define SYS_DEBUG       LWIP_DBG_ON</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define LWIP_NETIF_API             1</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="lwipopts_8h.html#add45fb65f2d0e6de5a0d14ff9e101b77">   72</a></span>&#160;<span class="preprocessor">#define LWIP_NETIF_STATUS_CALLBACK 1</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define LWIP_NETIF_LINK_CALLBACK   1</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">//#define SO_REUSE     1 //?</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#define LWIP_IGMP    0</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// #define LWIP_STATS         1 //?</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// #define LWIP_STATS_DISPLAY 1 //?</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">/* Use lwIP&#39;s built-in printf debugging */</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#define LWIP_DEBUG</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">// #define MEMP_DEBUG      LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// #define PBUF_DEBUG      LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// #define ICMP_DEBUG      LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// #define TCPIP_DEBUG     LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// #define IP_DEBUG        LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// #define DHCP_DEBUG      LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#define NETIF_DEBUG     LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">// #define RAW_DEBUG       LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// #define SYS_DEBUG       LWIP_DBG_ON</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aglobal__config_8h_html"><div class="ttname"><a href="global__config_8h.html">global_config.h</a></div><div class="ttdoc">Global application configuration.</div></div>
