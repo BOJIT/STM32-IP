@@ -99,7 +99,7 @@ static TaskHandle_t eth_task = NULL;
 static void init_tx_dma_desc(void)
 {
     for (int i = 0; i < STIF_NUM_TX_DMA_DESC; i++) {
-        tx_dma_desc[i].Status = ETH_TDES0_TCH | ETH_TDES0_CIC_IPPL;
+        tx_dma_desc[i].Status = ETH_TDES0_TCH | ETH_TDES0_CIC_IPPLPH;
         tx_dma_desc[i].pbuf = NULL;
         tx_dma_desc[i].Buffer2NextDescAddr = &tx_dma_desc[i+1];
     }
