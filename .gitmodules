@@ -7,3 +7,6 @@
 [submodule "lib/lwip"]
 	path = lib/lwip
 	url = https://git.savannah.nongnu.org/git/lwip.git
+[submodule "lib/ptpd-lwip"]
+	path = lib/ptpd-lwip
+	url = git@github.com:BOJIT/ptpd-lwip.git
