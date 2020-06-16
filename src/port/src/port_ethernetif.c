@@ -451,6 +451,8 @@ static err_t net_init(struct netif *netif)
     // netif_set_igmp_mac_filter(netif, mac_filter); // LATER
     // #endif
 
+    /// @todo this is where hardware Multicast filtering needs to be implemented
+
     return ERR_OK;
 }
 
@@ -556,11 +558,15 @@ void eth_hw_init(void)
 static void ethernetif_status_callback(struct netif *netif)
 {
     if(netif_is_up(netif)) {
-        //igmp_start(&netif); // LATER
+        #if LWIP_IGMP
+            igmp_start(netif);  /// @todo Don't know if these are thread-safe
+        #endif /* LWIP_IGMP */
     }
-    // else {
-
-    // }
+    else {
+        #if LWIP_IGMP
+            igmp_stop(netif);
+        #endif /* LWIP_IGMP */
+    }
 }
 
 /** 

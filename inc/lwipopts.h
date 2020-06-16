@@ -67,7 +67,7 @@
 #define LWIP_NETCONN 1      ///< Application uses Netconn API exclusively
 
 /** If DHCP is used, fall back on link-local address */
-#ifdef LWIP_DHCP
+#if LWIP_DHCP
     #define LWIP_AUTOIP                 1
     #define LWIP_DHCP_AUTOIP_COOP       1
     #define LWIP_DHCP_AUTOIP_COOP_TRIES 3
@@ -78,8 +78,8 @@
     #define LWIP_NETIF_HOSTNAME        1
 #endif /* LWIP_HOSTNAME */
 
-/// @todo implement IGMP!
-#define LWIP_IGMP    0
+/** Use IGMP - required for PTP and RTP */
+#define LWIP_IGMP                      1
 
 
 /*-------------------------- Non-lwIP Applications ---------------------------*/
