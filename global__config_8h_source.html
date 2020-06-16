@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('global__config_8h_source.html',''); in
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define LWIP_DHCP                   1   </span></div>
 <div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="global__config_8h.html#a8a6ec62dc121064ac591b1fd8567bee9">   41</a></span>&#160;<span class="preprocessor"></span> </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">/* Static IP configuration - only required if LWIP_DHCP==0 */</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#ifndef LWIP_DHCP</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#if !(LWIP_DHCP) </span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    #define LWIP_IP_0   192</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">    #define LWIP_IP_1   168</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">    #define LWIP_IP_2   50</span></div>
