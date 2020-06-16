@@ -95,7 +95,7 @@ int main(void) {
 
     xTaskCreate(startTask1, "task1", 350, NULL, 5, NULL);
     xTaskCreate(startTask2, "task2", 350, NULL, 5, NULL);
-    xTaskCreate(startTask3, "lwip", 1024, NULL, configMAX_PRIORITIES-2, NULL);
+    xTaskCreate(startTask3, "lwip", 1024, NULL, configMAX_PRIORITIES-3, NULL);
 
     vTaskStartScheduler();
 

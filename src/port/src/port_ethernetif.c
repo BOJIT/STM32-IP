@@ -476,7 +476,7 @@ err_t ethernetif_init(struct netif *netif)
     init_rx_dma_desc();
 
     /* FreeRTOS task initiation */
-    xTaskCreate(ethernetif_phy, "ETH_phy", 350, netif, 1, NULL);
+    xTaskCreate(ethernetif_phy, "ETH_phy", 350, netif, 2, NULL);
     xTaskCreate(ethernetif_input, "ETH_input", 1024, netif, 
                                   configMAX_PRIORITIES-1, NULL);
 
