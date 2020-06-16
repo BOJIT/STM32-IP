@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['eth_5fhw_5finit_11',['eth_hw_init',['../port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43',1,'port_ethernetif.c']]],
-  ['eth_5fisr_12',['eth_isr',['../port__ethernetif_8c.html#a0c6254f543dbc4e73a297b2ad606d3b9',1,'port_ethernetif.c']]],
-  ['ethernetif_5finit_13',['ethernetif_init',['../port__ethernetif_8c.html#a7ce979d0ec31575ecf17998b7bd9abb2',1,'port_ethernetif.c']]],
-  ['ethernetif_5finput_14',['ethernetif_input',['../port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3',1,'port_ethernetif.c']]],
-  ['ethernetif_5fphy_15',['ethernetif_phy',['../port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56',1,'port_ethernetif.c']]]
+  ['debug_6',['DEBUG',['../global__config_8h.html#ad72dbcf6d0153db1b8d8a58001feed83',1,'global_config.h']]],
+  ['debug_5fuart_5fport_7',['DEBUG_UART_PORT',['../port__config_8h.html#a1c9052d1656e86f50326fd275c54ca67',1,'port_config.h']]],
+  ['debug_5fuart_5frcc_8',['DEBUG_UART_RCC',['../port__config_8h.html#a4c0ab900c81a2bcdd756d32925607982',1,'port_config.h']]],
+  ['debug_5fuart_5frx_9',['DEBUG_UART_RX',['../port__config_8h.html#a44deb111256827042ee9de18db2a31e0',1,'port_config.h']]],
+  ['debug_5fuart_5ftx_10',['DEBUG_UART_TX',['../port__config_8h.html#a2fb01f7597c73a81d32d1bc55854fa88',1,'port_config.h']]],
+  ['default_5fthread_5fstacksize_11',['DEFAULT_THREAD_STACKSIZE',['../lwipopts_8h.html#a7f93dfeaed4021061959f822def602cb',1,'lwipopts.h']]],
+  ['dma_5fdesc_12',['dma_desc',['../structdma__desc.html',1,'']]]
 ];

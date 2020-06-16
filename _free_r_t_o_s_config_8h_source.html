@@ -98,10 +98,10 @@ $(document).ready(function(){initNavTree('_free_r_t_o_s_config_8h_source.html','
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#define configSUPPORT_DYNAMIC_ALLOCATION         1</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#define configUSE_IDLE_HOOK                      0</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#define configUSE_TICK_HOOK                      0</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#define configCPU_CLOCK_HZ      ( ( unsigned long ) SYSCLK_FREQ )</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#define configCPU_CLOCK_HZ          ( ( unsigned long ) SYSCLK_FREQ )</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define configSYSTICK_CLOCK_HZ      ( configCPU_CLOCK_HZ / 8 )</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define configTICK_RATE_HZ      ( ( TickType_t ) 1000 )</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define configMAX_PRIORITIES        ( 10 )</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define configMAX_PRIORITIES        ( FREERTOS_PRIORITIES )</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#define configMINIMAL_STACK_SIZE    ( ( unsigned short ) 128 )</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define configTOTAL_HEAP_SIZE       ( ( size_t ) ( 17 * 1024 ) )</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define configMAX_TASK_NAME_LEN                  ( 16 )</span></div>
@@ -124,8 +124,8 @@ $(document).ready(function(){initNavTree('_free_r_t_o_s_config_8h_source.html','
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define configTIMER_TASK_STACK_DEPTH             256</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/* Co-routine definitions. */</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define configUSE_CO_ROUTINES       0</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define configUSE_CO_ROUTINES               0</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define configMAX_CO_ROUTINE_PRIORITIES     ( 2 )</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/* Set the following definitions to 1 to include the API function, or zero</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">to exclude the API function. */</span></div>
@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('_free_r_t_o_s_config_8h_source.html','
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">/* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">(lowest) to 0 (1?) (highest). */</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define configKERNEL_INTERRUPT_PRIORITY     255</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define configKERNEL_INTERRUPT_PRIORITY         255</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 </span><span class="comment">/* equivalent to 0xb0, or priority 11. */</span><span class="preprocessor"></span></div>
