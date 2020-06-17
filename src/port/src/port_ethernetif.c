@@ -338,6 +338,7 @@ void ethernetif_phy(void* argument)
 
 static err_t ethernetif_output(struct netif *netif, struct pbuf *p)
 {
+    /// @todo create transmit IRQ handler?
     struct pbuf *q;
 
     // Iterate through pbuf chain until next-> == NULL

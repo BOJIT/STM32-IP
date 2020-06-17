@@ -99,8 +99,10 @@
 
 /*-------------------------- Non-lwIP Applications ---------------------------*/
 
-#ifdef LWIP_PTP
-
+#if LWIP_PTP
+    #define LWIP_PBUF_CUSTOM_DATA   \
+                    s32_t time_sec; \
+                    s32_t time_nsec;    ///< Add timestamp fields to pbuf
 #endif /* LWIP_PTP */
 
 
