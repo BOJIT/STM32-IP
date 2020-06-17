@@ -10,9 +10,8 @@ TODO:
 * get basic TCP/IP example up and running: basic DHCP Autodiscovery vs. Static IP
 
 * Ethernetif Driver:
-  - Sort Ethernet Interrupts
-  - Get Recieve Demo/ICMP working
-  - Add Static IP Override
+  - Add TCPIP core locking functionality (need to get multithreading done right)
+  - Phy link goes up and down one extra time on startup
   - Neaten Driver Code
   - Add IGMP Support
   - Add Link Polling/Detection

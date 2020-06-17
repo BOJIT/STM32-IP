@@ -41,6 +41,19 @@
 #define DEFAULT_TCP_RECVMBOX_SIZE 6
 #define DEFAULT_ACCEPTMBOX_SIZE 6
 
+/** Core locking functions (defined in sys_arch.c) */
+void sys_check_core_locking(void);
+void sys_mark_tcpip_thread(void);
+void sys_lock_tcpip_core(void);
+void sys_unlock_tcpip_core(void);
+///< For some reason, it is advised to declare these functions here rather
+///< than in sys_arch.h
+
+#define LWIP_ASSERT_CORE_LOCKED()   sys_check_core_locking()
+#define LWIP_MARK_TCPIP_THREAD()    sys_mark_tcpip_thread()
+#define LOCK_TCPIP_CORE()           sys_lock_tcpip_core()
+#define UNLOCK_TCPIP_CORE()         sys_unlock_tcpip_core()
+
 
 /*--------------------------- Netif Configuration ----------------------------*/
 
@@ -95,7 +108,7 @@
     #define LWIP_DEBUG
     // #define MEMP_DEBUG      LWIP_DBG_ON
     // #define PBUF_DEBUG      LWIP_DBG_ON
-    // #define ICMP_DEBUG      LWIP_DBG_ON
+    #define IGMP_DEBUG      LWIP_DBG_ON
     // #define TCPIP_DEBUG     LWIP_DBG_ON
     // #define IP_DEBUG        LWIP_DBG_ON
     // #define DHCP_DEBUG      LWIP_DBG_ON

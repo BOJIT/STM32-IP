@@ -36,6 +36,7 @@
 #include "lwip/sys.h"
 #include "lwip/mem.h"
 #include "lwip/stats.h"
+#include "lwip/tcpip.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
@@ -603,4 +604,4 @@ sys_check_core_locking(void)
 #endif /* !NO_SYS */
 }
 
-#endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING*/
+#endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING */

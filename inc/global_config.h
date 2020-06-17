@@ -40,7 +40,7 @@
 #define LWIP_DHCP                   1   ///< Use DHCP and fall back on AutoIP
 
 /* Static IP configuration - only required if LWIP_DHCP==0 */
-#if !(LWIP_DHCP) 
+#if !LWIP_DHCP
     #define LWIP_IP_0   192
     #define LWIP_IP_1   168
     #define LWIP_IP_2   50

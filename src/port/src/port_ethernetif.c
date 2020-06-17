@@ -557,16 +557,7 @@ void eth_hw_init(void)
 */
 static void ethernetif_status_callback(struct netif *netif)
 {
-    if(netif_is_up(netif)) {
-        #if LWIP_IGMP
-            igmp_start(netif);  /// @todo Don't know if these are thread-safe
-        #endif /* LWIP_IGMP */
-    }
-    else {
-        #if LWIP_IGMP
-            igmp_stop(netif);
-        #endif /* LWIP_IGMP */
-    }
+    if(netif_is_up(netif)) {} else {}   // Use later if required
 }
 
 /** 
@@ -584,12 +575,22 @@ static void ethernetif_link_callback(struct netif *netif)
         #if LWIP_DHCP
             netifapi_dhcp_start(&ethernetif);
         #endif /* LWIP_DHCP */
+        #if LWIP_IGMP
+            LOCK_TCPIP_CORE();
+            igmp_start(netif);
+            UNLOCK_TCPIP_CORE();
+        #endif /* LWIP_IGMP */
     }
     else {
         netifapi_netif_set_down(netif);
         #if LWIP_DHCP
             netifapi_dhcp_stop(&ethernetif);
         #endif /* LWIP_DHCP */
+        #if LWIP_IGMP
+            LOCK_TCPIP_CORE();
+            igmp_stop(netif);
+            UNLOCK_TCPIP_CORE();
+        #endif /* LWIP_IGMP */
     }
 }
 
@@ -606,11 +607,13 @@ void networkInit(void)
     ip_addr_t ip_addr = {0};
     ip_addr_t net_mask = {0};
     ip_addr_t gw_addr = {0};
-    #if !(LWIP_DHCP)
+    #if !LWIP_DHCP
         IP4_ADDR(&ip_addr, LWIP_IP_0, LWIP_IP_1, LWIP_IP_2, LWIP_IP_3);
         IP4_ADDR(&net_mask, LWIP_NM_0, LWIP_NM_1, LWIP_NM_2, LWIP_NM_3);
         IP4_ADDR(&gw_addr, LWIP_GW_0, LWIP_GW_1, LWIP_GW_2, LWIP_GW_3);  
     #endif
+
+    LOCK_TCPIP_CORE();  // Lock lwIP core while configuring
 
     /* Add ethernet interface (currently only one interface supported) */
     netif_add(&ethernetif, &ip_addr, &net_mask, &gw_addr, NULL,
@@ -620,6 +623,8 @@ void networkInit(void)
     /* Set callbacks for link events (restarting when cable is unplugged) */
     netif_set_status_callback(&ethernetif, ethernetif_status_callback);
     netif_set_link_callback(&ethernetif, ethernetif_link_callback);
+
+    UNLOCK_TCPIP_CORE();
 
     LWIP_DEBUGF(NETIF_DEBUG, ("Mac Address: %02x:%02x:%02x:%02x:%02x:%02x\n",
                               ethernetif.hwaddr[0], ethernetif.hwaddr[1],

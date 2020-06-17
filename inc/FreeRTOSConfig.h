@@ -14,6 +14,8 @@
 #include <global_config.h>
 #include <port_config.h>
 
+/*----------------------------------------------------------------------------*/
+
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_DYNAMIC_ALLOCATION         1
 #define configUSE_IDLE_HOOK                      0
@@ -76,9 +78,19 @@ configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
 
+/*---------------------------- libopencm3 Config -----------------------------*/
+
 /* Manually link handlers to libopencm3 handlers  */
 #define vPortSVCHandler sv_call_handler
 #define xPortPendSVHandler pend_sv_handler
 #define xPortSysTickHandler sys_tick_handler
+
+
+/*------------------------------- lwIP Config --------------------------------*/
+
+#define LWIP_FREERTOS_CHECK_CORE_LOCKING        1
+
+
+/*----------------------------------------------------------------------------*/
 
 #endif /* __FREERTOS_CONFIG__ */
