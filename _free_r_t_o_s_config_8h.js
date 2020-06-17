@@ -41,6 +41,7 @@ var _free_r_t_o_s_config_8h =
     [ "INCLUDE_xQueueGetMutexHolder", "_free_r_t_o_s_config_8h.html#a4e2902143b6abf777065c15940321911", null ],
     [ "INCLUDE_xTaskGetSchedulerState", "_free_r_t_o_s_config_8h.html#a9ed60ede556830584e6bfd4a3ab4f9de", null ],
     [ "INCLUDE_xTimerPendFunctionCall", "_free_r_t_o_s_config_8h.html#a4b4336acd61a8e513ca2376be84326b5", null ],
+    [ "LWIP_FREERTOS_CHECK_CORE_LOCKING", "_free_r_t_o_s_config_8h.html#aee0bd88b5460d3ee630d62e4eb3312e5", null ],
     [ "vPortSVCHandler", "_free_r_t_o_s_config_8h.html#ad43047b3ea0a146673e30637488bf754", null ],
     [ "xPortPendSVHandler", "_free_r_t_o_s_config_8h.html#a6f30022da7d797dd31f1b8a11cae9a35", null ],
     [ "xPortSysTickHandler", "_free_r_t_o_s_config_8h.html#ae42e6318b5d564e44f97f8c765859448", null ]

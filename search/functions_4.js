@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['vapplicationstackoverflowhook_104',['vApplicationStackOverflowHook',['../main_8c.html#a329de0f973fabef8b34da6444654295c',1,'main.c']]]
+  ['sys_5fcheck_5fcore_5flocking_106',['sys_check_core_locking',['../lwipopts_8h.html#a173fabebb0a383eab0007ea205a98762',1,'lwipopts.h']]],
+  ['sys_5funlock_5ftcpip_5fcore_107',['sys_unlock_tcpip_core',['../lwipopts_8h.html#ab5a3c5fc2a0c7e33ab4d3c7d1030eeb4',1,'lwipopts.h']]]
 ];

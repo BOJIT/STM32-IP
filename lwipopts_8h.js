@@ -13,11 +13,15 @@ var lwipopts_8h =
     [ "DEFAULT_THREAD_PRIO", "lwipopts_8h.html#a3d8715b1fdd0449d6c214e4a40108456", null ],
     [ "DEFAULT_THREAD_STACKSIZE", "lwipopts_8h.html#a7f93dfeaed4021061959f822def602cb", null ],
     [ "DEFAULT_UDP_RECVMBOX_SIZE", "lwipopts_8h.html#a09fe785559b3f0cf108da4440489e335", null ],
+    [ "IGMP_DEBUG", "lwipopts_8h.html#a8da07508ee75704362d45eee3eb857fa", null ],
+    [ "LOCK_TCPIP_CORE", "lwipopts_8h.html#a4700525e737fc025fea4887b172e0c95", null ],
+    [ "LWIP_ASSERT_CORE_LOCKED", "lwipopts_8h.html#a6a30040db307b3459fc11906bd433f75", null ],
     [ "LWIP_AUTOIP", "lwipopts_8h.html#aaf1b3a089827223589baf1b7f4f57069", null ],
     [ "LWIP_DEBUG", "lwipopts_8h.html#a957d947c94fda9b85d4aee0aab72952a", null ],
     [ "LWIP_DHCP_AUTOIP_COOP", "lwipopts_8h.html#a1a91e18dbb9777bc6e3963f52cb5f9fe", null ],
     [ "LWIP_DHCP_AUTOIP_COOP_TRIES", "lwipopts_8h.html#a4ff3f941b4c71a04b0c30fbee5b198c2", null ],
     [ "LWIP_IGMP", "lwipopts_8h.html#adaf25915ae1fd69c0943ef68cbb38923", null ],
+    [ "LWIP_MARK_TCPIP_THREAD", "lwipopts_8h.html#ab97d014f7ecf3b20f9d5abc2d0a79a3e", null ],
     [ "LWIP_NETCONN", "lwipopts_8h.html#a478041b8544461258f6961bf0f3c1a77", null ],
     [ "LWIP_NETIF_API", "lwipopts_8h.html#add45fb65f2d0e6de5a0d14ff9e101b77", null ],
     [ "LWIP_NETIF_HOSTNAME", "lwipopts_8h.html#aa714dbfa66822ec4c6111bdb8cf753c1", null ],
@@ -33,5 +37,10 @@ var lwipopts_8h =
     [ "TCPIP_MBOX_SIZE", "lwipopts_8h.html#a8cf210ad4e4bf616860a45fbd140fd06", null ],
     [ "TCPIP_THREAD_NAME", "lwipopts_8h.html#a405e604e4328e1feb878c6fe1798a587", null ],
     [ "TCPIP_THREAD_PRIO", "lwipopts_8h.html#a42b2c7a3042d7c3efd00f367f5837435", null ],
-    [ "TCPIP_THREAD_STACKSIZE", "lwipopts_8h.html#aa02b84eafa0c8b09b158b97c96d79db0", null ]
+    [ "TCPIP_THREAD_STACKSIZE", "lwipopts_8h.html#aa02b84eafa0c8b09b158b97c96d79db0", null ],
+    [ "UNLOCK_TCPIP_CORE", "lwipopts_8h.html#a915effea029b9c4891e1ec635eb1826d", null ],
+    [ "sys_check_core_locking", "lwipopts_8h.html#a173fabebb0a383eab0007ea205a98762", null ],
+    [ "sys_lock_tcpip_core", "lwipopts_8h.html#a02d4d9c4ae621257235a6256292f6991", null ],
+    [ "sys_mark_tcpip_thread", "lwipopts_8h.html#aef78611dcc4ea900c8c935c23d0d8a31", null ],
+    [ "sys_unlock_tcpip_core", "lwipopts_8h.html#ab5a3c5fc2a0c7e33ab4d3c7d1030eeb4", null ]
 ];
