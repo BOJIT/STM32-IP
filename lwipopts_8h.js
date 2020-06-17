@@ -27,6 +27,7 @@ var lwipopts_8h =
     [ "LWIP_NETIF_HOSTNAME", "lwipopts_8h.html#aa714dbfa66822ec4c6111bdb8cf753c1", null ],
     [ "LWIP_NETIF_LINK_CALLBACK", "lwipopts_8h.html#a1a446932dd927cc4136ba654c13bb97b", null ],
     [ "LWIP_NETIF_STATUS_CALLBACK", "lwipopts_8h.html#affb97d89516c38d3fcb9e44e5d707f36", null ],
+    [ "LWIP_PBUF_CUSTOM_DATA", "lwipopts_8h.html#a3b7067723b378457373722ca1a46a9d6", null ],
     [ "LWIP_SOCKET", "lwipopts_8h.html#a1cb62ce61ac39d7d6728ae5d3d3b927f", null ],
     [ "MEM_ALIGNMENT", "lwipopts_8h.html#a97343214666ee6dcb18c0bd77b441ea7", null ],
     [ "MEM_SIZE", "lwipopts_8h.html#a2dcf8c45f945dd0c4301a94700f2112c", null ],
