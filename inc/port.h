@@ -54,9 +54,23 @@ void portWarningLEDToggle(void);
 void portSerialInit(int baud);
 #endif /* DEBUG */
 
+/*----------------------------- NETWORK FUNCTIONS ----------------------------*/
+
+struct ptptime_t {
+  s32_t tv_sec;
+  s32_t tv_nsec;
+};
+
+void portPTPGetTime(struct ptptime_t * timestamp);
+
+void portPTPSetTime(struct ptptime_t * timestamp);
+
+void portPTPUpdateCoarse(struct ptptime_t * timeoffset);
+
+void portPTPUpdateFine(int32_t Adj);
 
 // YET TO CONFIRM PUBLIC INTERFACE!
-void networkInit(void);
+void portEthInit(void);
 
 /*----------------------------- NEWLIB OVERRIDES -----------------------------*/
 

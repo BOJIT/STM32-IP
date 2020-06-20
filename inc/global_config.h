@@ -55,7 +55,7 @@
     #define LWIP_GW_1   168
     #define LWIP_GW_2   50
     #define LWIP_GW_3   1
-#endif
+#endif /* !LWIP_DHCP */
 
 #define LWIP_HOSTNAME       "lwip"  ///< Hostname of lwIP netif
 

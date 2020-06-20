@@ -57,7 +57,7 @@ void startTask2(void *args __attribute((unused))) {
 /* Task 3 - Blink Warning LED */
 void startTask3(void *args __attribute((unused))) {
 
-    networkInit(); // Configure Ethernet GPIOs and registers
+    portEthInit(); // Configure Ethernet GPIOs and registers
 
     struct netconn *conn;
     char msg[] = "alpha";

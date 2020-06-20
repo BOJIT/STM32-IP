@@ -54,7 +54,7 @@
     #define LWIP_MARK_TCPIP_THREAD()    sys_mark_tcpip_thread()
     #define LOCK_TCPIP_CORE()           sys_lock_tcpip_core()
     #define UNLOCK_TCPIP_CORE()         sys_unlock_tcpip_core()
-#endif
+#endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING */
 
 
 /*--------------------------- Netif Configuration ----------------------------*/
@@ -103,6 +103,7 @@
     #define LWIP_PBUF_CUSTOM_DATA   \
                     s32_t time_sec; \
                     s32_t time_nsec;    ///< Add timestamp fields to pbuf
+    /// @todo use extern from ptpd.h?
 #endif /* LWIP_PTP */
 
 
@@ -123,7 +124,7 @@
     /** Collect general run-time stats */
     // #define LWIP_STATS         1
     // #define LWIP_STATS_DISPLAY 1
-#endif
+#endif /* DEBUG */
 
 
 /*----------------------------------------------------------------------------*/
