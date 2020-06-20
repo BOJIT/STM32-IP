@@ -83,6 +83,7 @@ $(document).ready(function(){initNavTree('port_8h.html',''); initResizable(); })
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">port.h File Reference</div>  </div>
@@ -95,6 +96,11 @@ $(document).ready(function(){initNavTree('port_8h.html',''); initResizable(); })
 </div>
 <p><a href="port_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structptptime__t.html">ptptime_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a78aff024b3035cfd704727915ec0d04f"><td class="memItemLeft" align="right" valign="top"><a id="a78aff024b3035cfd704727915ec0d04f"></a>
@@ -120,9 +126,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port
 <tr class="memitem:ac5d8ae5fbaf7e1294ce727f048327e5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b">portSerialInit</a> (int baud)</td></tr>
 <tr class="memdesc:ac5d8ae5fbaf7e1294ce727f048327e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the Serial interface that is designated for debugging.  <a href="port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b">More...</a><br /></td></tr>
 <tr class="separator:ac5d8ae5fbaf7e1294ce727f048327e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e268a2a94b9a42f17f71d9687beaca5"><td class="memItemLeft" align="right" valign="top"><a id="a7e268a2a94b9a42f17f71d9687beaca5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>networkInit</b> (void)</td></tr>
-<tr class="separator:a7e268a2a94b9a42f17f71d9687beaca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb3f09582f87b750ead042751dc24b31"><td class="memItemLeft" align="right" valign="top"><a id="adb3f09582f87b750ead042751dc24b31"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPGetTime</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
+<tr class="separator:adb3f09582f87b750ead042751dc24b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1797e6722f694d123b8e2908f4e9d747"><td class="memItemLeft" align="right" valign="top"><a id="a1797e6722f694d123b8e2908f4e9d747"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPSetTime</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
+<tr class="separator:a1797e6722f694d123b8e2908f4e9d747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01b1a25bb8fa34977ffd5549b2f751c8"><td class="memItemLeft" align="right" valign="top"><a id="a01b1a25bb8fa34977ffd5549b2f751c8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateCoarse</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timeoffset)</td></tr>
+<tr class="separator:a01b1a25bb8fa34977ffd5549b2f751c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd81145517530433742d118abb8ff4e2"><td class="memItemLeft" align="right" valign="top"><a id="afd81145517530433742d118abb8ff4e2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateFine</b> (int32_t Adj)</td></tr>
+<tr class="separator:afd81145517530433742d118abb8ff4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memItemLeft" align="right" valign="top"><a id="a6c3a3aada0c88bc81d218b4356353ae3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portEthInit</b> (void)</td></tr>
+<tr class="separator:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c1fa2d02c07b22bf2ebd769a028b852"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a> (int fd, char *ptr, int len)</td></tr>
 <tr class="memdesc:a0c1fa2d02c07b22bf2ebd769a028b852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overrides the <b>newlib</b> "_write" function that is used by <b>printf()</b>  <a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">More...</a><br /></td></tr>
 <tr class="separator:a0c1fa2d02c07b22bf2ebd769a028b852"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -117,6 +117,7 @@ $(document).ready(function(){initNavTree('port__ethernetif_8c.html',''); initRes
 <code>#include &quot;semphr.h&quot;</code><br />
 <code>#include &lt;<a class="el" href="global__config_8h_source.html">global_config.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="port__config_8h_source.html">port_config.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="port_8h_source.html">port.h</a>&gt;</code><br />
 <code>#include &lt;libopencm3/ethernet/phy_lan87xx.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 </div><table class="memberdecls">
@@ -131,6 +132,11 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ac814d81d239afb18b035f9ad28031a54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#ac814d81d239afb18b035f9ad28031a54">PTP_UPDATE_COARSE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ac814d81d239afb18b035f9ad28031a54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad49876309d98f635f701c3dcf2dead4d"><td class="memItemLeft" align="right" valign="top"><a id="ad49876309d98f635f701c3dcf2dead4d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PTP_UPDATE_FINE</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:ad49876309d98f635f701c3dcf2dead4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a274630819e995faa25cbf5fface18599"><td class="memItemLeft" align="right" valign="top"><a id="a274630819e995faa25cbf5fface18599"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a274630819e995faa25cbf5fface18599">STIF_NUM_TX_DMA_DESC</a>&#160;&#160;&#160;10</td></tr>
 <tr class="memdesc:a274630819e995faa25cbf5fface18599"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transmit descriptor ring - adjust length from <b>port_config</b> to tailor for your application. <br /></td></tr>
@@ -139,6 +145,17 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a623ac5660793fe9e03d0bd348678a482">STIF_NUM_RX_DMA_DESC</a>&#160;&#160;&#160;10</td></tr>
 <tr class="memdesc:a623ac5660793fe9e03d0bd348678a482"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recieve descriptor ring - adjust length from <b>port_config</b> to tailor for your application. <br /></td></tr>
 <tr class="separator:a623ac5660793fe9e03d0bd348678a482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff74d3bfb5c67fc4db0195c25765dae"><td class="memItemLeft" align="right" valign="top"><a id="a0ff74d3bfb5c67fc4db0195c25765dae"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADJ_FREQ_BASE_INCREMENT</b>&#160;&#160;&#160;43</td></tr>
+<tr class="separator:a0ff74d3bfb5c67fc4db0195c25765dae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf2f83e1d331f08bac7f3982eae1b7ed"><td class="memItemLeft" align="right" valign="top"><a id="abf2f83e1d331f08bac7f3982eae1b7ed"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADJ_FREQ_BASE_ADDEND</b>&#160;&#160;&#160;2^32*50000000/<a class="el" href="port__config_8h.html#ac93a56346a5b4aecdfd5503944de7aa4">SYSCLK_FREQ</a></td></tr>
+<tr class="separator:abf2f83e1d331f08bac7f3982eae1b7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468e1ae7db57a351c1e8c919e6aa616c"><td class="memItemLeft" align="right" valign="top"><a id="a468e1ae7db57a351c1e8c919e6aa616c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PTP_TO_NSEC</b>(SUBSEC)&#160;&#160;&#160;(u32_t)((uint64_t)(SUBSEC * 1000000000ll) &gt;&gt; 31)</td></tr>
+<tr class="separator:a468e1ae7db57a351c1e8c919e6aa616c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7529193815b9a95425cd256c1df48994"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>PTP_TO_SUBSEC</b>(NSEC)</td></tr>
+<tr class="separator:a7529193815b9a95425cd256c1df48994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -154,9 +171,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a1e7d5215a78608edc241df081c9f7f43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a> (void)</td></tr>
 <tr class="memdesc:a1e7d5215a78608edc241df081c9f7f43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise MCU hardware for use of the ethernet peripheral.  <a href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">More...</a><br /></td></tr>
 <tr class="separator:a1e7d5215a78608edc241df081c9f7f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e268a2a94b9a42f17f71d9687beaca5"><td class="memItemLeft" align="right" valign="top"><a id="a7e268a2a94b9a42f17f71d9687beaca5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>networkInit</b> (void)</td></tr>
-<tr class="separator:a7e268a2a94b9a42f17f71d9687beaca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb3f09582f87b750ead042751dc24b31"><td class="memItemLeft" align="right" valign="top"><a id="adb3f09582f87b750ead042751dc24b31"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPGetTime</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
+<tr class="separator:adb3f09582f87b750ead042751dc24b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1797e6722f694d123b8e2908f4e9d747"><td class="memItemLeft" align="right" valign="top"><a id="a1797e6722f694d123b8e2908f4e9d747"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPSetTime</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
+<tr class="separator:a1797e6722f694d123b8e2908f4e9d747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab59bd95b2629b03f26dbb10bde569f2a"><td class="memItemLeft" align="right" valign="top"><a id="ab59bd95b2629b03f26dbb10bde569f2a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateCoarse</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
+<tr class="separator:ab59bd95b2629b03f26dbb10bde569f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e28db24c07f30a8b3ae2d66917206c9"><td class="memItemLeft" align="right" valign="top"><a id="a0e28db24c07f30a8b3ae2d66917206c9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateFine</b> (int32_t adj)</td></tr>
+<tr class="separator:a0e28db24c07f30a8b3ae2d66917206c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memItemLeft" align="right" valign="top"><a id="a6c3a3aada0c88bc81d218b4356353ae3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>portEthInit</b> (void)</td></tr>
+<tr class="separator:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4520bf61ba5df78eb37294889b4f1867"><td class="memItemLeft" align="right" valign="top"><a id="a4520bf61ba5df78eb37294889b4f1867"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td></tr>
 <tr class="separator:a4520bf61ba5df78eb37294889b4f1867"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,7 +197,43 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
 <div class="textblock"><p>port-specific ethernet driver for lwIP </p>
 <dl class="section author"><dt>Author</dt><dd> &copy;  2020 James Bennion-Pedley</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>7 June 2020 </dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a7529193815b9a95425cd256c1df48994"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7529193815b9a95425cd256c1df48994">&#9670;&nbsp;</a></span>PTP_TO_SUBSEC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PTP_TO_SUBSEC</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">NSEC</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">                                                            (u32_t)((uint64_t)(NSEC * 0x80000000ll) \</div>
+<div class="line">                                                            / 1000000000)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ac814d81d239afb18b035f9ad28031a54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac814d81d239afb18b035f9ad28031a54">&#9670;&nbsp;</a></span>PTP_UPDATE_COARSE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PTP_UPDATE_COARSE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Eventually can be removed, as LWIP handles debug </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a1e7d5215a78608edc241df081c9f7f43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e7d5215a78608edc241df081c9f7f43">&#9670;&nbsp;</a></span>eth_hw_init()</h2>
 
@@ -186,8 +251,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
 </div><div class="memdoc">
 
 <p>Initialise MCU hardware for use of the ethernet peripheral. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Have not initialised PPS pin for debug! </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>PPS definition to go here when implemented </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Have not initialised PPS pin for debug! </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>PPS definition to go here when implemented </dd></dl>
 
 </div>
 </div>
@@ -208,7 +273,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
 </div><div class="memdoc">
 
 <p>Hardware ethernet interrupt (see reference manual for details) </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>implement separate transmission callbacks </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>implement separate transmission callbacks </dd></dl>
 
 </div>
 </div>
@@ -267,7 +332,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling. </dd></dl>
 
 </div>
 </div>

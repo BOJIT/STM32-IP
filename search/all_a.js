@@ -15,5 +15,7 @@ var searchData=
   ['portserialinit_53',['portSerialInit',['../port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b',1,'portSerialInit(int baud):&#160;port_serial.c'],['../port__serial_8c.html#ac5d8ae5fbaf7e1294ce727f048327e5b',1,'portSerialInit(int baud):&#160;port_serial.c']]],
   ['portstatusledtoggle_54',['portStatusLEDToggle',['../port_8h.html#aad686946b95a6c077b30617dc13563f5',1,'portStatusLEDToggle(void):&#160;port_leds.c'],['../port__leds_8c.html#aad686946b95a6c077b30617dc13563f5',1,'portStatusLEDToggle(void):&#160;port_leds.c']]],
   ['portsystemledtoggle_55',['portSystemLEDToggle',['../port_8h.html#a9d27381d46b54c4c942753a2017ca0af',1,'portSystemLEDToggle(void):&#160;port_leds.c'],['../port__leds_8c.html#a9d27381d46b54c4c942753a2017ca0af',1,'portSystemLEDToggle(void):&#160;port_leds.c']]],
-  ['portwarningledtoggle_56',['portWarningLEDToggle',['../port_8h.html#a20d8f6b35d67e0990707c36e76a7af0e',1,'portWarningLEDToggle(void):&#160;port_leds.c'],['../port__leds_8c.html#a20d8f6b35d67e0990707c36e76a7af0e',1,'portWarningLEDToggle(void):&#160;port_leds.c']]]
+  ['portwarningledtoggle_56',['portWarningLEDToggle',['../port_8h.html#a20d8f6b35d67e0990707c36e76a7af0e',1,'portWarningLEDToggle(void):&#160;port_leds.c'],['../port__leds_8c.html#a20d8f6b35d67e0990707c36e76a7af0e',1,'portWarningLEDToggle(void):&#160;port_leds.c']]],
+  ['ptp_5fupdate_5fcoarse_57',['PTP_UPDATE_COARSE',['../port__ethernetif_8c.html#ac814d81d239afb18b035f9ad28031a54',1,'port_ethernetif.c']]],
+  ['ptptime_5ft_58',['ptptime_t',['../structptptime__t.html',1,'']]]
 ];

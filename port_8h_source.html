@@ -111,23 +111,38 @@ $(document).ready(function(){initNavTree('port_8h_source.html',''); initResizabl
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> <a class="code" href="port_8h.html#ac5d8ae5fbaf7e1294ce727f048327e5b">portSerialInit</a>(<span class="keywordtype">int</span> baud);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// YET TO CONFIRM PUBLIC INTERFACE!</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span> networkInit(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/*----------------------------- NEWLIB OVERRIDES -----------------------------*/</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/*----------------------------- NETWORK FUNCTIONS ----------------------------*/</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="structptptime__t.html">   59</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structptptime__t.html">ptptime_t</a> {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  s32_t tv_sec;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  s32_t tv_nsec;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">void</span> portPTPGetTime(<span class="keyword">struct</span> <a class="code" href="structptptime__t.html">ptptime_t</a> * timestamp);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span> portPTPSetTime(<span class="keyword">struct</span> <a class="code" href="structptptime__t.html">ptptime_t</a> * timestamp);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> portPTPUpdateCoarse(<span class="keyword">struct</span> <a class="code" href="structptptime__t.html">ptptime_t</a> * timeoffset);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> portPTPUpdateFine(int32_t Adj);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// YET TO CONFIRM PUBLIC INTERFACE!</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> portEthInit(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">/*----------------------------- NEWLIB OVERRIDES -----------------------------*/</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">int</span> <a class="code" href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">char</span> *ptr, <span class="keywordtype">int</span> len);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">/*----------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __PORT__ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aport_8h_html_a78aff024b3035cfd704727915ec0d04f"><div class="ttname"><a href="port_8h.html#a78aff024b3035cfd704727915ec0d04f">portClockInit</a></div><div class="ttdeci">void portClockInit(void)</div><div class="ttdoc">Initialise the main system clock tree.</div><div class="ttdef"><b>Definition:</b> port_clock.c:53</div></div>
+<div class="ttc" id="astructptptime__t_html"><div class="ttname"><a href="structptptime__t.html">ptptime_t</a></div><div class="ttdef"><b>Definition:</b> port.h:59</div></div>
 <div class="ttc" id="aport_8h_html_aad686946b95a6c077b30617dc13563f5"><div class="ttname"><a href="port_8h.html#aad686946b95a6c077b30617dc13563f5">portStatusLEDToggle</a></div><div class="ttdeci">void portStatusLEDToggle(void)</div><div class="ttdoc">Toggle the STATUS LED.</div><div class="ttdef"><b>Definition:</b> port_leds.c:49</div></div>
 <div class="ttc" id="aport_8h_html_a20d8f6b35d67e0990707c36e76a7af0e"><div class="ttname"><a href="port_8h.html#a20d8f6b35d67e0990707c36e76a7af0e">portWarningLEDToggle</a></div><div class="ttdeci">void portWarningLEDToggle(void)</div><div class="ttdoc">Toggle the WARNING LED.</div><div class="ttdef"><b>Definition:</b> port_leds.c:56</div></div>
 <div class="ttc" id="aport_8h_html_a0c1fa2d02c07b22bf2ebd769a028b852"><div class="ttname"><a href="port_8h.html#a0c1fa2d02c07b22bf2ebd769a028b852">_write</a></div><div class="ttdeci">int _write(int fd, char *ptr, int len)</div><div class="ttdoc">Overrides the newlib &quot;_write&quot; function that is used by printf()</div><div class="ttdef"><b>Definition:</b> port_serial.c:64</div></div>
