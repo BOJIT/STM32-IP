@@ -22,7 +22,9 @@
 #include <global_config.h>
 
 /* Device-Specific includes */
-#include "port.h"       ///< 
+#include "port.h"
+
+#include "ptpd.h" /// @todo Improve ptpd public interface
 
 /* Stack Overflow Handler - move elsewhere */
 extern void vApplicationStackOverflowHook(
@@ -58,6 +60,8 @@ void startTask2(void *args __attribute((unused))) {
 void startTask3(void *args __attribute((unused))) {
 
     portEthInit(); // Configure Ethernet GPIOs and registers
+
+    ptpd_init();    // Initialise PTPd Daemon (not final interface)
 
     struct netconn *conn;
     char msg[] = "alpha";
@@ -95,7 +99,7 @@ int main(void) {
 
     xTaskCreate(startTask1, "task1", 350, NULL, 5, NULL);
     xTaskCreate(startTask2, "task2", 350, NULL, 5, NULL);
-    xTaskCreate(startTask3, "lwip", 1024, NULL, configMAX_PRIORITIES-3, NULL);
+    xTaskCreate(startTask3, "lwip", 1024, NULL, FREERTOS_PRIORITIES-3, NULL);
 
     vTaskStartScheduler();
 
