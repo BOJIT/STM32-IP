@@ -98,12 +98,11 @@ $(document).ready(function(){initNavTree('main_8c.html',''); initResizable(); })
 <code>#include &quot;<a class="el" href="_free_r_t_o_s_config_8h_source.html">FreeRTOSConfig.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="global__config_8h_source.html">global_config.h</a>&gt;</code><br />
 <code>#include &quot;<a class="el" href="port_8h_source.html">port.h</a>&quot;</code><br />
+<code>#include &quot;ptpd.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a329de0f973fabef8b34da6444654295c"><td class="memItemLeft" align="right" valign="top"><a id="a329de0f973fabef8b34da6444654295c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a329de0f973fabef8b34da6444654295c">vApplicationStackOverflowHook</a> (xTaskHandle *pxTask, signed portCHAR *pcTaskName)</td></tr>
-<tr class="memdesc:a329de0f973fabef8b34da6444654295c"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; <br /></td></tr>
+<tr class="memitem:a329de0f973fabef8b34da6444654295c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a329de0f973fabef8b34da6444654295c">vApplicationStackOverflowHook</a> (xTaskHandle *pxTask, signed portCHAR *pcTaskName)</td></tr>
 <tr class="separator:a329de0f973fabef8b34da6444654295c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ad0ee1694158c3c37f0854d68c0d36c"><td class="memItemLeft" align="right" valign="top"><a id="a0ad0ee1694158c3c37f0854d68c0d36c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vApplicationStackOverflowHook</b> (xTaskHandle *pxTask __attribute((unused)), signed portCHAR *pcTaskName __attribute((unused)))</td></tr>
@@ -124,7 +123,37 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main entry point for the program. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a329de0f973fabef8b34da6444654295c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a329de0f973fabef8b34da6444654295c">&#9670;&nbsp;</a></span>vApplicationStackOverflowHook()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vApplicationStackOverflowHook </td>
+          <td>(</td>
+          <td class="paramtype">xTaskHandle *&#160;</td>
+          <td class="paramname"><em>pxTask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">signed portCHAR *&#160;</td>
+          <td class="paramname"><em>pcTaskName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Improve ptpd public interface </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
