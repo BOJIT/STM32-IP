@@ -159,18 +159,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab93d67d6e97ecc7209999ee8521e93a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">ethernetif_input</a> (void *argument)</td></tr>
-<tr class="memdesc:ab93d67d6e97ecc7209999ee8521e93a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task for handling incoming ethernet packets (triggered by ISR)  <a href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">More...</a><br /></td></tr>
-<tr class="separator:ab93d67d6e97ecc7209999ee8521e93a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58b1cc64adf90b8027bf66c4e127bb56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56">ethernetif_phy</a> (void *argument)</td></tr>
-<tr class="memdesc:a58b1cc64adf90b8027bf66c4e127bb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Polls the phy every 0.5 seconds to check the status.  <a href="port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56">More...</a><br /></td></tr>
-<tr class="separator:a58b1cc64adf90b8027bf66c4e127bb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="memItemLeft" align="right" valign="top">err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a7ce979d0ec31575ecf17998b7bd9abb2">ethernetif_init</a> (struct netif *netif)</td></tr>
-<tr class="memdesc:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for initialising the ethernet interface.  <a href="port__ethernetif_8c.html#a7ce979d0ec31575ecf17998b7bd9abb2">More...</a><br /></td></tr>
-<tr class="separator:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e7d5215a78608edc241df081c9f7f43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a> (void)</td></tr>
-<tr class="memdesc:a1e7d5215a78608edc241df081c9f7f43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise MCU hardware for use of the ethernet peripheral.  <a href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">More...</a><br /></td></tr>
-<tr class="separator:a1e7d5215a78608edc241df081c9f7f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb3f09582f87b750ead042751dc24b31"><td class="memItemLeft" align="right" valign="top"><a id="adb3f09582f87b750ead042751dc24b31"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPGetTime</b> (struct <a class="el" href="structptptime__t.html">ptptime_t</a> *timestamp)</td></tr>
 <tr class="separator:adb3f09582f87b750ead042751dc24b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,6 +171,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateCoarse</
 <tr class="memitem:a0e28db24c07f30a8b3ae2d66917206c9"><td class="memItemLeft" align="right" valign="top"><a id="a0e28db24c07f30a8b3ae2d66917206c9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>portPTPUpdateFine</b> (int32_t adj)</td></tr>
 <tr class="separator:a0e28db24c07f30a8b3ae2d66917206c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93d67d6e97ecc7209999ee8521e93a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">ethernetif_input</a> (void *argument)</td></tr>
+<tr class="memdesc:ab93d67d6e97ecc7209999ee8521e93a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task for handling incoming ethernet packets (triggered by ISR)  <a href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">More...</a><br /></td></tr>
+<tr class="separator:ab93d67d6e97ecc7209999ee8521e93a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58b1cc64adf90b8027bf66c4e127bb56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56">ethernetif_phy</a> (void *argument)</td></tr>
+<tr class="memdesc:a58b1cc64adf90b8027bf66c4e127bb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Polls the phy every 0.5 seconds to check the status.  <a href="port__ethernetif_8c.html#a58b1cc64adf90b8027bf66c4e127bb56">More...</a><br /></td></tr>
+<tr class="separator:a58b1cc64adf90b8027bf66c4e127bb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="memItemLeft" align="right" valign="top">err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a7ce979d0ec31575ecf17998b7bd9abb2">ethernetif_init</a> (struct netif *netif)</td></tr>
+<tr class="memdesc:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for initialising the ethernet interface.  <a href="port__ethernetif_8c.html#a7ce979d0ec31575ecf17998b7bd9abb2">More...</a><br /></td></tr>
+<tr class="separator:a7ce979d0ec31575ecf17998b7bd9abb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7d5215a78608edc241df081c9f7f43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a> (void)</td></tr>
+<tr class="memdesc:a1e7d5215a78608edc241df081c9f7f43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise MCU hardware for use of the ethernet peripheral.  <a href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">More...</a><br /></td></tr>
+<tr class="separator:a1e7d5215a78608edc241df081c9f7f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memItemLeft" align="right" valign="top"><a id="a6c3a3aada0c88bc81d218b4356353ae3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>portEthInit</b> (void)</td></tr>
 <tr class="separator:a6c3a3aada0c88bc81d218b4356353ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -251,8 +251,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
 </div><div class="memdoc">
 
 <p>Initialise MCU hardware for use of the ethernet peripheral. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Have not initialised PPS pin for debug! </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>PPS definition to go here when implemented </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>Have not initialised PPS pin for debug! </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>PPS definition to go here when implemented </dd></dl>
 
 </div>
 </div>
@@ -332,7 +332,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gdb_break</b> ()</td>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling. </dd></dl>
 
 </div>
 </div>

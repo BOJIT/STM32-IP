@@ -92,23 +92,23 @@ $(document).ready(function(){initNavTree('todo.html',''); initResizable(); });
 <dt>Global <a class="el" href="port__ethernetif_8c.html#ac814d81d239afb18b035f9ad28031a54">PTP_UPDATE_COARSE</a>  </dt>
 <dd><a class="anchor" id="_todo000002"></a>Eventually can be removed, as LWIP handles debug  </dd>
 <dt>" </dt>
-<dd><a class="anchor" id="_todo000003"></a>check frame validity + frame length +/- CRC?  </dd>
+<dd><p class="startdd"><a class="anchor" id="_todo000003"></a>restrict to IPV4/IPV6 later (OR JUST PTP?) </p>
+<p class="interdd"><a class="anchor" id="_todo000004"></a>does timestamp need to be set here? </p>
+<p class="enddd"><a class="anchor" id="_todo000005"></a>check frame validity + frame length +/- CRC?  </p>
+</dd>
 <dt>Global <a class="el" href="port__ethernetif_8c.html#ab93d67d6e97ecc7209999ee8521e93a3">ethernetif_input</a>  (void *argument)</dt>
-<dd><a class="anchor" id="_todo000004"></a>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling.  </dd>
+<dd><a class="anchor" id="_todo000006"></a>if this task and the ISR get out of sync (under heavy load), the DMA controller and the processing loop could get out of sync. Ideally implement support for 'catch-up'/'overflow' handling.  </dd>
 <dt>" </dt>
-<dd><p class="startdd"><a class="anchor" id="_todo000005"></a>create transmit IRQ handler? </p>
-<p class="interdd"><a class="anchor" id="_todo000006"></a>the step above is not required if the DMA hasn't got through the previous descriptors before the next packet is sent. potentially this behaviour should be flagged, as currently nothing is stopping descriptor overflow. </p>
-<p class="enddd"><a class="anchor" id="_todo000007"></a>this is where hardware Multicast filtering needs to be implemented  </p>
+<dd><p class="startdd"><a class="anchor" id="_todo000007"></a>create transmit IRQ handler? </p>
+<p class="interdd"><a class="anchor" id="_todo000008"></a>the step above is not required if the DMA hasn't got through the previous descriptors before the next packet is sent. potentially this behaviour should be flagged, as currently nothing is stopping descriptor overflow. </p>
+<p class="enddd"><a class="anchor" id="_todo000009"></a>this is where hardware Multicast filtering needs to be implemented  </p>
 </dd>
 <dt>Global <a class="el" href="port__ethernetif_8c.html#a1e7d5215a78608edc241df081c9f7f43">eth_hw_init</a>  (void)</dt>
-<dd><p class="startdd"><a class="anchor" id="_todo000008"></a>Have not initialised PPS pin for debug! </p>
-<p class="enddd"><a class="anchor" id="_todo000009"></a>PPS definition to go here when implemented  </p>
+<dd><p class="startdd"><a class="anchor" id="_todo000010"></a>Have not initialised PPS pin for debug! </p>
+<p class="enddd"><a class="anchor" id="_todo000011"></a>PPS definition to go here when implemented  </p>
 </dd>
 <dt>" </dt>
-<dd><p class="startdd"><a class="anchor" id="_todo000010"></a>Restart services with a semaphore! + any ETH Mac reinitialisation </p>
-<p class="interdd"><a class="anchor" id="_todo000011"></a>restrict to IPV4/IPV6 later (OR JUST PTP?) </p>
-<p class="enddd"><a class="anchor" id="_todo000012"></a>does timestamp need to be set here?  </p>
-</dd>
+<dd><a class="anchor" id="_todo000012"></a>Restart services with a semaphore! + any ETH Mac reinitialisation  </dd>
 <dt>Global <a class="el" href="port__ethernetif_8c.html#a0c6254f543dbc4e73a297b2ad606d3b9">eth_isr</a>  (void)</dt>
 <dd><a class="anchor" id="_todo000013"></a>implement separate transmission callbacks </dd>
 </dl>
