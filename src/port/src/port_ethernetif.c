@@ -115,6 +115,128 @@ static struct dma_desc *rx_cur_dma_desc;
 */
 static TaskHandle_t eth_task = NULL;
 
+/*------------------------------ PTP FUNCTIONS -------------------------------*/
+
+/* Temp Config Area */
+#define ADJ_FREQ_BASE_INCREMENT   43    // 20ns increment
+#define ADJ_FREQ_BASE_ADDEND      2^32*50000000/SYSCLK_FREQ // see AN3411
+
+#if LWIP_PTP
+
+// Check the validity of these macros! REWRITE!!!!!
+#define PTP_TO_NSEC(SUBSEC)     (u32_t)((uint64_t)(SUBSEC * 1000000000ll) >> 31)
+#define PTP_TO_SUBSEC(NSEC)     (u32_t)((uint64_t)(NSEC * 0x80000000ll) \
+                                                            / 1000000000)
+
+static err_t ptp_init(uint32_t mode) {
+    /* Disable timestamp interrupt */
+    ETH_MACIMR |= ETH_MACIMR_TSTIM;
+
+    /* Enable timestamps for relevant packets */
+    ETH_PTPTSCR |= ETH_PTPTSCR_TSE | ETH_PTPTSCR_TSSIPV4FE |
+                        ETH_PTPTSCR_TSSIPV6FE | ETH_PTPTSCR_TSSARFE;
+    /// @todo restrict to IPV4/IPV6 later (OR JUST PTP?)
+
+    /* Set smallest clock adjustment increment (20ns) */
+    ETH_PTPSSIR = ETH_PTPSSIR_STSSI & ADJ_FREQ_BASE_INCREMENT;
+
+    if(mode == PTP_UPDATE_FINE) {
+        /* Set addend based on SYSCLK frequency (see reference manual) */
+        ETH_PTPTSAR = ADJ_FREQ_BASE_ADDEND;
+        printf("ADDEND: %lu\n", ETH_PTPTSAR);
+        
+        /* Update addend, wait for bit to be cleared */
+        ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
+        while(ETH_PTPTSCR & ETH_PTPTSCR_TTSARU);
+
+        /* Configure for fine update */
+        ETH_PTPTSCR |= ETH_PTPTSCR_TSFCU;
+    }
+    else {
+        /* Configure for coarse update */
+        ETH_PTPTSCR &= ~ETH_PTPTSCR_TSFCU;
+    }
+
+    /// @todo does timestamp need to be set here?
+    ETH_PTPTSHUR = 0;
+    ETH_PTPTSLUR = 0;
+
+    /* Initialise timestamping and wait for bit to be cleared */
+    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTI;
+    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTI);
+
+    return ERR_OK;
+}
+
+void portPTPGetTime(struct ptptime_t * timestamp) {
+    timestamp->tv_sec = ETH_PTPTSHR;
+    timestamp->tv_nsec = PTP_TO_NSEC(ETH_PTPTSLR);
+}
+
+void portPTPSetTime(struct ptptime_t * timestamp) {
+    if((timestamp->tv_sec < 0) || (timestamp->tv_nsec < 0)) {
+        ETH_PTPTSLUR = ETH_PTPTSLUR_TSUPNS; // Set timestamp as negative
+    }
+    else {
+        ETH_PTPTSLUR = 0;   // Set timestamp as positive (default)
+    }
+
+    /* Write timestamps to registers */
+    ETH_PTPTSHUR = (u32_t)abs(timestamp->tv_sec);
+    ETH_PTPTSLUR |= (u32_t)(PTP_TO_SUBSEC(abs(timestamp->tv_nsec))
+                                                & ETH_PTPTSLUR_TSUSS);
+
+    /* Reinitialise timestamping and wait for bit to be cleared */
+    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTI;
+    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTI);
+}
+
+void portPTPUpdateCoarse(struct ptptime_t * timestamp) {
+    /* Backup addend (coarse update clears it) */
+    u32_t addend = ETH_PTPTSAR;
+
+    /* Wait for timestamp flags to be cleared */
+    while(ETH_PTPTSCR & (ETH_PTPTSCR_TSSTI | ETH_PTPTSCR_TSSTU 
+                                            | ETH_PTPTSCR_TTSARU));
+
+    if((timestamp->tv_sec < 0) || (timestamp->tv_nsec < 0)) {
+        ETH_PTPTSLUR = ETH_PTPTSLUR_TSUPNS; // Set timestamp as negative
+    }
+    else {
+        ETH_PTPTSLUR = 0;   // Set timestamp as positive (default)
+    }
+
+    /* Write timestamps to registers */
+    ETH_PTPTSHUR = (u32_t)abs(timestamp->tv_sec);
+    ETH_PTPTSLUR |= (u32_t)(PTP_TO_SUBSEC(abs(timestamp->tv_nsec))
+                                                & ETH_PTPTSLUR_TSUSS);
+
+    /* Update timestamps */
+    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTU;
+    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTU);
+
+    /* Restore addend */
+    ETH_PTPTSAR = addend;
+    ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
+}
+
+void portPTPUpdateFine(int32_t adj) {
+    /* Limit maximum frequency adjustment */
+    if( adj > 5120000) adj = 5120000;
+    if( adj < -5120000) adj = -5120000;
+
+    /* Addend estimation (from AN3411) */
+    u32_t addend = ((((275LL * adj)>>8) * 
+                    (ADJ_FREQ_BASE_ADDEND>>24))>>6) + (ADJ_FREQ_BASE_ADDEND);
+
+    /* Update addend */
+    ETH_PTPTSAR = addend;
+    while(ETH_PTPTSCR & ETH_PTPTSCR_TTSARU);
+    ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
+}
+
+#endif /* LWIP_PTP */
+
 /*------------------------------ DMA Functions -------------------------------*/
 
 /** 
@@ -608,130 +730,6 @@ static void ethernetif_link_callback(struct netif *netif)
         #endif /* LWIP_IGMP */
     }
 }
-
-/*------------------------------ PTP FUNCTIONS -------------------------------*/
-
-/* Temp Config Area */
-#define ADJ_FREQ_BASE_INCREMENT   43    // 20ns increment
-#define ADJ_FREQ_BASE_ADDEND      2^32*50000000/SYSCLK_FREQ // see AN3411
-
-#if LWIP_PTP
-
-// Check the validity of these macros! REWRITE!!!!!
-#define PTP_TO_NSEC(SUBSEC)     (u32_t)((uint64_t)(SUBSEC * 1000000000ll) >> 31)
-#define PTP_TO_SUBSEC(NSEC)     (u32_t)((uint64_t)(NSEC * 0x80000000ll) \
-                                                            / 1000000000)
-
-static err_t ptp_init(uint32_t mode) {
-
-    /* Disable timestamp interrupt */
-    ETH_MACIMR |= ETH_MACIMR_TSTIM;
-
-    /* Enable timestamps for relevant packets */
-    ETH_PTPTSCR |= ETH_PTPTSCR_TSE | ETH_PTPTSCR_TSSIPV4FE |
-                        ETH_PTPTSCR_TSSIPV6FE | ETH_PTPTSCR_TSSARFE;
-    /// @todo restrict to IPV4/IPV6 later (OR JUST PTP?)
-
-    /* Set smallest clock adjustment increment (20ns) */
-    ETH_PTPSSIR = ETH_PTPSSIR_STSSI & ADJ_FREQ_BASE_INCREMENT;
-
-    if(mode == PTP_UPDATE_FINE) {
-        /* Set addend based on SYSCLK frequency (see reference manual) */
-        ETH_PTPTSAR = ADJ_FREQ_BASE_ADDEND;
-        printf("ADDEND: %lu\n", ETH_PTPTSAR);
-        
-        /* Update addend, wait for bit to be cleared */
-        ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
-        while(ETH_PTPTSCR & ETH_PTPTSCR_TTSARU);
-
-        /* Configure for fine update */
-        ETH_PTPTSCR |= ETH_PTPTSCR_TSFCU;
-    }
-    else {
-        /* Configure for coarse update */
-        ETH_PTPTSCR &= ~ETH_PTPTSCR_TSFCU;
-    }
-
-    /// @todo does timestamp need to be set here?
-    ETH_PTPTSHUR = 0;
-    ETH_PTPTSLUR = 0;
-
-    /* Initialise timestamping and wait for bit to be cleared */
-    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTI;
-    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTI);
-
-    return ERR_OK;
-}
-
-void portPTPGetTime(struct ptptime_t * timestamp) {
-
-    timestamp->tv_sec = ETH_PTPTSHR;
-    timestamp->tv_nsec = PTP_TO_NSEC(ETH_PTPTSLR);
-}
-
-void portPTPSetTime(struct ptptime_t * timestamp) {
-    if((timestamp->tv_sec < 0) || (timestamp->tv_nsec < 0)) {
-        ETH_PTPTSLUR = ETH_PTPTSLUR_TSUPNS; // Set timestamp as negative
-    }
-    else {
-        ETH_PTPTSLUR = 0;   // Set timestamp as positive (default)
-    }
-
-    /* Write timestamps to registers */
-    ETH_PTPTSHUR = (u32_t)abs(timestamp->tv_sec);
-    ETH_PTPTSLUR |= (u32_t)(PTP_TO_SUBSEC(abs(timestamp->tv_nsec))
-                                                & ETH_PTPTSLUR_TSUSS);
-
-    /* Reinitialise timestamping and wait for bit to be cleared */
-    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTI;
-    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTI);
-}
-
-void portPTPUpdateCoarse(struct ptptime_t * timestamp) {
-    /* Backup addend (coarse update clears it) */
-    u32_t addend = ETH_PTPTSAR;
-
-    /* Wait for timestamp flags to be cleared */
-    while(ETH_PTPTSCR & (ETH_PTPTSCR_TSSTI | ETH_PTPTSCR_TSSTU 
-                                            | ETH_PTPTSCR_TTSARU));
-
-    if((timestamp->tv_sec < 0) || (timestamp->tv_nsec < 0)) {
-        ETH_PTPTSLUR = ETH_PTPTSLUR_TSUPNS; // Set timestamp as negative
-    }
-    else {
-        ETH_PTPTSLUR = 0;   // Set timestamp as positive (default)
-    }
-
-    /* Write timestamps to registers */
-    ETH_PTPTSHUR = (u32_t)abs(timestamp->tv_sec);
-    ETH_PTPTSLUR |= (u32_t)(PTP_TO_SUBSEC(abs(timestamp->tv_nsec))
-                                                & ETH_PTPTSLUR_TSUSS);
-
-    /* Update timestamps */
-    ETH_PTPTSCR |= ETH_PTPTSCR_TSSTU;
-    while(ETH_PTPTSCR & ETH_PTPTSCR_TSSTU);
-
-    /* Restore addend */
-    ETH_PTPTSAR = addend;
-    ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
-}
-
-void portPTPUpdateFine(int32_t adj) {
-    /* Limit maximum frequency adjustment */
-    if( adj > 5120000) adj = 5120000;
-    if( adj < -5120000) adj = -5120000;
-
-    /* Addend estimation (from AN3411) */
-    u32_t addend = ((((275LL * adj)>>8) * 
-                    (ADJ_FREQ_BASE_ADDEND>>24))>>6) + ADJ_FREQ_BASE_ADDEND;
-
-    /* Update addend */
-    ETH_PTPTSAR = addend;
-    while(ETH_PTPTSCR & ETH_PTPTSCR_TTSARU);
-    ETH_PTPTSCR |= ETH_PTPTSCR_TTSARU;
-}
-
-#endif /* LWIP_PTP */
 
 /*--------------------- PUBLIC DEVICE-SPECIFIC FUNCTIONS ---------------------*/
 

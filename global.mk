@@ -25,3 +25,9 @@ LFLAGS := -Wl,--gc-sections
 LFLAGS += --specs=nosys.specs --specs=nano.specs
 LFLAGS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 LFLAGS += --static -nostartfiles
+
+# Pretty Terminal Formatting
+FORMAT_PURPLE = \033[1m\033[95m
+FORMAT_WHITE = \033[1m\033[36m
+FORMAT_RED = \033[1m\033[91m
+FORMAT_OFF = \033[0m

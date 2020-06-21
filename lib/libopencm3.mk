@@ -6,12 +6,6 @@
 include global.mk
 include src/port/port.mk
 
-# Pretty Terminal Formatting
-_FORMAT_PURPLE = \033[1m\033[95m
-_FORMAT_WHITE = \033[1m\033[36m
-_FORMAT_RED = \033[1m\033[91m
-_FORMAT_OFF = \033[0m
-
 ################################## SOURCES #####################################
 
 # Set library name (should be equivalent to the folder/submodule name)

@@ -12,18 +12,12 @@
 include global.mk
 include src/port/port.mk
 
-# Pretty Terminal Formatting
-_FORMAT_PURPLE = \033[1m\033[95m
-_FORMAT_WHITE = \033[1m\033[36m
-_FORMAT_RED = \033[1m\033[91m
-_FORMAT_OFF = \033[0m
-
 ################################## SOURCES #####################################
 
 _BUILD_DIR = build
 
 # Project Source Files:
-_SRC := $(wildcard src/*.c) $(wildcard src/port/src/*.c)
+_SRC := $(shell find src -name "*.c")
 _LIB := $(wildcard lib/*.mk)
 _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 
@@ -36,7 +30,7 @@ _OBJ := $(patsubst %.c,$(_BUILD_DIR)/%.o,$(_SRC))
 
 # Link all object files and libraries
 all: dep $(_OBJ)
-	@echo "$(_FORMAT_PURPLE)Linking Application Code:$(_FORMAT_OFF)"
+	@echo "$(FORMAT_PURPLE)Linking Application Code:$(FORMAT_OFF)"
 	mkdir -p bin
 	# CFlags are included purely for setting implicit linker flags
 	$(CC) $(CFLAGS) $(PORT_CFLAGS) $(_OBJ) -o bin/$(PROJECT).elf \
@@ -45,7 +39,7 @@ all: dep $(_OBJ)
 
 # Delete device binary and build directories
 clean:
-	@echo "$(_FORMAT_PURPLE)Cleaning Project:$(_FORMAT_OFF)"
+	@echo "$(FORMAT_PURPLE)Cleaning Project:$(FORMAT_OFF)"
 	rm -rf bin
 	rm -rf build
 
@@ -55,12 +49,12 @@ flash: all
 
 # Build all libs with a sub-make
 $(_LIB):
-	@echo "$(_FORMAT_PURPLE)Building $@:$(_FORMAT_OFF)"
+	@echo "$(FORMAT_PURPLE)Building $@:$(FORMAT_OFF)"
 	$(MAKE) -f$@
 
 # Get lib dependencies and add them to the compiler/linker flags
 dep: $(_LIB)
-	@echo "$(_FORMAT_PURPLE)Compiling Application Code:$(_FORMAT_OFF)"
+	@echo "$(FORMAT_PURPLE)Compiling Application Code:$(FORMAT_OFF)"
 	$(eval CFLAGS += $(shell cat build/$(PROJECT).cdep))
 	$(eval LFLAGS += $(shell cat build/$(PROJECT).ldep))
 
