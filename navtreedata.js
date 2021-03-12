@@ -25,11 +25,13 @@
 var NAVTREE =
 [
   [ "STM32-IP", "index.html", [
-    [ "Overview", "index.html", [
-      [ "Basic framework for using lwIP and FreeRTOS with libopencm3:", "index.html#autotoc_md2", null ],
-      [ "Reference Software Tools:", "index.html#autotoc_md3", null ],
-      [ "Project Structure:", "index.html#autotoc_md4", null ],
-      [ "Building this Project:", "index.html#autotoc_md5", null ]
+    [ "IMPORTANT NOTICE!", "index.html", [
+      [ "Overview", "index.html#autotoc_md2", [
+        [ "Basic framework for using lwIP and FreeRTOS with libopencm3:", "index.html#autotoc_md3", null ],
+        [ "Reference Software Tools:", "index.html#autotoc_md4", null ],
+        [ "Project Structure:", "index.html#autotoc_md5", null ],
+        [ "Building this Project:", "index.html#autotoc_md6", null ]
+      ] ]
     ] ],
     [ "Porting", "page.html", [
       [ "Porting Guide:", "page.html#autotoc_md0", null ]
