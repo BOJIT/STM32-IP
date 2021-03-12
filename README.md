@@ -1,3 +1,7 @@
+# IMPORTANT NOTICE!
+This repository is no longer being updated! A more complete version of the ethernet driver/project is now maintained here:
+[https://github.com/Open-AES67/PTP-GM]
+
 # Overview
 
 ## Basic framework for using lwIP and FreeRTOS with libopencm3:
